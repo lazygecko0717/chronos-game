@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.0.5</div>
+  <div class="home-version">VERSION v0.0.6</div>
  </div>
 </section>
 <div id="gameApp" class="hidden">
@@ -1674,7 +1674,7 @@ function updateMissionTurnCircle(onComplete){
  window.setTimeout(step,460);
  return true;
 }
-$('missionShow').onclick=()=>{let p=players[team[missionIndex]],evil=evilRoles.includes(p.role);$('gameHint').textContent=`${p.name}，請秘密選擇任務牌。其他玩家請勿觀看。`;$('missionSecret').innerHTML=`<div>${p.name}，請選擇</div><div class="actions"><button class="blue" onclick="missionCard(true)">任務成功</button>${evil?'<button class="red" onclick="missionCard(false)">任務失敗</button>':''}</div>`;$('missionSecret').classList.remove('hidden');$('missionShow').classList.add('hidden')};
+$('missionShow').onclick=()=>{let p=players[team[missionIndex]],evil=evilRoles.includes(p.role);$('gameHint').textContent=`${p.name}，請秘密選擇任務牌。其他玩家請勿觀看。`;$('missionSecret').innerHTML=`<div>${p.name}，請選擇</div><div class="actions"><button class="blue" onclick="missionCard(true)"><img src="./assets/cards/mission-success.png" alt="">任務成功</button>${evil?'<button class="red" onclick="missionCard(false)"><img src="./assets/cards/mission-failure.png" alt="">任務失敗</button>':''}</div>`;$('missionSecret').classList.remove('hidden');$('missionShow').classList.add('hidden')};
 window.missionCard=v=>{missionValues.push(v);missionIndex++;if(missionIndex<team.length){renderMission()}else{$('missionPanel').classList.add('hidden');$('gameHint').textContent='所有修復小隊成員均已完成秘密選擇，請查看任務結果。';let fails=missionValues.filter(x=>!x).length,threshold=($('rule').value==='standard'&&count()>=7&&round===3)?2:1;let passed=fails<threshold;if(passed)success++;else fail++;$('resultPanel').classList.remove('hidden');$('gameHint').textContent='時間節點結果已統計，請確認後進入下一步。';$('resultText').innerHTML=`時間節點結果：<b>${passed?'修復成功':'遭到干擾'}</b><br>干擾牌數：${fails} 張（本關需 ${threshold} 張干擾才算節點失守）<br><span class="muted">時間牌已統計，不公開各玩家出的牌。</span>`;phase='result'}};
 $('next').onclick=()=>{if(fail>=3){end('命運反抗軍獲勝','命運反抗軍造成 3 個時間節點失守。');return}if(success>=3){let assassin=players.find(p=>p.role==='命運刺客');if(!assassin){end('時間守護者獲勝','時間守護者已修復三個時間節點，且本局未配置命運刺客。');return}$('resultPanel').classList.add('hidden');$('assassinPanel').classList.remove('hidden');$('gameHint').textContent='請命運刺客選擇一位玩家，進行最終命運裁決。';$('assassinChoices').innerHTML=players.map((p,i)=>`<label class="vote"><input type="radio" name="target" value="${i}" style="width:auto"> ${p.name}</label>`).join('');return}round++;leader=(leader+1)%players.length;beginRound()};
 $('assassinate').onclick=()=>{let t=document.querySelector('input[name=target]:checked');if(!t){alert('請選擇最終裁決目標。');return}let p=players[+t.value];if(p.role==='時序之神')end('命運反抗軍獲勝','命運刺客成功指認時序之神！');else end('時間守護者獲勝',`命運刺客指認了 ${p.name}，但他不是時序之神。`);};
@@ -1944,4 +1944,15 @@ header .game-menu-dropdown button{display:flex;align-items:center;gap:10px}
 .deal-flight-card{position:fixed!important;z-index:12000!important;pointer-events:none!important;margin:0!important;}
 #revealCircle .deal-center-card.deal-center-leaving{opacity:0;transition:opacity .12s ease}
 @media(prefers-reduced-motion:reduce){#revealCircle .deal-center-card.deal-center-leaving{transition:none}}
+</style><style>
+/* CHRONOS v0.0.6 — card artwork, preserve existing geometry and animations */
+.identity-card,.team-pick-card,.role-card-back,.vote-result-back{background-image:url('./assets/cards/card-back.png')!important;background-size:100% 100%!important;background-position:center!important;background-repeat:no-repeat!important}
+.identity-card .mini-seal:not(.is-leader),.team-pick-card .mini-seal:not(.is-leader),.role-card-back .mini-seal:not(.is-leader),.identity-card small,.role-card-back small{visibility:hidden}
+.role-card-front.faction-good,.faction-good .role-card-front{background-image:linear-gradient(#fff9,#fff9),url('./assets/cards/guardian-frame.png')!important;background-size:100% 100%!important}
+.role-card-front.faction-evil,.faction-evil .role-card-front{background-image:linear-gradient(#fff9,#fff9),url('./assets/cards/rebel-frame.png')!important;background-size:100% 100%!important}
+.vote-result-seat.approve .vote-result-front{background-image:url('./assets/cards/vote-approve.png')!important;background-size:100% 100%!important}
+.vote-result-seat.reject .vote-result-front{background-image:url('./assets/cards/vote-reject.png')!important;background-size:100% 100%!important}
+.vote-result-front .vote-result-choice{color:transparent!important;text-shadow:none!important}
+#missionSecret button[onclick^="missionCard"] img{display:block;width:100%;max-width:90px;height:auto;margin:auto}
+#missionSecret button[onclick^="missionCard"]{height:auto;min-height:44px}
 </style>
