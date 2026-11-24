@@ -1286,16 +1286,16 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 <div class="notice game-hint hidden" id="gameHint" aria-live="polite"></div>
 <div class="notice hidden" id="status"></div><div class="hidden"><span id="progressLabel">0 / 3 次成功</span><div class="progress-fill" id="progressFill"></div><div class="track" id="track"></div></div>
 <div id="teamPanel"><h2 id="teamStageTitle">選擇出征名單</h2><p class="muted" id="teamStageText"></p></div>
-<div class="panel hidden" id="votePanel"><h2>④ 全員投票：贊成或反對</h2><div id="votes" class="votegrid"></div></div>
-<div class="panel hidden" id="missionPanel"><h2>⑤ 時間線修復</h2><div id="missionSecret" class="secret hidden"></div><div class="actions"><button class="blue" id="missionShow">查看並出牌</button><button class="secondary hidden" id="missionHide">確認出牌並交給下一位</button></div></div>
+<div class="panel hidden" id="votePanel"><h2>④ 全員表決：贊成或反對</h2><div id="votes" class="votegrid"></div></div>
+<div class="panel hidden" id="missionPanel"><h2>⑤ 時間線修復</h2><div id="missionSecret" class="secret hidden"></div><div class="actions"><button class="blue" id="missionShow">查看並選擇時間牌</button><button class="secondary hidden" id="missionHide">確認選擇並交給下一位</button></div></div>
 <div class="panel hidden" id="resultPanel"><h2>時間節點結果</h2><div id="resultText" class="notice"></div><div class="actions"><button class="blue" id="next">進入下一步</button></div></div>
-<div class="panel hidden" id="assassinPanel"><h2>⑥ 命運刺客最後指認</h2><p>好人已完成三次修復成功。請由命運刺客發動最終命運裁決，選擇一位玩家。</p><div id="assassinChoices" class="votegrid"></div><div class="actions"><button class="red" id="assassinate">確認命運裁決目標</button></div></div>
+<div class="panel hidden" id="assassinPanel"><h2>⑥ 最終命運裁決</h2><p>時間守護者已成功修復三個時間節點。請由命運刺客發動最終命運裁決，選擇一位玩家。</p><div id="assassinChoices" class="votegrid"></div><div class="actions"><button class="red" id="assassinate">確認命運裁決目標</button></div></div>
 <div class="panel hidden" id="endPanel"><h2 id="endTitle">遊戲結束</h2><div id="endText" class="notice"></div><div class="actions"><button id="restart">重新開局</button></div></div>
 </div>
 </section>
 
 </div>
-</main><footer>CHRONOS 時序之戰｜v0.0.1｜本機遊戲，不會上傳玩家資料</footer>
+</main><footer>CHRONOS 時序之戰｜v0.0.2｜本機遊戲，不會上傳玩家資料</footer>
 <div id="installHelp" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle">
  <div class="install-dialog">
   <h2 id="installHelpTitle">📲 加入主畫面</h2>
@@ -1363,7 +1363,7 @@ savedGameSettings={count:n,rule:$('rule').value,names:Array.from({length:n},(_,i
 $('gameMenu').classList.remove('hidden');$('gameMenuDropdown').classList.add('hidden');$('gameMenuButton').setAttribute('aria-expanded','false');
 enterGameFullscreen();
 let gr=[...gs,...Array(g-gs.length).fill('時間騎士')],er=[...es,...Array(e-es.length).fill('時間掠奪者')];
-if(!er.includes('命運刺客')){if(es.length===e){alert('邪惡角色名額已滿，請選擇命運刺客。');return}er[er.length-1]='命運刺客'}
+if(!er.includes('命運刺客')){if(es.length===e){alert('命運反抗軍角色名額已滿，請選擇命運刺客。');return}er[er.length-1]='命運刺客'}
 players=Array.from({length:n},(_,i)=>({name:$('p'+i).value.trim()||`玩家${i+1}`,role:null}));
 roles=shuffle([...gr,...er]);players.forEach((p,i)=>p.role=roles[i]);round=0;leader=0;consecutive=0;success=0;fail=0;phase='reveal';revealIndex=0;$('revealCircle').dataset.dealStarted='';
 $('setup').classList.add('hidden');$('game').classList.remove('hidden');$('reveal').classList.remove('hidden');$('teamPanel').classList.add('hidden');showReveal();
@@ -1656,10 +1656,10 @@ function updateMissionTurnCircle(onComplete){
  return true;
 }
 $('missionShow').onclick=()=>{let p=players[team[missionIndex]],evil=evilRoles.includes(p.role);$('gameHint').textContent=`${p.name}，請秘密選擇任務牌。其他玩家請勿觀看。`;$('missionSecret').innerHTML=`<div>${p.name}，請選擇</div><div class="actions"><button class="blue" onclick="missionCard(true)">任務成功</button>${evil?'<button class="red" onclick="missionCard(false)">任務失敗</button>':''}</div>`;$('missionSecret').classList.remove('hidden');$('missionShow').classList.add('hidden')};
-window.missionCard=v=>{missionValues.push(v);missionIndex++;if(missionIndex<team.length){renderMission()}else{$('missionPanel').classList.add('hidden');$('gameHint').textContent='所有出征玩家均已完成秘密出牌，請查看任務結果。';let fails=missionValues.filter(x=>!x).length,threshold=($('rule').value==='standard'&&count()>=7&&round===3)?2:1;let passed=fails<threshold;if(passed)success++;else fail++;$('resultPanel').classList.remove('hidden');$('gameHint').textContent='任務結果已統計，請確認後進入下一步。';$('resultText').innerHTML=`本次任務：<b>${passed?'成功':'失敗'}</b><br>失敗牌數：${fails} 張（本關需 ${threshold} 張失敗才算失敗）<br><span class="muted">時間牌已統計，不公開各玩家出的牌。</span>`;phase='result'}};
+window.missionCard=v=>{missionValues.push(v);missionIndex++;if(missionIndex<team.length){renderMission()}else{$('missionPanel').classList.add('hidden');$('gameHint').textContent='所有修復小隊成員均已完成秘密選擇，請查看任務結果。';let fails=missionValues.filter(x=>!x).length,threshold=($('rule').value==='standard'&&count()>=7&&round===3)?2:1;let passed=fails<threshold;if(passed)success++;else fail++;$('resultPanel').classList.remove('hidden');$('gameHint').textContent='任務結果已統計，請確認後進入下一步。';$('resultText').innerHTML=`本次任務：<b>${passed?'成功':'失敗'}</b><br>干擾牌數：${fails} 張（本關需 ${threshold} 張干擾才算節點失守）<br><span class="muted">時間牌已統計，不公開各玩家出的牌。</span>`;phase='result'}};
 $('next').onclick=()=>{if(fail>=3){end('命運反抗軍獲勝','命運反抗軍累積 3 次任務失敗。');return}if(success>=3){let assassin=players.find(p=>p.role==='命運刺客');if(!assassin){end('時間守護者獲勝','時間守護者完成三次任務成功，且本局未配置命運刺客。');return}$('resultPanel').classList.add('hidden');$('assassinPanel').classList.remove('hidden');$('gameHint').textContent='請由命運刺客選擇一位玩家，嘗試找出時序之神。';$('assassinChoices').innerHTML=players.map((p,i)=>`<label class="vote"><input type="radio" name="target" value="${i}" style="width:auto"> ${p.name}</label>`).join('');return}round++;leader=(leader+1)%players.length;beginRound()};
 $('assassinate').onclick=()=>{let t=document.querySelector('input[name=target]:checked');if(!t){alert('請選擇最終裁決目標。');return}let p=players[+t.value];if(p.role==='時序之神')end('命運反抗軍獲勝','命運刺客成功指認時序之神！');else end('時間守護者獲勝',`命運刺客指認了 ${p.name}，但他不是時序之神。`);};
-function end(title,msg){$('teamPanel').classList.add('hidden');$('votePanel').classList.add('hidden');$('missionPanel').classList.add('hidden');$('resultPanel').classList.add('hidden');$('assassinPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');$('gameHint').textContent=msg;$('endTitle').textContent=title;$('endText').textContent=msg+` 最終戰績：正義任務成功 ${success} 次、失敗 ${fail} 次。`;$('roundTitle').textContent='遊戲結束';}
+function end(title,msg){$('teamPanel').classList.add('hidden');$('votePanel').classList.add('hidden');$('missionPanel').classList.add('hidden');$('resultPanel').classList.add('hidden');$('assassinPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');$('gameHint').textContent=msg;$('endTitle').textContent=title;$('endText').textContent=msg+` 最終戰績：時間節點修復成功 ${success} 次、失守 ${fail} 次。`;$('roundTitle').textContent='遊戲結束';}
 $('restart').onclick=()=>location.reload();
 function closeGameMenu(){
  $('gameMenuDropdown').classList.add('hidden');
