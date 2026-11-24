@@ -1,0 +1,14 @@
+{
+  "id": "./",
+  "name": "CHRONOS 時序之戰",
+  "short_name": "CHRONOS",
+  "description": "5–10 人同樂的史詩奇幻陣營推理遊戲",
+  "lang": "zh-TW",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#11152b",
+  "theme_color": "#11152b",
+  "icons": [{ "src": "./chronos-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

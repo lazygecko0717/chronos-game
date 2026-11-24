@@ -1,0 +1,1927 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CHRONOS 時序之戰｜史詩奇幻陣營推理</title>
+<meta name="theme-color" content="#14243a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CHRONOS 時序之戰">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="chronos-icon.svg">
+
+
+<style>
+:root{--navy:#14243a;--blue:#2878c7;--red:#c44747;--gold:#d5a642;--paper:#f4f1e9;--card:#fff;--muted:#667085;--line:#e4e0d7}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:#202938;font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif}
+header{background:var(--navy);color:white;padding:18px 16px;text-align:center}header h1{margin:0;font-size:25px}header p{margin:5px 0 0;color:#d7e0eb;font-size:13px}
+main{max-width:850px;margin:auto;padding:16px}.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 3px 12px #1720330a}
+h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1}
+label{font-size:14px;color:#465265;display:block;margin:8px 0 4px}input,select,button{font:inherit}input,select{width:100%;padding:11px;border:1px solid #cfd5dd;border-radius:10px;background:white}
+button{border:0;border-radius:11px;padding:11px 15px;background:var(--navy);color:white;font-weight:650;cursor:pointer}button.secondary{background:#e9edf2;color:#243247}button.blue{background:var(--blue)}button.red{background:var(--red)}button.gold{background:#a87917}button:disabled{opacity:.4;cursor:not-allowed}
+.players{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px}.player{border:1px solid var(--line);border-radius:10px;padding:9px;background:#fafafa}.player small{color:var(--muted)}
+.hidden{display:none!important}.muted{color:var(--muted);font-size:13px}.pill{display:inline-block;padding:4px 9px;border-radius:99px;background:#edf1f5;font-size:12px;margin:2px}.good{background:#e8f2ff;color:#145a9e}.evil{background:#ffeded;color:#a52e2e}
+.notice{padding:12px;border-radius:11px;background:#f3f6fa;border:1px solid #e1e7ef;margin:10px 0}.secret{font-size:22px;font-weight:800;text-align:center;padding:20px;border-radius:12px;background:#f7f5ef;margin:12px 0}
+.track{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.mission{border-radius:10px;padding:9px 4px;text-align:center;background:#eef0f3;font-size:12px}.mission b{display:block;font-size:18px}.mission.win{background:#dceeff;color:#155a9b}.mission.fail{background:#ffe3e3;color:#a42b2b}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.actions button{flex:1;min-width:120px}
+.votegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}.vote{padding:10px;border:1px solid var(--line);border-radius:10px}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+@media(max-width:520px){main{padding:10px}.panel{padding:13px}header h1{font-size:22px}.actions button{min-width:100%}}
+.rules-overlay{position:fixed;inset:0;background:#101b2dcc;z-index:1000;display:flex;align-items:center;justify-content:center;padding:14px}
+.rules-dialog{width:min(760px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:16px;padding:20px;box-shadow:0 18px 60px #0005}
+.rules-dialog h2{margin-top:18px;color:var(--navy)}.rules-dialog h3{margin-top:13px;color:#34445b}
+.rules-dialog p,.rules-dialog li{line-height:1.65;font-size:14px}.rules-close{position:sticky;top:0;float:right;background:var(--navy)}
+.rules-table{width:100%;border-collapse:collapse;font-size:13px}.rules-table th,.rules-table td{padding:8px;border-bottom:1px solid var(--line);text-align:center}.rules-table th{background:#f2f4f7}
+
+/* CHRONOS prototype: original visual assets are being prepared */
+:root{--blue-deep:#102f55;--blue-glow:#5bb8ff;--red-deep:#571e2a;--red-glow:#ff7777;--gold-light:#f3d58b}
+body{background:radial-gradient(ellipse at 8% 0%,#dcecff 0,transparent 34%),radial-gradient(ellipse at 92% 4%,#f8dddd 0,transparent 32%),var(--paper)}
+header{position:relative;overflow:hidden;padding:27px 16px 22px;background:linear-gradient(110deg,#102d50 0%,#183957 48%,#512832 100%);box-shadow:0 8px 24px #14243a28}
+header:before,header:after{content:"";position:absolute;width:190px;height:190px;border:1px solid #ffffff20;border-radius:50%;top:-115px}
+header:before{left:8%}header:after{right:8%}
+header h1{position:relative;font-size:clamp(25px,5vw,34px);letter-spacing:2px;text-shadow:0 3px 16px #0008}
+header p{position:relative;font-size:14px;letter-spacing:.4px}
+#openRules{border:1px solid #f3d58b88;background:linear-gradient(135deg,#a87917,#d0a64c);box-shadow:0 4px 14px #0003;margin:0 0 12px}
+.panel{border-radius:18px;box-shadow:0 8px 24px #1720330c;border-color:#e2e5ea}
+#teamPanel{border-top:4px solid var(--blue)}#votePanel{border-top:4px solid var(--gold)}#missionPanel{border-top:4px solid var(--red)}
+#teamPanel h2:before{content:"🛡️ "}#votePanel h2:before{content:"⚖️ "}#missionPanel h2:before{content:"⚔️ "}
+.vote{background:linear-gradient(145deg,#fff,#f7f9fc);border-color:#dfe5ed;transition:transform .18s,border-color .18s,box-shadow .18s}
+.vote:has(input:checked){border-color:var(--blue);box-shadow:0 0 0 2px #2878c722;transform:translateY(-2px)}
+button{transition:transform .16s,filter .16s,box-shadow .16s}button:hover{filter:brightness(1.07);box-shadow:0 4px 12px #17203320}button:active{transform:scale(.98)}
+#status{font-weight:650;background:linear-gradient(100deg,#e7f2ff,#fff0f0);border-color:#e0e6ef}
+.track{gap:8px;position:relative}.mission{position:relative;overflow:hidden;border:1px solid #e1e5eb;min-height:66px;display:flex;flex-direction:column;justify-content:center;gap:2px;transition:background .35s,transform .35s,box-shadow .35s}
+.mission b{font-size:20px}.mission.current{outline:2px solid var(--gold);outline-offset:1px;animation:missionPulse 1.8s ease-in-out infinite}
+.mission.win{background:linear-gradient(145deg,#d9edff,#b9dcff);border-color:#9bcaff}.mission.fail{background:linear-gradient(145deg,#ffe4e4,#ffcaca);border-color:#f1aaaa}
+.mission.win:after,.mission.fail:after{content:"";position:absolute;inset:0;opacity:.18;animation:revealGlow .7s ease-out}
+.mission.win:after{background:linear-gradient(110deg,transparent,#fff,transparent)}.mission.fail:after{background:linear-gradient(110deg,transparent,#fff,transparent)}
+.secret{border:1px solid #dbe3ed;box-shadow:inset 0 0 30px #fff8;animation:cardEnter .42s cubic-bezier(.2,.8,.2,1)}
+.secret.faction-good{background:radial-gradient(circle at 50% 0%,#d8edff,#f8fbff 70%);border-color:#8fc7f5;color:#123e69}
+.secret.faction-evil{background:radial-gradient(circle at 50% 0%,#ffdede,#fff8f8 70%);border-color:#efaaaa;color:#702532}
+.character-art{width:112px;height:112px;margin:0 auto 12px;display:block;object-fit:contain;filter:drop-shadow(0 8px 9px #17203324);animation:portraitFloat 3s ease-in-out infinite}
+.character-name{font-size:25px;font-weight:850;letter-spacing:2px}
+.faction-tag{display:inline-block;padding:5px 12px;border-radius:99px;font-size:12px;font-weight:800;margin-top:8px}
+.faction-good .faction-tag{background:#d6ebff;color:#155b96}.faction-evil .faction-tag{background:#ffe0e0;color:#a32f3c}
+.progress-summary{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);margin:10px 2px 5px}
+.progress-rail{height:7px;background:#e8ebf0;border-radius:99px;overflow:hidden;margin-bottom:12px}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#348bd4,#d5a642,#d65a5a);border-radius:99px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes missionPulse{0%,100%{box-shadow:0 0 0 0 #d5a64200}50%{box-shadow:0 0 0 5px #d5a64226}}
+@keyframes revealGlow{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+@keyframes cardEnter{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes portraitFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+@media(max-width:520px){header{padding:22px 12px 18px}.character-art{width:96px;height:96px}.mission{min-height:58px;font-size:11px}}
+
+/* Role-specific 3D reveal cards and opening intel sequence */
+.secret{perspective:1100px;overflow:hidden}
+.role-card{width:min(100%,390px);margin:0 auto;perspective:1100px}
+.role-card-inner{position:relative;min-height:270px;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transform:rotateY(180deg);-webkit-transform:rotateY(180deg);animation:roleFlip .95s cubic-bezier(.2,.75,.2,1) both}
+.role-card-back,.role-card-front{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px}
+.role-card-back{transform:rotateY(0deg);-webkit-transform:rotateY(0deg);background:linear-gradient(145deg,#172d48,#304c68);color:#f8e8bd;border:1px solid #d6b76b;box-shadow:inset 0 0 28px #ffffff12}
+.role-card-back .seal{width:76px;height:76px;border:2px solid #e8cf8c;border-radius:50%;display:grid;place-items:center;font-size:34px;margin-bottom:12px;box-shadow:0 0 0 7px #e8cf8c18,0 0 24px #e8cf8c35}
+.role-card-back small{letter-spacing:4px;color:#f3d58b}
+.role-card-front{transform:rotateY(180deg);-webkit-transform:rotateY(180deg);background:linear-gradient(155deg,#ffffff,#f5f8fc);border:1px solid #dbe3ed}
+.faction-good .role-card-front{background:linear-gradient(155deg,#e4f3ff,#fff)}
+.faction-evil .role-card-front{background:linear-gradient(155deg,#ffe8e8,#fff)}
+.role-card-front .character-art{margin-bottom:5px}
+.role-card-front .character-name{font-size:24px}
+.role-card-merlin .role-card-inner{animation-duration:1.05s}
+.role-card-percival .role-card-inner{animation-duration:.9s}
+.role-card-assassin .role-card-inner,.role-card-morgana .role-card-inner,.role-card-mordred .role-card-inner,.role-card-oberon .role-card-inner,.role-card-minion .role-card-inner{animation-duration:1.15s}
+@keyframes roleFlip{0%{opacity:.7;transform:rotateY(0deg) scale(.94);-webkit-transform:rotateY(0deg) scale(.94)}65%{opacity:1;transform:rotateY(192deg) scale(1.015);-webkit-transform:rotateY(192deg) scale(1.015)}100%{opacity:1;transform:rotateY(180deg) scale(1);-webkit-transform:rotateY(180deg) scale(1)}}
+.intel-reveal{width:100%;margin-top:12px;padding:12px;border-radius:11px;background:#14243a0a;border:1px solid #14243a18;animation:intelPanelIn .55s .55s both}
+.intel-title{font-size:12px;font-weight:850;letter-spacing:1px;opacity:.72;margin-bottom:8px}
+.intel-list{display:flex;flex-wrap:wrap;justify-content:center;gap:7px}
+.intel-chip{display:inline-block;padding:6px 10px;border-radius:99px;font-size:13px;font-weight:750;opacity:0;transform:translateY(8px) scale(.94);animation:intelChipIn .42s both}
+.faction-good .intel-chip{background:#d3eaff;color:#15558b}
+.faction-evil .intel-chip{background:#ffdddd;color:#922e3a}
+.intel-note{font-size:13px;line-height:1.6;font-weight:550}
+@keyframes intelPanelIn{from{opacity:0;clip-path:inset(0 0 100% 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+@keyframes intelChipIn{to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){.role-card-inner,.intel-reveal,.intel-chip{animation:none!important;opacity:1!important;transform:none!important}}
+
+
+
+.vote-reveal-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px 0 4px}
+.vote-reveal-stage{position:relative;width:min(100%,460px);aspect-ratio:1/1;margin:0 auto;border-radius:50%;background:radial-gradient(circle,#f8fafc 0 34%,#edf2f8 34.5% 35%,#f8fafc 35.5%);border:1px solid #e2e8f0}
+.vote-reveal-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:34%;text-align:center;padding:10px 6px;border-radius:16px;background:#fff;border:1px solid #e3e8ef;box-shadow:0 4px 16px #17203312;z-index:1}
+.vote-reveal-center strong{display:block;font-size:clamp(14px,3.6vw,19px)}
+.vote-reveal-center span{display:block;font-size:12px;color:var(--muted);margin-top:5px}
+.vote-seat{position:absolute;left:50%;top:50%;width:clamp(76px,19%,94px);min-height:62px;transform:translate(-50%,-50%);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;padding:7px 4px;border:2px solid #cbd5e1;border-radius:13px;background:#fff;box-shadow:0 4px 12px #17203318;text-align:center;z-index:2}
+.vote-seat .seat-name{font-size:12px;font-weight:750;max-width:100%;overflow-wrap:anywhere;line-height:1.25}
+.vote-seat .seat-choice{font-size:13px;font-weight:850}
+.vote-seat.approve{border-color:#2d8b62;background:#e8f7ef;color:#17633f}
+.vote-seat.reject{border-color:#c44747;background:#fff0f0;color:#a52e35}
+.vote-reveal-summary{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.vote-reveal-summary span{padding:8px 13px;border-radius:999px;font-weight:750;font-size:14px}
+.vote-reveal-summary .yes{background:#e3f5eb;color:#17633f}
+.vote-reveal-summary .no{background:#ffebeb;color:#a52e35}
+@media(max-width:380px){.vote-seat{width:72px;min-height:58px;padding:5px 3px}.vote-seat .seat-name{font-size:11px}.vote-seat .seat-choice{font-size:12px}.vote-reveal-center{width:32%;padding:7px 3px}}
+
+/* v0.1.40：遊戲進行中的標題列右側選單 */
+header .game-menu{position:absolute;right:14px;top:50%;transform:translateY(-50%);z-index:950}
+header .game-menu-button{width:42px;height:42px;padding:0;border:1px solid #ffffff55;border-radius:11px;background:#ffffff18;color:#fff;font-size:22px;line-height:1;box-shadow:0 3px 12px #0002}
+header .game-menu-dropdown{position:absolute;right:0;top:calc(100% + 9px);width:164px;padding:6px;border:1px solid #ffffff40;border-radius:12px;background:#14243a;box-shadow:0 10px 28px #0005;display:flex;flex-direction:column;gap:4px}
+header .game-menu-dropdown button{width:100%;text-align:left;padding:11px 12px;border-radius:8px;background:transparent;color:#fff;font-size:14px}
+header .game-menu-dropdown button:hover{background:#ffffff20}
+body.app-fullscreen header h1{padding-right:54px}
+
+/* Immersive game view after setup */
+html,body{min-height:100%}
+body.app-fullscreen{min-height:100vh;min-height:100dvh}
+body.app-fullscreen header{
+ display:block;
+ position:sticky;
+ top:0;
+ z-index:900;
+ width:100%;
+ text-align:left;
+ padding:12px 16px !important;
+}
+body.app-fullscreen header h1{
+ text-align:left;
+ font-size:22px;
+ letter-spacing:1px;
+}
+body.app-fullscreen footer{display:none}
+body.app-fullscreen main{width:100%;max-width:none;min-height:100vh;min-height:100dvh;padding: max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+body.app-fullscreen #game{width:100%;max-width:1100px;margin:0 auto}
+body.app-fullscreen #game .panel{margin:8px 0}
+@media(max-width:520px){body.app-fullscreen main{padding: max(6px,env(safe-area-inset-top)) max(6px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left))}}
+
+/* Circular seating and tap-to-reveal identity cards */
+.player-circle{position:relative;width:min(100%,520px);aspect-ratio:1/1;margin:14px auto 8px;border-radius:50%;background:radial-gradient(circle,#f7f9fc 0 27%,#e8eef5 27.5% 28%,transparent 28.5%);border:1px solid #e1e7ef}
+.identity-seat{position:absolute;left:50%;top:50%;width:clamp(70px,17%,92px);height:clamp(86px,20%,108px);transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.identity-card{width:100%;height:66px;border:1px solid #d6b76b;border-radius:10px;background:linear-gradient(145deg,#172d48,#304c68);color:#f3d58b;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:4px;box-shadow:0 4px 12px #17203324;transition:transform .2s,filter .2s}
+.identity-card:active{transform:scale(.95)}
+.identity-card .mini-seal{font-size:25px;line-height:1.1}
+.identity-card small{font-size:9px;letter-spacing:2px}
+.identity-seat .identity-name{font-size:12px;font-weight:800;text-align:center;max-width:100%;overflow-wrap:anywhere;line-height:1.2}
+.identity-seat .leader-mark{font-size:10px;font-weight:800;color:#946b16;background:#fff1c8;border-radius:99px;padding:2px 6px}
+.identity-seat.locked .identity-card{opacity:.48;filter:grayscale(.45)}
+.identity-seat.done .identity-card{background:linear-gradient(145deg,#52657a,#8795a5);border-color:#c5ced8;color:#fff}
+.identity-seat.active .identity-card{outline:3px solid #e0b54d;outline-offset:3px;animation:seatGlow 1.3s ease-in-out infinite}
+.role-focus{position:fixed;inset:0;z-index:3000;background:#081321f5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top)) 14px max(16px,env(safe-area-inset-bottom));}
+.role-focus-card{width:min(94vw,620px);height:min(78vh,760px);min-height:390px;perspective:1300px;display:flex;align-items:center;justify-content:center;cursor:pointer;animation:focusZoom .42s cubic-bezier(.2,.8,.2,1)}
+.role-focus-card .role-card{width:100%;height:100%;max-width:520px}
+.role-focus-card .role-card-inner{height:100%;min-height:0;animation:focusFlip .9s cubic-bezier(.2,.75,.2,1) both}
+.role-focus-card .role-card-back,.role-focus-card .role-card-front{height:100%;overflow:auto}
+.role-focus-card .role-card-front{justify-content:center}
+.role-focus-card .character-art{width:clamp(95px,22vh,150px);height:clamp(95px,22vh,150px)}
+.role-focus-card .character-name{font-size:clamp(25px,5vw,36px)}
+.role-focus>p{color:#fff;font-size:13px;margin:14px 0 0;text-align:center}
+@keyframes seatGlow{50%{box-shadow:0 0 0 7px #e0b54d33}}
+@keyframes focusZoom{from{opacity:0;transform:scale(.76)}to{opacity:1;transform:scale(1)}}
+@keyframes focusFlip{0%{transform:rotateY(0deg) scale(.94)}65%{transform:rotateY(192deg) scale(1.01)}100%{transform:rotateY(180deg) scale(1)}}
+@media(max-width:390px){.player-circle{width:100%}.identity-seat{width:66px;height:82px}.identity-card{height:57px}.identity-seat .identity-name{font-size:11px}.role-focus-card{height:min(78vh,680px);min-height:350px}}
+
+/* Mission team selection directly on circular player seats */
+.team-pick-card{width:100%;height:66px;min-height:0;border:1px solid #d6b76b;border-radius:10px;background:linear-gradient(145deg,#172d48,#304c68);color:#f3d58b;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;box-shadow:0 4px 12px #17203324;transition:background .18s,border-color .18s,transform .18s,box-shadow .18s}
+.team-pick-card .mini-seal{font-size:25px;line-height:1}
+.team-pick-card small{font-size:9px;letter-spacing:2px}
+.team-seat{cursor:pointer;z-index:3}
+.team-pick-card{width:100%;min-height:66px;border:1px solid #cbd5e1;border-radius:11px;background:linear-gradient(145deg,#172d48,#304c68);color:#f3d58b;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;box-shadow:0 4px 12px #17203324;transition:background .18s,border-color .18s,transform .18s,box-shadow .18s}
+.team-pick-card .mini-seal{font-size:20px;line-height:1}
+.team-pick-text{font-size:10px;font-weight:750}
+.team-pick{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+.team-seat .team-pick-card{color:#fff}
+.team-seat:has(.team-pick:checked) .team-pick-card{background:linear-gradient(145deg,#a87518,#e4b94f);border:2px solid #ffe29a;color:#fff;box-shadow:0 0 0 4px rgba(244,190,66,.32),0 5px 15px #17203338;transform:translateY(-2px)}
+.team-seat:has(.team-pick:checked) .team-pick-text:after{content:""}
+.team-seat .identity-name{margin-top:1px;color:#fff}
+.team-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;width:38%;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.team-center-title{font-size:12px;font-weight:850;color:#43536a;background:#ffffffdf;border-radius:99px;padding:4px 9px;white-space:nowrap}
+.team-center button{width:100%;padding:9px 5px;font-size:clamp(11px,2.7vw,14px);box-shadow:0 4px 14px #17203330}
+.team-seat.team-selected .team-pick-card{background:linear-gradient(145deg,#a87518,#e4b94f);border:2px solid #ffe29a;color:#fff;box-shadow:0 0 0 4px rgba(244,190,66,.32),0 5px 15px #17203338}
+.team-seat.team-selected .team-pick-text:after{content:''}
+.team-seat.team-unselected{opacity:.48;filter:grayscale(.65)}
+.team-seat.team-selected .team-pick,.team-seat.team-unselected .team-pick{visibility:hidden}
+@media(max-width:390px){.team-pick-card{height:57px}.team-pick-card .mini-seal{font-size:25px}.team-pick{width:17px!important;height:17px}}
+/* Home screen and install experience */
+.home-screen{position:fixed;inset:0;z-index:1000;min-height:100vh;min-height:100dvh;width:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:28px 20px;isolation:isolate;background:#0b1e32 url('./home-background.svg') center/cover no-repeat}
+.home-screen:before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#08182a44,#08182a70 65%,#08182a99);pointer-events:none}
+.home-card{width:min(100%,560px);box-sizing:border-box;text-align:center;padding:24px 18px;background:transparent;color:#fff;position:relative}
+.home-card h2{font-size:clamp(32px,7vw,48px);letter-spacing:4px;margin:0 0 12px;color:#fff;text-shadow:0 3px 18px #000b}
+.home-subtitle{color:#e5edf6;font-size:15px;line-height:1.9;margin:0 0 32px;text-shadow:0 2px 10px #000b}
+.home-card h2{font-size:clamp(27px,6vw,38px);letter-spacing:3px;margin:0 0 8px;color:#fff}
+.home-subtitle{color:#dbe8f5;font-size:14px;line-height:1.8;margin:0 0 26px}
+.home-actions{display:grid;gap:12px;max-width:330px;margin:0 auto;position:relative;z-index:1}
+.home-actions button{width:100%;min-height:52px;font-size:16px;border-radius:14px}
+.home-enter{background:linear-gradient(135deg,#b1842d,#e1bd68);color:#17283d;box-shadow:0 6px 18px #0003}
+.home-install{background:#ffffff18;border:1px solid #ffffff55;color:#fff}
+.home-version{margin-top:26px;color:#e1e8f0;font-size:12px;letter-spacing:1.5px;text-shadow:0 2px 8px #000b}
+body.home-active{overflow:hidden}body.home-active>header,body.home-active>footer{display:none}body.home-active>main{margin:0;padding:0}
+.install-overlay{position:fixed;inset:0;z-index:4000;background:#081321d9;display:flex;align-items:center;justify-content:center;padding:16px}
+.install-dialog{width:min(100%,430px);background:#fff;color:#263448;border-radius:18px;padding:22px;box-shadow:0 20px 60px #0005;line-height:1.7}
+.install-dialog h2{margin:0 0 10px}.install-dialog ol{padding-left:22px}.install-dialog .actions{margin-top:16px}
+@media(max-width:520px){.home-screen{padding:20px 14px}.home-card{padding:20px 10px}.home-subtitle{font-size:14px;margin-bottom:28px}}
+
+/* Avalon setup layout inspired by the Undercover setup screen */
+#setup.setup-panel{width:min(100%,650px);margin:14px auto 18px;padding:18px;border-radius:20px;background:#fff;border:1px solid #dbe3ef;box-shadow:0 5px 18px #0f172a0d}
+.setup-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.setup-heading h2{margin:3px 0 0;font-size:21px;color:#172f4d}
+.setup-eyebrow{font-size:10px;letter-spacing:2px;font-weight:800;color:#9a762e}
+.setup-rules{flex:0 0 auto;padding:10px 12px;font-size:13px}
+.setup-row{display:grid;grid-template-columns:minmax(105px,32%) minmax(0,1fr);align-items:center;gap:12px;margin:11px 0}
+.setup-row>label{margin:0;font-size:15px;font-weight:750;color:#294563}
+.setup-row select{min-width:0;min-height:44px;border:1px solid #d6deea;border-radius:12px;background:#fbfcfe;padding:10px 12px}
+.setup-ratio{margin:14px 0 4px;padding:11px 13px;border-radius:12px;background:#eef5fc;color:#294e73;font-size:14px;font-weight:750;text-align:center}
+.setup-divider{height:1px;background:#e8edf3;margin:18px 0}
+.setup-section-title{font-size:16px;font-weight:850;color:#203d5d;margin-bottom:4px}
+.setup-note{font-size:12px;line-height:1.6;color:#718096;margin:0 0 10px}
+#setup .setup-players{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#setup .player{min-width:0;padding:10px 11px;border:1px solid #e0e7ef;border-radius:13px;background:#f8fafc}
+#setup .player label{margin:0 0 6px;color:#52657b;font-size:12px;font-weight:750}
+#setup .player input{min-width:0;min-height:40px;padding:8px 10px;border:1px solid #d9e1eb;border-radius:9px;background:#fff}
+#setup .setup-roles>.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#setup .setup-roles>.row>div{min-width:0;padding:12px;border:1px solid #e0e7ef;border-radius:14px;background:#f8fafc}
+#setup .setup-roles>.row>div>label{margin:0 0 10px;color:#294563;font-weight:800}
+#setup .setup-roles #goodChecks,#setup .setup-roles #evilChecks{display:grid;gap:7px}
+#setup .setup-roles #goodChecks label,#setup .setup-roles #evilChecks label{display:flex;align-items:center;gap:7px;margin:0;padding:8px 9px;border-radius:9px;background:#fff;border:1px solid #e4eaf1;font-size:13px;color:#334155}
+#setup .setup-roles #goodChecks label{border-left:3px solid #4b91cf}
+#setup .setup-roles #evilChecks label{border-left:3px solid #c65b5b}
+#setup .setup-roles input[type=checkbox]{accent-color:#2878c7}
+#setup .setup-roles p{margin:10px 1px 0;font-size:12px;line-height:1.6;color:#718096}
+#setup .setup-actions{margin-top:18px}
+#setup .setup-actions button{width:100%;min-height:50px;border-radius:13px;font-size:16px;font-weight:800}
+@media(max-width:520px){
+ #setup.setup-panel{margin:10px auto 14px;padding:15px;border-radius:17px}
+ .setup-heading{align-items:flex-start}
+ .setup-heading h2{font-size:19px}
+ .setup-rules{padding:9px 10px;font-size:12px}
+ .setup-row{grid-template-columns:94px minmax(0,1fr);gap:9px}
+ .setup-row>label{font-size:14px}
+ #setup .setup-players{gap:7px}
+ #setup .player{padding:8px}
+ #setup .setup-roles>.row{gap:7px}
+ #setup .setup-roles>.row>div{padding:9px}
+}
+@media(max-width:360px){
+ #setup .setup-players{grid-template-columns:1fr}
+ .setup-rules{font-size:11px}
+}
+
+
+/* Settings use consistent left-label / right-control rows */
+#setup .player.name-option{display:block;padding:7px}
+#setup .player.name-option input{width:100%;text-align:left}
+#setup .setup-roles #goodChecks label.role-option,
+#setup .setup-roles #evilChecks label.role-option{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:38px;margin:0;padding:7px 10px}
+#setup .setup-roles label.role-option span{font-weight:700}
+#setup .setup-roles label.role-option input[type=checkbox]{width:18px;height:18px;flex:0 0 auto;margin:0;accent-color:#2878c7}
+@media(max-width:360px){
+ #setup .player.name-option{grid-template-columns:minmax(76px,auto) minmax(0,1fr)}
+}
+
+
+/* v0.1.26：遊戲所有階段沿用首頁背景，主要前景面板為 20% 不透明度 */
+body, body.app-fullscreen {
+  background: #0b1e32 url('./home-background.svg') center center / cover fixed no-repeat !important;
+}
+.panel,
+#setup.setup-panel {
+  background: rgba(255,255,255,.20) !important;
+  border-color: rgba(255,255,255,.32) !important;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+#setup .player,
+#setup .setup-roles > .row > div,
+.notice,
+.vote,
+.vote-reveal-center,
+.vote-seat {
+  background-color: rgba(255,255,255,.20) !important;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+
+/* v0.1.26：前景底色 10% 不透明度，主要介面文字改為近白色 */
+.panel,
+#setup.setup-panel,
+#setup .player,
+#setup .setup-roles > .row > div,
+.notice,
+.vote,
+.vote-reveal-center,
+.vote-seat {
+  background-color: rgba(255,255,255,.10) !important;
+  border-color: rgba(255,255,255,.28) !important;
+}
+body, main, main h1, main h2, main h3, main p,
+.panel h1, .panel h2, .panel h3, .panel p,
+.panel label, .panel small, .panel .muted,
+#setup .setup-row label, #setup .setup-section-title,
+#setup .player small, .team-center-title,
+.vote-reveal-summary, .rules-hint {
+  color: #f5f7fb;
+  text-shadow: 0 1px 3px rgba(0,0,0,.48);
+}
+#setup .setup-ratio,
+#setup .setup-divider {
+  color: #f5f7fb;
+}
+#setup .setup-ratio {
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.22);
+}
+
+
+/* v0.1.26：精簡頂部標題列，玩家名稱改為獨立彈出設定 */
+header{padding:0 16px !important;min-height:0 !important}
+header h1{margin:0 !important;line-height:1.2 !important;padding:0 !important}
+header p{display:none !important}
+.setup-name-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.setup-name-toolbar .setup-section-title{margin:0}
+.setup-name-open{flex:0 0 auto;padding:10px 14px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.14);color:#f7f9fc}
+.names-overlay{position:fixed;inset:0;z-index:3500;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(4,13,25,.82);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
+.names-overlay.hidden{display:none !important}
+.names-dialog{width:min(100%,520px);max-height:min(82vh,720px);overflow:auto;padding:18px;border:1px solid rgba(255,255,255,.28);border-radius:18px;background:rgba(15,35,57,.96);box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.names-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.names-dialog-head h3{margin:0;color:#f7f9fc;font-size:19px}
+.names-dialog .setup-note{color:#e0e8f2}
+.names-dialog #names{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.names-dialog #names .player{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.22)}
+.names-dialog #names .player label{color:#f5f7fb}
+.names-dialog #names .player input{background:rgba(255,255,255,.94);color:#17283d}
+@media(max-width:380px){.names-dialog #names{grid-template-columns:1fr}.setup-name-open{padding:9px 10px;font-size:13px}}
+/* Keep the CHRONOS title visible throughout gameplay */
+body:not(.home-active)>header{position:sticky;top:0;z-index:1200;text-align:left;padding:12px 16px !important;min-height:0 !important;box-shadow:0 3px 12px #07142635}
+body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height:1.2 !important}
+.role-card-back .seal{display:grid;place-items:center}
+.role-card-back .crossed-swords{width:64px;height:64px;display:block;color:#f3d58b;filter:drop-shadow(0 1px 2px #0005)}
+
+
+
+/* v0.1.26：身份牌在原座位翻開，尺寸約放大一倍，不使用全螢幕覆蓋 */
+.identity-seat.revealed{
+ width:clamp(140px,34%,190px);
+ height:clamp(180px,44%,240px);
+ z-index:50;
+}
+.identity-seat.revealed .role-card{
+ width:100%;
+ height:100%;
+ max-width:none;
+ perspective:1100px;
+ cursor:pointer;
+}
+.identity-seat.revealed .role-card-inner{
+ width:100%;
+ height:100%;
+ min-height:100%;
+ animation:roleFlip .85s cubic-bezier(.2,.75,.2,1) both;
+}
+.identity-seat.revealed .role-card-back,
+.identity-seat.revealed .role-card-front{
+ position:absolute;
+ inset:0;
+ width:100%;
+ height:100%;
+ min-height:0;
+ border-radius:12px;
+ padding:8px;
+ overflow:auto;
+ gap:3px;
+}
+.identity-seat.revealed .role-card-back .seal{
+ width:64px;height:64px;margin-bottom:8px;
+}
+.identity-seat.revealed .role-card-back .crossed-swords{width:42px;height:42px}
+.identity-seat.revealed .card-back-caption{font-size:10px;margin-top:8px;letter-spacing:1px}
+.identity-seat.revealed .role-card-front{justify-content:flex-start}
+.identity-seat.revealed .identity-owner{font-size:12px;font-weight:800;color:#43536a}
+.identity-seat.revealed .character-art{width:54px;height:54px;margin:0 auto 2px}
+.identity-seat.revealed .character-name{font-size:16px;letter-spacing:1px}
+.identity-seat.revealed .faction-tag{font-size:9px;padding:3px 7px;margin-top:2px}
+.identity-seat.revealed .intel-reveal{margin-top:4px;padding:5px;width:100%}
+.identity-seat.revealed .intel-title{font-size:9px;margin-bottom:3px}
+.identity-seat.revealed .intel-chip{font-size:9px;padding:3px 5px}
+.identity-seat.revealed .intel-note{font-size:9px;line-height:1.35}
+.identity-seat.revealed .card-tap-hint{font-size:9px;line-height:1.25;color:#64748b;margin-top:3px}
+@media(max-width:390px){
+ .identity-seat.revealed{width:clamp(132px,38%,158px);height:180px}
+ .identity-seat.revealed .character-art{width:46px;height:46px}
+ .identity-seat.revealed .intel-chip{font-size:8px;padding:2px 4px}
+}
+
+
+/* v0.1.26：優化 iPhone 身份牌翻轉效能 */
+#reveal:has(.identity-seat.revealed){
+ -webkit-backdrop-filter:none !important;
+ backdrop-filter:none !important;
+}
+#reveal .identity-seat.revealed .role-card-inner{
+ animation:avalonSmoothFlip .48s cubic-bezier(.4,0,.2,1) both !important;
+ -webkit-transform-style:preserve-3d;
+ transform-style:preserve-3d;
+ will-change:transform;
+}
+#reveal .identity-seat.revealed .role-card-back,
+#reveal .identity-seat.revealed .role-card-front{
+ -webkit-backface-visibility:hidden;
+ backface-visibility:hidden;
+}
+#reveal .identity-seat.revealed .character-art,
+#reveal .identity-seat.revealed .intel-reveal,
+#reveal .identity-seat.revealed .intel-chip{
+ animation:none !important;
+ opacity:1 !important;
+ transform:none !important;
+}
+@keyframes avalonSmoothFlip{
+ 0%{transform:translateZ(0) rotateY(0deg);-webkit-transform:translateZ(0) rotateY(0deg)}
+ 100%{transform:translateZ(0) rotateY(180deg);-webkit-transform:translateZ(0) rotateY(180deg)}
+}
+@media(prefers-reduced-motion:reduce){
+ #reveal .identity-seat.revealed .role-card-inner{animation:none !important;transform:rotateY(180deg);-webkit-transform:rotateY(180deg)}
+}
+
+
+/* v0.1.26：身份牌統一調整為 1:1 正方形 */
+.identity-seat .identity-card{
+ height:auto;
+ aspect-ratio:1 / 1;
+}
+.identity-seat.revealed{
+ width:clamp(140px,34%,190px);
+ height:auto;
+ aspect-ratio:1 / 1;
+}
+.identity-seat.revealed .role-card,
+.identity-seat.revealed .role-card-inner,
+.identity-seat.revealed .role-card-back,
+.identity-seat.revealed .role-card-front{
+ aspect-ratio:1 / 1;
+}
+@media(max-width:390px){
+ .identity-seat.revealed{
+  width:clamp(132px,38%,158px);
+  height:auto;
+  aspect-ratio:1 / 1;
+ }
+}
+
+
+/* v0.1.26：玩家座位區與投票結果區套用自訂底圖 */
+.player-circle,
+.vote-reveal-stage{
+ background-image:
+  linear-gradient(rgba(7,18,31,.22),rgba(7,18,31,.22)),
+  url('./assets/player-area-bg.svg') !important;
+ background-position:center;
+ background-size:cover;
+ background-repeat:no-repeat;
+ border-color:rgba(255,255,255,.42);
+}
+
+/* v0.1.26：玩家牌卡維持完全不透明 */
+.identity-seat .identity-card,
+.team-seat .team-pick-card,
+.identity-seat.locked .identity-card,
+.team-seat.team-unselected .team-pick-card{
+ opacity:1 !important;
+}
+.identity-seat.locked .identity-card{filter:grayscale(.35)}
+.team-seat.team-unselected{opacity:1 !important}
+.team-seat.team-unselected .team-pick-card{filter:grayscale(.35)}
+/* 投票結果座位卡片使用實心底色 */
+.vote-reveal-stage .vote-seat{background-color:#fff !important}
+.vote-reveal-stage .vote-seat.approve{background-color:#e8f7ef !important}
+.vote-reveal-stage .vote-seat.reject{background-color:#fff0f0 !important}
+
+/* v0.1.26：翻牌動畫加速至 0.62 秒 */
+#reveal .identity-seat.revealed{
+  transform-origin:center;
+  animation:avalonIdentityGrow .48s cubic-bezier(.22,.7,.25,1) both;
+}
+#reveal .identity-seat.revealed.closing{
+  pointer-events:none;
+  animation:avalonIdentityShrink .48s cubic-bezier(.4,0,.2,1) both;
+}
+#reveal .identity-seat.revealed.closing .role-card-inner{
+  animation:avalonCloseFlip .48s cubic-bezier(.4,0,.2,1) both !important;
+}
+/* 翻開時放大為原卡牌兩倍，並向下移動半張放大後卡牌的高度 */
+#reveal .identity-seat.revealed{transform:translate(-50%,24px)}
+@keyframes avalonIdentityGrow{
+  from{opacity:.65;transform:translate(-50%,-50%) scale(.32)}
+  to{opacity:1;transform:translate(-50%,24px) scale(1)}
+}
+@keyframes avalonIdentityShrink{
+  from{opacity:1;transform:translate(-50%,24px) scale(1)}
+  to{opacity:1;transform:translate(-50%,-50%) scale(.5)}
+}
+@keyframes avalonCloseFlip{
+  0%{transform:translateZ(0) rotateY(180deg);-webkit-transform:translateZ(0) rotateY(180deg)}
+  100%{transform:translateZ(0) rotateY(0deg);-webkit-transform:translateZ(0) rotateY(0deg)}
+}
+
+}
+
+
+/* v0.1.26：動畫牌背與靜態身份牌背完全統一 */
+.identity-seat.revealed .role-card-back{
+ background:linear-gradient(145deg,#172d48,#304c68) !important;
+ color:#f3d58b !important;
+ border:1px solid #d6b76b !important;
+ border-radius:10px !important;
+ box-shadow:0 4px 12px #17203324 !important;
+}
+.identity-seat.revealed .role-card-back .mini-seal{
+ font-size:25px;
+ line-height:1.1;
+}
+.identity-seat.revealed .role-card-back small{
+ font-size:9px;
+ letter-spacing:2px;
+ color:#f3d58b;
+}
+
+
+/* Player area background image with 75% black overlay */
+.player-circle,
+.vote-reveal-stage{
+  background-image:
+    linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.75)),
+    url('./assets/player-area-bg.svg') !important;
+  background-position:center center !important;
+  background-size:cover !important;
+  background-repeat:no-repeat !important;
+  background-color:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+@media(max-width:390px){
+ #reveal .identity-seat.revealed.closing{
+   animation:avalonIdentityShrinkMobile .48s cubic-bezier(.4,0,.2,1) both;
+ }
+ @keyframes avalonIdentityShrinkMobile{
+   from{opacity:1;transform:translate(-50%,-50%) scale(1)}
+   to{opacity:1;transform:translate(-50%,-50%) scale(.53)}
+ }
+}
+
+
+/* v0.1.26：翻牌正面尺寸再放大一倍，並同步放大卡面內容 */
+#reveal .identity-seat.revealed{
+ width:clamp(264px,76%,316px) !important;
+ height:auto !important;
+ aspect-ratio:1 / 1 !important;
+}
+#reveal .identity-seat.revealed .role-card-front{padding:22px !important}
+#reveal .identity-seat.revealed .identity-owner{font-size:20px !important}
+#reveal .identity-seat.revealed .character-art{width:92px !important;height:92px !important}
+#reveal .identity-seat.revealed .character-name{font-size:30px !important;letter-spacing:1.5px !important}
+#reveal .identity-seat.revealed .faction-tag{font-size:16px !important;padding:6px 12px !important;margin-top:5px !important}
+#reveal .identity-seat.revealed .intel-reveal{margin-top:8px !important;padding:10px !important}
+#reveal .identity-seat.revealed .intel-title{font-size:16px !important;margin-bottom:6px !important}
+#reveal .identity-seat.revealed .intel-chip{font-size:16px !important;padding:6px 10px !important}
+#reveal .identity-seat.revealed .intel-note{font-size:15px !important;line-height:1.45 !important}
+#reveal .identity-seat.revealed .card-tap-hint{font-size:13px !important;line-height:1.3 !important;margin-top:6px !important}
+@keyframes avalonIdentityShrink{
+  from{opacity:1;transform:translate(-50%,24px) scale(1)}
+  to{opacity:1;transform:translate(-50%,-50%) scale(.25)}
+}
+@media(max-width:390px){
+ @keyframes avalonIdentityShrinkMobile{
+   from{opacity:1;transform:translate(-50%,24px) scale(1)}
+   to{opacity:1;transform:translate(-50%,-50%) scale(.25)}
+ }
+}
+
+
+
+
+/* v0.1.26：進度方塊底部圖示與否決方塊縮小 */
+.round-progress-cell{flex-direction:column;gap:3px;padding:4px 1px}
+.round-progress-row:first-child .round-progress-cell:after{
+ content:"🚩";display:block;font-size:11px;line-height:1
+}
+.round-progress-row:last-child .round-progress-cell{
+ transform:scale(.8);transform-origin:center center
+}
+.round-progress-row:last-child .round-progress-cell:after{
+ content:"✋";display:block;font-size:10px;line-height:1
+}
+.round-progress-row .round-progress-cell:after{filter:grayscale(1)}
+
+/* v0.1.26：進度格標記改為外框，已否決格使用紅色 */
+.round-progress-row .round-progress-cell:after{content:none!important;display:none!important}
+.round-progress-cell.current{
+ border:2px solid #f5cf70!important;
+ background:rgba(255,255,255,.10)!important;
+ color:#fff!important;
+ box-shadow:0 0 0 1px #f5cf7040!important
+}
+.round-progress-cell.rejected{
+ background:#963e46!important;border-color:#ffb1b1!important;color:#fff!important
+}
+.round-progress-label:before{
+ display:inline-block;margin-right:5px;font-size:12px;filter:grayscale(1);vertical-align:middle
+}
+.round-progress-row:first-child .round-progress-label:before{content:"🚩"}
+.round-progress-row:last-child .round-progress-label:before{content:"✖"}
+
+/* v0.1.26：任務進度移至玩家座位圓桌中央 */
+#game .player-area-panel{position:relative}
+#game .player-circle{position:relative}
+.round-progress-center{
+ position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+ z-index:2;width:48%;max-width:250px;display:flex;flex-direction:column;gap:9px;
+ padding:9px 8px;border:1px solid #d8c18a;border-radius:13px;
+ background:rgba(15,31,49,.88);box-shadow:0 5px 18px #101b2d45;
+ color:#fff;pointer-events:none;text-align:center;
+}
+.round-progress-row{display:flex;flex-direction:column;gap:4px}
+.round-progress-label{font-size:10px;font-weight:850;letter-spacing:.8px;color:#f3d58b;line-height:1.2}
+.round-progress-cells{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.round-progress-cell{
+ min-width:0;min-height:29px;display:flex;align-items:center;justify-content:center;
+ border:1px solid #ffffff45;border-radius:6px;background:#ffffff18;
+ color:#fff;font-size:13px;font-weight:900;line-height:1;
+}
+.round-progress-cell.current{border:2px solid #f5cf70;background:#a87518;color:#fff;box-shadow:0 0 0 2px #f5cf7033}
+.round-progress-cell.win{background:#246b9e;border-color:#8dcaff;color:#fff}
+.round-progress-cell.fail{background:#963e46;border-color:#ffb1b1;color:#fff}
+.round-progress-cell.rejected{background:#a87518;border-color:#f5cf70;color:#fff}
+@media(max-width:390px){
+ .round-progress-center{width:49%;padding:7px 5px;gap:7px}
+ .round-progress-label{font-size:9px}
+ .round-progress-cells{gap:3px}
+ .round-progress-cell{min-height:25px;font-size:11px;border-radius:5px}
+}
+
+/* v0.1.26：放大翻牌置於下方資訊面板上層，避免被遮擋 */
+#reveal{position:relative;isolation:isolate}
+#reveal .player-area-panel,
+#game .player-area-panel{
+ background:rgba(255,255,255,.20) !important;
+ border:1px solid rgba(255,255,255,.32) !important;
+ border-radius:18px !important;
+ box-shadow:0 8px 24px #1720330c !important;
+ -webkit-backdrop-filter:blur(8px);
+ backdrop-filter:blur(8px);
+}
+#reveal .player-area-panel{
+ position:relative !important;
+ z-index:30 !important;
+ overflow:visible !important;
+}
+#revealCircle{
+ position:relative;
+ z-index:31;
+ overflow:visible !important;
+}
+#reveal .identity-seat.revealed{
+ z-index:40 !important;
+}
+#reveal .identity-seat.revealed .role-card,
+#reveal .identity-seat.revealed .role-card-inner,
+#reveal .identity-seat.revealed .role-card-front,
+#reveal .identity-seat.revealed .role-card-back{
+ overflow:visible;
+}
+
+
+/* v0.1.26：強化阿瓦隆古典徽章風格牌框 */
+#reveal .identity-seat.revealed .role-card-front{
+ position:relative;
+ isolation:isolate;
+ overflow:hidden;
+ border:2px solid #b8c7d8;
+ border-radius:12px;
+}
+#reveal .identity-seat.revealed .role-card-front.faction-good{
+ background:linear-gradient(145deg,#9fcbed 0%,#c6e3f8 50%,#a9d2f1 100%) !important;
+ border-color:#579bd2;
+ color:#123b63;
+ box-shadow:inset 0 0 0 3px #ffffff70,inset 0 0 22px #397eb522,0 5px 18px #0b274522;
+}
+#reveal .identity-seat.revealed .role-card-front.faction-evil{
+ background:linear-gradient(145deg,#eaaeb5 0%,#f8cbd0 50%,#edb4bb 100%) !important;
+ border-color:#d77e88;
+ color:#67232f;
+ box-shadow:inset 0 0 0 3px #ffffff70,inset 0 0 22px #a63d4b22,0 5px 18px #35101833;
+}
+/* 內層雙線框 */
+#reveal .identity-seat.revealed .role-card-front:before{
+ content:"";
+ position:absolute;
+ inset:9px;
+ border:3px double currentColor;
+ border-radius:7px;
+ opacity:.48;
+ pointer-events:none;
+ z-index:0;
+}
+/* 四角劍盾式轉角、菱形鉚釘與上下中央徽飾 */
+#reveal .identity-seat.revealed .role-card-front:after{
+ content:"";
+ position:absolute;
+ inset:5px;
+ border-radius:9px;
+ pointer-events:none;
+ z-index:0;
+ opacity:.72;
+ background:
+  linear-gradient(currentColor,currentColor) left top/23px 2px no-repeat,
+  linear-gradient(currentColor,currentColor) left top/2px 23px no-repeat,
+  linear-gradient(currentColor,currentColor) right top/23px 2px no-repeat,
+  linear-gradient(currentColor,currentColor) right top/2px 23px no-repeat,
+  linear-gradient(currentColor,currentColor) left bottom/23px 2px no-repeat,
+  linear-gradient(currentColor,currentColor) left bottom/2px 23px no-repeat,
+  linear-gradient(currentColor,currentColor) right bottom/23px 2px no-repeat,
+  linear-gradient(currentColor,currentColor) right bottom/2px 23px no-repeat,
+  radial-gradient(circle,currentColor 0 2px,transparent 2.8px) 7px 7px/8px 8px no-repeat,
+  radial-gradient(circle,currentColor 0 2px,transparent 2.8px) calc(100% - 7px) 7px/8px 8px no-repeat,
+  radial-gradient(circle,currentColor 0 2px,transparent 2.8px) 7px calc(100% - 7px)/8px 8px no-repeat,
+  radial-gradient(circle,currentColor 0 2px,transparent 2.8px) calc(100% - 7px) calc(100% - 7px)/8px 8px no-repeat,
+  linear-gradient(45deg,transparent 42%,currentColor 43% 57%,transparent 58%) 50% 3px/9px 9px no-repeat,
+  linear-gradient(45deg,transparent 42%,currentColor 43% 57%,transparent 58%) 50% calc(100% - 3px)/9px 9px no-repeat;
+ filter:drop-shadow(0 0 1px currentColor);
+}
+#reveal .identity-seat.revealed .role-card-front>*{
+ position:relative;
+ z-index:1;
+}
+#reveal .identity-seat.revealed .role-card-front .character-name{
+ text-shadow:0 1px 0 #ffffff99;
+}
+#reveal .identity-seat.revealed .role-card-front .faction-tag{
+ border:1px solid currentColor;
+ box-shadow:inset 0 1px 0 #ffffff88,0 2px 5px #17203318;
+}
+
+/* v0.1.26：梅林查看身份時，高亮標記已知邪惡玩家（排除莫德雷德） */
+#revealCircle .identity-seat.merlin-known-evil{
+ z-index:12;
+}
+#revealCircle .identity-seat.merlin-known-evil .identity-card{
+ opacity:1 !important;
+ filter:none !important;
+ border:2px solid #e34b52 !important;
+ background:linear-gradient(145deg,#8f2935,#d6535b) !important;
+ color:#fff !important;
+ outline:3px solid #ff8585;
+ outline-offset:2px;
+ box-shadow:0 0 0 6px #e34b5240,0 0 22px #ed5555b8,0 5px 16px #17203340 !important;
+}
+#revealCircle .identity-seat.merlin-known-evil .identity-name{
+ color:#b52635;
+ font-weight:900;
+ text-shadow:0 0 8px #ffb0b0;
+}
+#revealCircle .merlin-evil-mark{
+ display:inline-block;
+ padding:2px 7px;
+ border-radius:99px;
+ background:#c93643;
+ color:#fff;
+ font-size:10px;
+ font-weight:900;
+ line-height:1.35;
+ box-shadow:0 2px 8px #c9364355;
+}
+
+/* v0.1.26：依各角色資訊視野標記可辨識玩家 */
+#revealCircle .identity-seat.percival-known-candidate,
+#revealCircle .identity-seat.evil-known-ally{z-index:12}
+#revealCircle .identity-seat.percival-known-candidate .identity-card{
+ opacity:1!important;filter:none!important;border:2px solid #d6a43b!important;
+ background:linear-gradient(145deg,#76551b,#c69a3c)!important;color:#fff!important;
+ outline:3px solid #f1d58b;outline-offset:2px;
+ box-shadow:0 0 0 6px #d6a43b40,0 0 22px #e7bd58a8,0 5px 16px #17203340!important;
+}
+#revealCircle .identity-seat.percival-known-candidate .identity-name{
+ color:#956714;font-weight:900;text-shadow:0 0 8px #f5dfaa;
+}
+#revealCircle .identity-seat.evil-known-ally .identity-card{
+ opacity:1!important;filter:none!important;border:2px solid #e34b52!important;
+ background:linear-gradient(145deg,#8f2935,#d6535b)!important;color:#fff!important;
+ outline:3px solid #ff8585;outline-offset:2px;
+ box-shadow:0 0 0 6px #e34b5240,0 0 22px #ed5555b8,0 5px 16px #17203340!important;
+}
+#revealCircle .identity-seat.evil-known-ally .identity-name{
+ color:#b52635;font-weight:900;text-shadow:0 0 8px #ffb0b0;
+}
+#revealCircle .percival-mark{background:#a87917!important;box-shadow:0 2px 8px #c69a3c55!important}
+#revealCircle .evil-ally-mark{background:#922e3a!important;box-shadow:0 2px 8px #c9364355!important}
+
+/* v0.1.26：未翻開的身份牌背縮小為原尺寸的 3/4 */
+#revealCircle .identity-seat:not(.revealed) .identity-card{
+  transform:scale(.75);
+  transform-origin:center;
+}
+#revealCircle .identity-seat:not(.revealed) .identity-card:active{
+  transform:scale(.71);
+}
+
+/* v0.1.26：輪到翻牌的玩家，牌卡背面維持 100% 原尺寸 */
+#revealCircle .identity-seat.active:not(.revealed) .identity-card{
+  transform:scale(1);
+}
+#revealCircle .identity-seat.active:not(.revealed) .identity-card:active{
+  transform:scale(.96);
+}
+
+
+/* v0.1.26：確保角色牌正面資訊完整呈現 */
+#reveal .identity-seat.revealed .role-card-front{
+ box-sizing:border-box !important;
+ padding:14px 16px !important;
+ gap:4px !important;
+ justify-content:flex-start !important;
+ overflow-y:auto !important;
+ overflow-x:hidden !important;
+ scrollbar-width:thin;
+}
+#reveal .identity-seat.revealed .identity-owner{
+ flex:0 0 auto !important;
+ font-size:16px !important;
+ line-height:1.2 !important;
+}
+#reveal .identity-seat.revealed .character-art{
+ flex:0 0 auto !important;
+ width:72px !important;
+ height:72px !important;
+ margin:0 auto !important;
+}
+#reveal .identity-seat.revealed .character-name{
+ flex:0 0 auto !important;
+ font-size:24px !important;
+ line-height:1.2 !important;
+}
+#reveal .identity-seat.revealed .faction-tag{
+ flex:0 0 auto !important;
+ font-size:12px !important;
+ line-height:1.2 !important;
+ padding:4px 9px !important;
+ margin-top:2px !important;
+}
+#reveal .identity-seat.revealed .intel-reveal{
+ flex:0 0 auto !important;
+ width:100% !important;
+ box-sizing:border-box !important;
+ margin-top:4px !important;
+ padding:7px !important;
+}
+#reveal .identity-seat.revealed .intel-title{
+ font-size:12px !important;
+ margin-bottom:4px !important;
+}
+#reveal .identity-seat.revealed .intel-chip{
+ font-size:12px !important;
+ padding:4px 7px !important;
+ line-height:1.25 !important;
+}
+#reveal .identity-seat.revealed .intel-note{
+ font-size:11px !important;
+ line-height:1.35 !important;
+}
+#reveal .identity-seat.revealed .card-tap-hint{
+ flex:0 0 auto !important;
+ font-size:10px !important;
+ line-height:1.25 !important;
+ margin-top:3px !important;
+}
+
+/* v0.1.26：領袖標記改為卡牌背面的王冠符號 */
+.identity-card .mini-seal.is-leader,.team-pick-card .mini-seal.is-leader,.role-card-back .mini-seal.is-leader{color:#ffe08a;text-shadow:0 0 8px rgba(255,218,120,.85),0 1px 3px #0008;filter:drop-shadow(0 0 4px rgba(243,213,139,.7))}
+.identity-card:has(.mini-seal.is-leader),.team-seat:has(.mini-seal.is-leader) .team-pick-card{border-color:#f3d58b;box-shadow:0 0 0 2px rgba(243,213,139,.28),0 4px 12px #17203324}
+.player-area-actions{margin-top:14px;justify-content:center;min-height:62px;align-items:center}
+.player-area-actions button{width:100%;min-height:48px;font-weight:800}
+#game .game-hint{margin:8px 0 0;min-height:48px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;line-height:1.55}
+#game .game-hint.hidden{display:none!important}
+
+/* v0.1.26：修正先前誤置於 HTML 結尾、未被瀏覽器載入的任務資訊樣式 */
+.round-progress-center{align-items:flex-start!important;text-align:left!important}
+.round-progress-row{width:100%!important;align-items:flex-start!important}
+.round-progress-label{width:100%!important;text-align:left!important}
+.round-progress-cells{width:100%!important;justify-content:start!important;justify-items:stretch!important}
+.round-progress-row:last-child .round-progress-cell{
+ clip-path:polygon(40% 0,50% 10%,60% 0,100% 40%,90% 50%,100% 60%,60% 100%,50% 90%,40% 100%,0 60%,10% 50%,0 40%);
+ border-radius:0!important;
+ filter:drop-shadow(0 1px 1px #0005);
+}
+.round-progress-row:last-child .round-progress-cell.current{background:rgba(255,255,255,.16)!important}
+
+/* v0.1.26：任務出征人數進度格改為旗標外型 */
+.round-progress-row:first-child .round-progress-cell{
+ clip-path:polygon(0 0,18% 0,18% 12%,100% 50%,18% 88%,18% 100%,0 100%)!important;
+ border-radius:0!important;
+}
+
+/* v0.1.26：連續否決次數的 X 標記大幅加粗 */
+.round-progress-row:last-child .round-progress-cell{
+  clip-path:polygon(20% 0,50% 30%,80% 0,100% 20%,70% 50%,100% 80%,80% 100%,50% 70%,20% 100%,0 80%,30% 50%,0 20%)!important;
+}
+
+/* v0.1.26：任務出征人數與連續否決次數的目前標記加粗高亮外框 */
+.round-progress-row:first-child .round-progress-cell.current,
+.round-progress-row:last-child .round-progress-cell.current{
+ border:4px solid #f5cf70!important;
+ box-shadow:0 0 0 2px #f5cf7080,0 0 10px #f5cf70aa!important;
+ filter:drop-shadow(0 0 2px #f5cf70)!important;
+}
+
+
+/* v0.1.26：開票結果直接顯示於原玩家座位區 */
+.vote-result-seat{width:clamp(76px,19%,94px);height:auto;min-height:76px;z-index:4}
+.vote-result-card{width:100%;min-height:76px;padding:6px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:2px solid #cbd5e1;border-radius:13px;background:rgba(255,255,255,.2);box-shadow:0 4px 12px #17203330;text-align:center}
+.vote-result-seat.approve .vote-result-card{border-color:#45c58a;background:rgba(28,120,77,.42);color:#fff}
+.vote-result-seat.reject .vote-result-card{border-color:#ff7777;background:rgba(160,35,45,.42);color:#fff}
+.vote-result-seat .identity-name{font-size:12px;font-weight:800;line-height:1.2}
+.vote-result-choice{font-size:13px;font-weight:900;white-space:nowrap}
+@media(max-width:380px){.vote-result-seat,.vote-result-card{min-height:68px}.vote-result-seat .identity-name{font-size:11px}.vote-result-choice{font-size:12px}}
+
+/* v0.1.26：開票座位由領袖起順時針逐一自動翻牌 */
+.vote-result-seat{width:clamp(76px,19%,94px);height:auto;min-height:76px;z-index:4;perspective:900px}
+.vote-flip-inner{position:relative;width:100%;height:76px;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;animation:voteSeatFlip .52s cubic-bezier(.2,.75,.2,1) both}
+.vote-result-back,.vote-result-front{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 4px;border:2px solid #d6b76b;border-radius:13px;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 4px 12px #17203330;text-align:center}
+.vote-result-back{background:linear-gradient(145deg,#172d48,#304c68);color:#f3d58b}
+.vote-result-front{transform:rotateY(180deg);-webkit-transform:rotateY(180deg);background:rgba(255,255,255,.2);color:#fff}
+.vote-result-seat.approve .vote-result-front{border-color:#45c58a;background:rgba(28,120,77,.62)}
+.vote-result-seat.reject .vote-result-front{border-color:#ff7777;background:rgba(160,35,45,.62)}
+.vote-result-seat .identity-name{font-size:12px;font-weight:800;line-height:1.2}
+.vote-result-choice{font-size:15px;font-weight:900;white-space:nowrap}
+@keyframes voteSeatFlip{from{transform:rotateY(0deg)}to{transform:rotateY(180deg)}}
+@media(max-width:380px){.vote-result-seat,.vote-flip-inner{height:68px;min-height:68px}.vote-result-seat .identity-name{font-size:11px}.vote-result-choice{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.vote-flip-inner{animation-duration:.01ms!important}}
+
+/* v0.1.26：出征選人卡牌維持原始比例，整體等比縮小至 3/4 */
+.team-pick-card{transform:scale(.75);transform-origin:center}
+.team-seat:has(.team-pick:checked) .team-pick-card{transform:scale(.75) translateY(-2px)}
+/* v0.1.26：已選取出征玩家仍維持 75% 等比尺寸 */
+.team-seat:has(.team-pick:checked) .team-pick-card{transform:scale(.75) translateY(-2px)!important}
+.team-seat.team-selected .team-pick-card{transform:scale(.75)!important}
+
+/* v0.1.26：投票輪替座位，當前玩家固定在下方 */
+.vote-turn-seat{position:absolute;left:50%;top:50%;width:clamp(76px,19%,94px);height:100px;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;z-index:2;transition:left .55s cubic-bezier(.2,.75,.25,1),top .55s cubic-bezier(.2,.75,.25,1)}
+.vote-turn-seat .identity-card{transform:scale(.75);transform-origin:center;transition:transform .3s ease}
+.vote-turn-seat.current-voter{z-index:4}
+.vote-turn-seat.current-voter .identity-card{transform:scale(1)}
+.vote-turn-seat .identity-name{font-size:12px;font-weight:800;text-align:center;max-width:100%;overflow-wrap:anywhere;line-height:1.2;color:#172033}
+@media(max-width:390px){.vote-turn-seat{height:92px}.vote-turn-seat .identity-name{font-size:11px}}
+
+/* v0.1.26：投票階段持續標示已選出的任務出征玩家 */
+.vote-turn-seat.mission-team-highlight .identity-card,
+.vote-result-seat.mission-team-highlight .vote-result-front{
+ border:2px solid #ffe29a!important;
+ box-shadow:0 0 0 4px rgba(244,190,66,.38),0 0 16px rgba(255,210,105,.72),0 5px 15px #17203338!important;
+}
+.vote-turn-seat.mission-team-highlight .identity-card{
+ background:linear-gradient(145deg,#a87518,#e4b94f)!important;
+ color:#fff!important;
+}
+.vote-result-seat.mission-team-highlight .vote-result-front{outline:3px solid #f5cf70;outline-offset:2px}
+.vote-turn-seat.current-voter.mission-team-highlight .identity-card{transform:scale(1)}
+
+/* v0.1.26：投票結果翻牌正面改為不透明底色，僅顯示贊成或反對 */
+.vote-result-seat.approve .vote-result-front{background:#247b55!important}
+.vote-result-seat.reject .vote-result-front{background:#a52e35!important}
+.vote-result-seat .vote-result-front .identity-name{display:none!important}
+
+/* v0.1.26：投票階段卡牌尺寸統一比照查看身份階段 */
+.vote-turn-seat{
+ width:clamp(70px,17%,92px)!important;
+ height:clamp(86px,20%,108px)!important;
+}
+.vote-turn-seat .identity-card{transform:scale(.75)!important;transform-origin:center}
+.vote-turn-seat.current-voter .identity-card,
+.vote-turn-seat.current-voter.mission-team-highlight .identity-card{transform:scale(1)!important}
+.mission-turn-seat .identity-card{transform:scale(.75);transform-origin:center}
+.mission-turn-seat{transition:left .42s cubic-bezier(.22,.75,.25,1),top .42s cubic-bezier(.22,.75,.25,1)}
+.mission-turn-seat.current-mission-voter{z-index:4}
+.mission-turn-seat.current-mission-voter .identity-card{transform:scale(1)}
+.mission-turn-seat .identity-name{font-size:12px;font-weight:800;text-align:center;max-width:100%;overflow-wrap:anywhere;line-height:1.2;color:#172033}
+@media(max-width:390px){.mission-turn-seat .identity-name{font-size:11px}}
+.vote-result-seat{
+ width:clamp(70px,17%,92px)!important;
+ height:clamp(86px,20%,108px)!important;
+ min-height:0!important;
+}
+.vote-flip-inner{
+ height:66px!important;
+}
+.vote-result-back,.vote-result-front{
+ border-radius:10px!important;
+ padding:4px!important;
+}
+@media(max-width:380px){
+ .vote-turn-seat{height:clamp(86px,20%,108px)!important}
+ .vote-flip-inner{height:66px!important}
+}
+
+/* Keep selected mission-team players highlighted during secret mission-card voting */
+.mission-turn-seat.mission-team-highlight .identity-card{
+ background:linear-gradient(145deg,#a87518,#e4b94f)!important;
+ border:2px solid #ffe29a!important;
+ color:#fff!important;
+ box-shadow:0 0 0 4px rgba(244,190,66,.38),0 0 16px rgba(255,210,105,.72),0 5px 15px #17203338!important;
+}
+/* Keep selected mission-team players highlighted throughout the vote phase */
+.vote-turn-seat.mission-team-highlight .identity-card{
+ background:linear-gradient(145deg,#a87518,#e4b94f)!important;
+ border:2px solid #ffe29a!important;
+ color:#fff!important;
+ box-shadow:0 0 0 4px rgba(244,190,66,.38),0 0 16px rgba(255,210,105,.72),0 5px 15px #17203338!important;
+}
+/* All player names beneath cards stay white in every game phase */
+.identity-seat .identity-name{color:#fff!important}
+
+/* v0.1.26：任務秘密出牌座位依順時針方向排列 */
+/* v0.1.26：公布隊伍投票結果時，卡牌縮小至 3/4，玩家名稱顯示於卡牌下方 */
+.vote-result-seat{gap:2px!important;justify-content:center!important}
+.vote-result-seat .vote-flip-inner{width:75%!important;height:49.5px!important;flex:0 0 49.5px;margin:0 auto}
+.vote-result-seat .vote-result-back,.vote-result-seat .vote-result-front{border-radius:8px!important;padding:3px!important}
+.vote-result-seat .vote-result-choice{font-size:12px!important}
+.vote-result-seat .identity-name{display:block!important;width:100%;font-size:11px!important;line-height:1.15!important;text-align:center;color:#fff!important;text-shadow:0 1px 3px #172033!important;overflow-wrap:anywhere}
+@media(max-width:390px){.vote-result-seat .vote-result-choice{font-size:11px!important}.vote-result-seat .identity-name{font-size:10px!important}}
+
+/* v0.1.26：領袖優先開始投票，王冠符號尺寸加倍 */
+.identity-card .mini-seal.is-leader,
+.role-card-back .mini-seal.is-leader{font-size:50px!important;line-height:1!important}
+.team-pick-card .mini-seal.is-leader{font-size:40px!important;line-height:1!important}
+
+/* v0.1.26：秘密身份確認階段不顯示任務進度資訊區 */
+#reveal .stage-progress-info{display:none!important}
+/* v0.1.26：階段資訊區套用與玩家區相同的半透明背景效果 */
+#reveal .stage-info-area,
+#game .stage-info-area{
+ background:rgba(255,255,255,.20)!important;
+ border:1px solid rgba(255,255,255,.32)!important;
+ border-radius:18px!important;
+ box-shadow:0 8px 24px #1720330c!important;
+ -webkit-backdrop-filter:blur(8px);
+ backdrop-filter:blur(8px);
+}
+
+
+/* v0.1.26：所有階段標題區標題尺寸縮小至原本的約 3/4 */
+.stage-info-area>h2,
+.stage-info-area>.stage-progress-info h2{font-size:13px!important}
+.stage-info-area>.panel h2{font-size:11px!important}
+
+/* v0.1.26：玩家座位區下方預留固定按鈕空間，不移動既有按鈕 */
+.player-area-button-space{height:62px;min-height:62px;flex:0 0 62px;display:flex;align-items:center;justify-content:center}.player-area-button-space #finishReveal{margin:0;max-width:100%}
+
+
+/* v0.1.26：選擇出征名單階段僅顯示階段標題與說明，移除任務狀態列及方框 */
+#game.team-selection-phase .stage-progress-info{display:none!important}
+/* 出征名單階段的階段資訊外框沿用秘密身份確認階段的半透明卡片格式 */
+#game.team-selection-phase .stage-info-area{
+ background:rgba(255,255,255,.20)!important;
+ border:1px solid rgba(255,255,255,.32)!important;
+ border-radius:18px!important;
+ box-shadow:0 8px 24px #1720330c!important;
+ -webkit-backdrop-filter:blur(8px)!important;
+ backdrop-filter:blur(8px)!important;
+}
+#game.team-selection-phase #teamPanel{
+ display:block!important;background:transparent!important;border:0!important;
+ border-radius:0!important;box-shadow:none!important;padding:0!important;margin:0!important;
+}
+#game.team-selection-phase #teamPanel h2{font-size:13px!important;margin:0 0 8px!important}
+#game.team-selection-phase #teamPanel p{font-size:14px!important;line-height:1.6;margin:0}
+#game.team-selection-phase #gameHint,
+#game.team-selection-phase #status{display:none!important}
+
+
+/* v0.1.26：投票階段資訊與身份確認階段採用相同格式 */
+#game.vote-phase .stage-progress-info{display:none!important}
+#game.vote-phase .stage-info-area{
+ background:rgba(255,255,255,.20)!important;
+ border:1px solid rgba(255,255,255,.32)!important;
+ border-radius:18px!important;
+ box-shadow:0 8px 24px #1720330c!important;
+ -webkit-backdrop-filter:blur(8px)!important;
+ backdrop-filter:blur(8px)!important;
+}
+#game.vote-phase #voteStageInfo{display:block!important}
+#game.vote-phase #voteStageInfo h2{font-size:13px!important;margin:0 0 8px!important}
+#game.vote-phase #voteStageInfo p{font-size:14px!important;line-height:1.6;margin:0}
+#game.vote-phase #gameHint,
+#game.vote-phase #status{display:none!important}
+#game.vote-phase #votePanel{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;margin:8px 0!important}
+#game.vote-phase #votePanel>h2{display:none!important}
+#voteActionSpace{display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
+#voteActionSpace button{margin:0;min-width:112px}
+
+
+/* v0.1.26：角色配置改為可展開的圖像下拉選單 */
+#setup .setup-roles>.row>div.role-side{min-width:0;padding:12px;border:1px solid rgba(255,255,255,.28);border-radius:14px;background:rgba(255,255,255,.10)}
+#setup .setup-roles>.row>div.role-side>label{display:block;margin:0 0 9px;color:#f5f7fb;font-weight:800}
+#setup .role-dropdown{position:relative}
+#setup .role-dropdown>summary{display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:42px;padding:9px 10px;border:1px solid rgba(255,255,255,.30);border-radius:10px;background:rgba(255,255,255,.13);color:#fff;font-size:12px;font-weight:750;cursor:pointer;list-style:none}
+#setup .role-dropdown>summary::-webkit-details-marker{display:none}
+#setup .role-dropdown>summary:after{content:'▾';font-size:14px}
+#setup .role-dropdown[open]>summary:after{content:'▴'}
+#setup .role-count{font-size:10px;font-weight:600;opacity:.85;white-space:nowrap}
+#setup .role-side{position:relative;overflow:visible!important;z-index:1}
+#setup .role-side:has(.role-dropdown[open]){z-index:20}
+#setup .role-dropdown{position:relative}
+#setup .role-menu{position:absolute;left:0;right:0;bottom:calc(100% + 7px);z-index:30;display:grid;gap:6px;margin:0;padding:8px;border:1px solid rgba(255,255,255,.28);border-radius:11px;background:rgba(15,32,52,.96);box-shadow:0 8px 20px rgba(0,0,0,.28);max-height:min(48vh,280px);overflow-y:auto}
+#setup .role-menu .role-option{display:flex;align-items:center;gap:9px;min-height:42px;margin:0;padding:5px 8px;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:rgba(255,255,255,.08);color:#fff;font-size:13px}
+#setup .role-menu .role-option img{width:32px;height:32px;flex:0 0 32px;object-fit:contain;border-radius:6px}
+#setup .role-menu .role-option span{flex:1;font-weight:750}
+#setup .role-menu .role-option input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;margin:0;accent-color:#55a9ef}
+#setup .role-menu .role-fixed{opacity:.72;cursor:default}
+#setup .role-menu .role-fixed small{margin-left:auto;font-size:10px;color:#d7e0eb;white-space:nowrap}
+@media(max-width:520px){#setup .setup-roles>.row>div.role-side{padding:9px}#setup .role-menu .role-option{gap:6px;padding:5px}#setup .role-menu .role-option img{width:27px;height:27px;flex-basis:27px}}
+
+
+/* v0.1.26：移除陣營人數比例區塊，於角色選單標題顯示人數 */
+#ratio{display:none!important}
+#setup .role-dropdown>summary .role-count{margin-left:auto;font-size:12px;font-weight:800;opacity:1}
+
+</style>
+<style>
+/* v0.1.36：角色名稱恢復黑色，正義／邪惡角色分別使用藍／紅底色 */
+#setup .role-menu .role-option:has(input[type="checkbox"]:checked){
+  border-width:2px;
+  box-shadow:0 0 0 3px rgba(98,197,255,.24),0 0 16px rgba(75,177,255,.48),inset 0 0 12px rgba(255,255,255,.16);
+}
+#setup #goodChecks .role-option:has(input[type="checkbox"]:checked){
+  border-color:#398bd0;
+  background:linear-gradient(110deg,#b9dcff,#dceeff);
+  box-shadow:0 0 0 3px rgba(68,153,220,.24),0 0 16px rgba(75,177,255,.48),inset 0 0 12px rgba(255,255,255,.28);
+}
+#setup #evilChecks .role-option:has(input[type="checkbox"]:checked){
+  border-color:#d45b65;
+  background:linear-gradient(110deg,#ffc5c9,#ffe1e2);
+  box-shadow:0 0 0 3px rgba(212,91,101,.22),0 0 16px rgba(235,105,115,.45),inset 0 0 12px rgba(255,255,255,.28);
+}
+#setup .role-menu .role-option:has(input[type="checkbox"]:checked) span{
+  color:#172033;
+  font-weight:900;
+  text-shadow:none;
+}
+#setup .role-menu .role-option:has(input[type="checkbox"]:checked) img{
+  filter:drop-shadow(0 0 6px rgba(30,65,100,.32));
+  transform:scale(1.08);
+}
+#setup .role-menu .role-option input[type="checkbox"]{display:none!important}
+#setup .role-menu .role-option{cursor:pointer;transition:background .16s,border-color .16s,box-shadow .16s,transform .16s}
+</style>
+
+</head>
+<body class="home-active">
+<header>
+ <h1>◷ CHRONOS 時序之戰</h1>
+ <div id="gameMenu" class="game-menu hidden">
+  <button type="button" id="gameMenuButton" class="game-menu-button" aria-label="遊戲選單" aria-haspopup="true" aria-expanded="false">☰</button>
+  <div id="gameMenuDropdown" class="game-menu-dropdown hidden">
+   <button type="button" id="restartSameGame"><span class="game-menu-item-symbol" aria-hidden="true">↻</span><span>重新開始</span></button>
+   <button type="button" id="newGameSetup"><span class="game-menu-item-symbol" aria-hidden="true">⚙︎</span><span>設定新遊戲</span></button>
+  </div>
+ </div>
+</header>
+<div id="gameMenuConfirm" class="game-menu-confirm hidden" role="dialog" aria-modal="true" aria-labelledby="gameMenuConfirmTitle" aria-describedby="gameMenuConfirmMessage">
+ <div class="game-menu-confirm-card">
+  <h2 id="gameMenuConfirmTitle">確認操作</h2>
+  <p id="gameMenuConfirmMessage"></p>
+  <div class="game-menu-confirm-actions">
+   <button type="button" id="gameMenuConfirmCancel" class="game-menu-confirm-cancel">取消</button>
+   <button type="button" id="gameMenuConfirmAccept" class="game-menu-confirm-accept">確認</button>
+  </div>
+ </div>
+</div>
+<main>
+<section id="homeScreen" class="home-screen">
+ <div class="home-card">
+   <h2>CHRONOS 時序之戰</h2>
+  <p class="home-subtitle">守護時間線與反抗命運的史詩對決<br>5–10 人同樂・同一台裝置輪流遊玩</p>
+  <div class="home-actions">
+   <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
+   <button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
+  </div>
+  <div class="home-version">VERSION v0.0.1</div>
+ </div>
+</section>
+<div id="gameApp" class="hidden">
+<div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+ <div class="rules-dialog">
+  <button type="button" class="rules-close" id="closeRules" aria-label="關閉規則">✕ 關閉</button>
+  <h2 id="rulesTitle">📖 阿瓦隆遊戲規則</h2>
+  <p>阿瓦隆是 5～10 人的陣營推理遊戲。玩家分為正義陣營（藍方）與邪惡陣營（紅方），透過討論、組隊投票及秘密任務牌決定勝負。</p>
+  <h3>一、玩家人數與陣營</h3>
+  <table class="rules-table"><thead><tr><th>玩家</th><th>正義</th><th>邪惡</th></tr></thead><tbody>
+   <tr><td>5 人</td><td>3</td><td>2</td></tr><tr><td>6 人</td><td>4</td><td>2</td></tr><tr><td>7 人</td><td>4</td><td>3</td></tr><tr><td>8 人</td><td>5</td><td>3</td></tr><tr><td>9 人</td><td>6</td><td>3</td></tr><tr><td>10 人</td><td>6</td><td>4</td></tr>
+  </tbody></table>
+  <h3>二、角色能力</h3>
+  <ul>
+   <li><b>梅林（正義）</b>：知道邪惡玩家是誰，但看不到莫德雷德；必須避免暴露身份。</li>
+   <li><b>派西維爾（正義）</b>：看到梅林與莫甘娜，但無法分辨誰是真正的梅林。</li>
+   <li><b>忠臣（正義）</b>：沒有特殊能力，靠推理協助正義陣營。</li>
+   <li><b>刺客（邪惡）</b>：正義完成三次任務成功後，可指認一位玩家；若猜中梅林，邪惡獲勝。</li>
+   <li><b>莫甘娜（邪惡）</b>：在派西維爾眼中會偽裝成梅林。</li>
+   <li><b>莫德雷德（邪惡）</b>：不會被梅林看見。</li>
+   <li><b>奧伯倫（邪惡）</b>：不知道其他邪惡玩家是誰，其他邪惡玩家也不知道他。</li>
+   <li><b>爪牙（邪惡）</b>：沒有特殊能力。</li>
+  </ul>
+  <h3>三、遊戲流程</h3>
+  <ol>
+   <li><b>秘密分配身份：</b>每位玩家輪流查看自己的角色與陣營資訊，查看後隱藏畫面。</li>
+   <li><b>領袖組隊：</b>領袖依任務人數選擇出征隊員，所有玩家討論後各自秘密投票。</li>
+   <li><b>表決隊伍：</b>贊成票必須多於反對票才算通過；平票或反對票較多，隊伍遭否決並由下一位玩家擔任領袖。連續五次否決，邪惡直接獲勝。</li>
+   <li><b>執行任務：</b>隊員秘密出任務牌。正義玩家只能出成功；邪惡玩家可出成功或失敗。一般有一張失敗牌，任務便算失敗。</li>
+   <li><b>進入下一次任務：</b>依任務結果更新戰績，並輪替領袖。正義累積三次成功後進入刺客指認階段。</li>
+  </ol>
+  <h3>四、每次任務出征人數</h3>
+  <table class="rules-table"><thead><tr><th>人數</th><th>任務1</th><th>任務2</th><th>任務3</th><th>任務4</th><th>任務5</th></tr></thead><tbody>
+   <tr><td>5 人</td><td>2</td><td>3</td><td>2</td><td>3</td><td>3</td></tr><tr><td>6 人</td><td>2</td><td>3</td><td>4</td><td>3</td><td>4</td></tr><tr><td>7 人</td><td>2</td><td>3</td><td>3</td><td>4</td><td>4</td></tr><tr><td>8 人</td><td>3</td><td>4</td><td>4</td><td>5</td><td>5</td></tr><tr><td>9 人</td><td>3</td><td>4</td><td>4</td><td>5</td><td>5</td></tr><tr><td>10 人</td><td>3</td><td>4</td><td>4</td><td>5</td><td>5</td></tr>
+  </tbody></table>
+  <p>標準規則中，<b>7 人以上的第 4 次任務</b>需要至少兩張失敗牌才算任務失敗；本程式也提供「所有任務一張失敗即失敗」的自訂選項。</p>
+  <h3>五、勝負條件</h3>
+  <ul><li><b>正義陣營獲勝：</b>完成三次任務成功，且刺客最後沒有成功指認梅林。</li><li><b>邪惡陣營獲勝：</b>累積三次任務失敗、連續五次隊伍投票遭否決，或刺客成功指認梅林。</li></ul>
+  <p class="muted">此頁為遊戲規則摘要；不同桌遊版本或擴充角色可能另有細節，開局前請先確認全體玩家採用相同規則。</p>
+ </div>
+</div>
+<section id="setup" class="panel setup-panel">
+<div class="setup-heading">
+ <div><h2>建立遊戲</h2></div>
+ <button type="button" class="gold setup-rules" id="openRules">📖 遊戲規則說明</button>
+</div>
+<div class="setup-row"><label for="count">玩家人數</label><select id="count"><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div>
+<div class="setup-name-toolbar">
+ <div class="setup-section-title">玩家名稱</div>
+ <button type="button" class="secondary setup-name-open" id="openNames">✎ 設定玩家名稱</button>
+</div>
+<div class="setup-row"><label for="rule">任務規則</label><select id="rule"><option value="standard">標準規則（7人以上第4任務需2張失敗）</option><option value="one">所有任務1張失敗即失敗</option></select></div>
+<div class="setup-ratio" id="ratio"></div>
+<div id="namesOverlay" class="names-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="namesTitle">
+ <div class="names-dialog">
+  <div class="names-dialog-head"><h3 id="namesTitle">玩家名稱設定</h3><button type="button" class="secondary" id="closeNames">完成</button></div>
+  <p class="setup-note">可分別修改每位玩家的顯示名稱。</p>
+  <div id="names" class="players setup-players"></div>
+ </div>
+</div>
+<div class="setup-divider"></div>
+<div class="setup-section-title">角色配置</div>
+<p class="setup-note">可依喜好選擇正義方與邪惡方角色；未勾選的名額會由忠臣或爪牙補足。陣營人數會固定符合玩家人數。</p>
+<div id="roles" class="setup-roles"></div>
+<div class="actions setup-actions"><button class="blue" id="start">洗牌並開始分配身份</button></div>
+</section>
+<section id="reveal" class="hidden">
+<div class="player-area-panel">
+<div id="revealCircle" class="player-circle"></div>
+<div class="player-area-button-space"><button class="blue hidden" id="finishReveal">完成身份確認，開始遊戲</button></div>
+</div>
+<div class="stage-info-area">
+<h2>秘密身份確認</h2>
+<p class="muted" id="revealText"></p>
+</div>
+</section>
+<section id="game" class="hidden">
+<div class="player-area-panel">
+<div id="tableCircle" class="player-circle hidden" aria-label="玩家座位順時針排列，本輪領袖位於最下方"></div>
+<div class="player-area-button-space"><button type="button" class="blue hidden" id="submitTeam">確認出征名單，開始投票</button><div id="voteActionSpace"></div><button type="button" class="blue hidden" id="submitVotes">公布投票結果</button></div>
+</div>
+<div class="stage-info-area">
+<div id="voteStageInfo" class="hidden"><h2>投票決定是否贊成隊伍出征</h2><p class="muted">玩家順時針方向輪流進行秘密投票，決定本輪隊伍是否出征。所有玩家完成投票後，公開公布各玩家投票結果。</p></div>
+<div class="stage-progress-info"><div><h2 id="roundTitle">第1次任務</h2><p class="muted" id="leader"></p></div><div style="text-align:right"><span class="pill" id="voteFails">連續否決：0/5</span></div></div>
+<div class="notice game-hint hidden" id="gameHint" aria-live="polite"></div>
+<div class="notice hidden" id="status"></div><div class="hidden"><span id="progressLabel">0 / 3 次成功</span><div class="progress-fill" id="progressFill"></div><div class="track" id="track"></div></div>
+<div id="teamPanel"><h2 id="teamStageTitle">選擇出征名單</h2><p class="muted" id="teamStageText"></p></div>
+<div class="panel hidden" id="votePanel"><h2>④ 全員投票：贊成或反對</h2><div id="votes" class="votegrid"></div></div>
+<div class="panel hidden" id="missionPanel"><h2>⑤ 任務玩家秘密出牌</h2><div id="missionSecret" class="secret hidden"></div><div class="actions"><button class="blue" id="missionShow">查看並出牌</button><button class="secondary hidden" id="missionHide">確認出牌並交給下一位</button></div></div>
+<div class="panel hidden" id="resultPanel"><h2>任務結果</h2><div id="resultText" class="notice"></div><div class="actions"><button class="blue" id="next">進入下一步</button></div></div>
+<div class="panel hidden" id="assassinPanel"><h2>⑥ 刺客最後指認</h2><p>好人已完成三次任務成功。請由刺客選擇一位玩家，嘗試找出梅林。</p><div id="assassinChoices" class="votegrid"></div><div class="actions"><button class="red" id="assassinate">確認刺殺目標</button></div></div>
+<div class="panel hidden" id="endPanel"><h2 id="endTitle">遊戲結束</h2><div id="endText" class="notice"></div><div class="actions"><button id="restart">重新開局</button></div></div>
+</div>
+</section>
+
+</div>
+</main><footer>CHRONOS 時序之戰｜v0.0.1｜本機遊戲，不會上傳玩家資料</footer>
+<div id="installHelp" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle">
+ <div class="install-dialog">
+  <h2 id="installHelpTitle">📲 加入主畫面</h2>
+  <div id="installHelpText"></div>
+  <div class="actions"><button type="button" class="blue" id="closeInstallHelp">知道了</button></div>
+ </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+// 預先載入角色立繪，避免翻牌動畫開始時才讀取圖片造成卡頓。
+['assassin','merlin','minion','mordred','morgana','oberon','percival','servant'].forEach(name=>{const image=new Image();image.src='./assets/roles/'+name+'.png'});
+
+let deferredInstallPrompt=null;
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{}));}
+$('enterGame').onclick=()=>{$('homeScreen').classList.add('hidden');document.body.classList.remove('home-active');$('gameApp').classList.remove('hidden');window.scrollTo(0,0)};
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e});
+$('installApp').onclick=async()=>{
+ if(deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;return}
+ const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream;
+ $('installHelpText').innerHTML=isIOS
+ ?'<p>請使用 Safari 開啟本遊戲，依照以下步驟加入 iPhone 主畫面：</p><ol><li>點擊 Safari 下方的「分享」圖示（方框向上箭頭）。</li><li>向下滑動選單，選擇「加入主畫面」。</li><li>確認名稱後，點擊右上角「新增」。</li></ol>'
+ :'<p>請從瀏覽器選單中選擇「安裝應用程式」或「新增至主畫面」。不同瀏覽器的選項名稱可能略有不同。</p><p class="muted">若找不到此選項，請先使用 Safari（iPhone）或 Chrome（Android）開啟本遊戲。</p>';
+ $('installHelp').classList.remove('hidden');
+};
+$('closeInstallHelp').onclick=()=>$('installHelp').classList.add('hidden');
+$('installHelp').onclick=e=>{if(e.target===$('installHelp'))$('installHelp').classList.add('hidden')};
+const evilRoles=['刺客','莫甘娜','莫德雷德','奧伯倫','爪牙'];
+const goodRoles=['梅林','派西維爾','忠臣'];
+const defaultSpecial={5:['梅林','派西維爾','刺客','莫甘娜'],6:['梅林','派西維爾','刺客','莫甘娜'],7:['梅林','派西維爾','刺客','莫甘娜','奧伯倫'],8:['梅林','派西維爾','刺客','莫甘娜','莫德雷德'],9:['梅林','派西維爾','刺客','莫甘娜','莫德雷德'],10:['梅林','派西維爾','刺客','莫甘娜','莫德雷德','奧伯倫']};
+const ratios={5:[3,2],6:[4,2],7:[4,3],8:[5,3],9:[6,3],10:[6,4]};
+const teamSizes={5:[2,3,2,3,3],6:[2,3,4,3,4],7:[2,3,3,4,4],8:[3,4,4,5,5],9:[3,4,4,5,5],10:[3,4,4,5,5]};
+let players=[],roles=[],round=0,leader=0,consecutive=0,success=0,fail=0,team=[],voteIndex=0,voteValues=[],missionIndex=0,missionValues=[],phase='setup',revealIndex=0,roleCardOpen=false,assassinTarget=null;
+let voteRevealed=false,teamConfirmed=false,roleCardClosing=false;
+let savedGameSettings=null;
+function count(){return +$('count').value}
+function renderSetup(){let n=count();$('ratio').textContent='';
+$('names').innerHTML=Array.from({length:n},(_,i)=>`<div class="player name-option"><input id="p${i}" aria-label="玩家 ${i+1} 名稱" placeholder="玩家 ${i+1}" value="玩家${i+1}" maxlength="12"></div>`).join('');
+let sp=defaultSpecial[n];let good=sp.filter(x=>goodRoles.includes(x)),evil=sp.filter(x=>evilRoles.includes(x));
+const roleOption=(name,side,selected)=>{const slug={'梅林':'merlin','派西維爾':'percival','忠臣':'servant','刺客':'assassin','莫甘娜':'morgana','莫德雷德':'mordred','奧伯倫':'oberon','爪牙':'minion'}[name];return `<label class="role-option"><img src="./assets/roles/${slug}.png" alt=""><span>${name}</span><input type="checkbox" value="${name}" ${selected?'checked':''}></label>`};
+const fixedRole=(name)=>{const slug=name==='忠臣'?'servant':'minion';return `<div class="role-option role-fixed"><img src="./assets/roles/${slug}.png" alt=""><span>${name}</span><small>固定補足</small></div>`};
+$('roles').innerHTML=`<div class="row"><div class="role-side good"><div class="role-heading"><span>正義方角色</span><span class="role-total">${ratios[n][0]} 人</span></div><details class="role-dropdown"><summary><span>選擇正義方角色</span><span class="role-count">已選 ${good.length} 位</span></summary><div class="role-menu" id="goodChecks">${['梅林','派西維爾'].map(x=>roleOption(x,'good',good.includes(x))).join('')}${fixedRole('忠臣')}</div></details></div><div class="role-side evil"><div class="role-heading"><span>邪惡方角色</span><span class="role-total">${ratios[n][1]} 人</span></div><details class="role-dropdown"><summary><span>選擇邪惡方角色</span><span class="role-count">已選 ${evil.length} 位</span></summary><div class="role-menu" id="evilChecks">${['刺客','莫甘娜','莫德雷德','奧伯倫'].map(x=>roleOption(x,'evil',evil.includes(x))).join('')}${fixedRole('爪牙')}</div></details></div></div><p class="muted">未選滿的陣營名額會自動以「忠臣」或「爪牙」補足。刺客建議保留，否則三次成功後將無法進行刺殺階段。</p>`;
+$('roles').querySelectorAll('.role-dropdown').forEach(dropdown=>{const update=()=>{const checks=dropdown.querySelectorAll('input[type="checkbox"]');const count=dropdown.querySelector('.role-count');count.textContent='已選 '+Array.from(checks).filter(x=>x.checked).length+' 位'};dropdown.querySelectorAll('input[type="checkbox"]').forEach(input=>input.addEventListener('change',update));});
+}
+$('count').onchange=renderSetup;renderSetup();
+$('openNames').onclick=()=>{$('namesOverlay').classList.remove('hidden');const first=$('names').querySelector('input');if(first)first.focus()};
+$('closeNames').onclick=()=>{$('namesOverlay').classList.add('hidden');$('openNames').focus()};
+$('namesOverlay').onclick=e=>{if(e.target===$('namesOverlay'))$('namesOverlay').classList.add('hidden')};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('namesOverlay').classList.add('hidden')});
+$('openRules').onclick=()=>{$('rulesOverlay').classList.remove('hidden');$('closeRules').focus()};
+$('closeRules').onclick=()=>{$('rulesOverlay').classList.add('hidden');$('openRules').focus()};
+$('rulesOverlay').onclick=e=>{if(e.target===$('rulesOverlay'))$('rulesOverlay').classList.add('hidden')};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('rulesOverlay').classList.add('hidden')});
+function chosen(id){return [...document.querySelectorAll(`#${id} input:checked`)].map(x=>x.value)}
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function enterGameFullscreen(){
+ document.body.classList.add('app-fullscreen');
+ const root=document.documentElement;
+ if(root.requestFullscreen){
+  try{const result=root.requestFullscreen();if(result&&typeof result.catch==='function')result.catch(()=>{});}catch(_){}
+ }
+}
+function start(){let n=count(),[g,e]=ratios[n],gs=chosen('goodChecks'),es=chosen('evilChecks');
+if(gs.length>g||es.length>e||gs.length===0||!gs.includes('梅林')){alert('請確認特殊角色數量沒有超過陣營人數，且保留梅林。');return}
+savedGameSettings={count:n,rule:$('rule').value,names:Array.from({length:n},(_,i)=>$('p'+i).value.trim()||`玩家${i+1}`),good:[...gs],evil:[...es]};
+$('gameMenu').classList.remove('hidden');$('gameMenuDropdown').classList.add('hidden');$('gameMenuButton').setAttribute('aria-expanded','false');
+enterGameFullscreen();
+let gr=[...gs,...Array(g-gs.length).fill('忠臣')],er=[...es,...Array(e-es.length).fill('爪牙')];
+if(!er.includes('刺客')){if(es.length===e){alert('邪惡角色名額已滿，請選擇刺客。');return}er[er.length-1]='刺客'}
+players=Array.from({length:n},(_,i)=>({name:$('p'+i).value.trim()||`玩家${i+1}`,role:null}));
+roles=shuffle([...gr,...er]);players.forEach((p,i)=>p.role=roles[i]);round=0;leader=0;consecutive=0;success=0;fail=0;phase='reveal';revealIndex=0;$('revealCircle').dataset.dealStarted='';
+$('setup').classList.add('hidden');$('game').classList.remove('hidden');$('reveal').classList.remove('hidden');$('teamPanel').classList.add('hidden');showReveal();
+}
+$('start').onclick=start;
+function info(p){let r=p.role,evil=players.filter(x=>evilRoles.includes(x.role));let seen='';
+if(r==='梅林')seen='你看見的邪惡玩家（莫德雷德除外）：'+evil.filter(x=>x.role!=='莫德雷德').map(x=>x.name).join('、');
+if(r==='派西維爾'){let m=players.filter(x=>['梅林','莫甘娜'].includes(x.role));seen='你看見可能是梅林的人（梅林與莫甘娜不分）：'+(m.map(x=>x.name).join('、')||'無');}
+if(evilRoles.includes(r)&&r!=='奧伯倫'){let known=evil.filter(x=>x.role!=='奧伯倫'&&x!==p);seen='你認識的邪惡同伴：'+(known.map(x=>x.name).join('、')||'無（你可能是孤狼）');}
+if(r==='奧伯倫')seen='你是孤狼：你不知道其他邪惡玩家是誰，其他邪惡玩家也不知道你是誰。';
+return seen}
+function renderPlayerCircle(targetId,leaderIndex,identityMode=false,teamMode=false,voteMode=false){
+ const n=players.length,el=$(targetId);if(!el)return;
+ el.innerHTML=players.map((p,i)=>{
+  const order=identityMode?((i-leaderIndex-revealIndex+n*2)%n):((i-leaderIndex+n)%n),angle=(90+order*360/n)*Math.PI/180,r=39;
+  const left=50+r*Math.cos(angle),top=50+r*Math.sin(angle);
+  if(identityMode){
+   const state=i<revealIndex?'done':i===revealIndex?'active':'locked';
+   const viewingRole=roleCardOpen?players[revealIndex]?.role:null;
+   const merlinKnownEvil=viewingRole==='梅林'&&evilRoles.includes(p.role)&&p.role!=='莫德雷德'&&i!==revealIndex;
+   const percivalKnown=viewingRole==='派西維爾'&&['梅林','莫甘娜'].includes(p.role)&&i!==revealIndex;
+   const evilKnown=viewingRole&&evilRoles.includes(viewingRole)&&viewingRole!=='奧伯倫'&&evilRoles.includes(p.role)&&p.role!=='奧伯倫'&&i!==revealIndex;
+   const knownClass=merlinKnownEvil?'merlin-known-evil':percivalKnown?'percival-known-candidate':evilKnown?'evil-known-ally':'';
+   const knownLabel=merlinKnownEvil?'邪惡陣營':percivalKnown?'梅林候選人':evilKnown?'邪惡同伴':'';
+   if(i===revealIndex&&roleCardOpen){
+    const good=goodRoles.includes(p.role),slug={'梅林':'merlin','派西維爾':'percival','忠臣':'servant','刺客':'assassin','莫甘娜':'morgana','莫德雷德':'mordred','奧伯倫':'oberon','爪牙':'minion'}[p.role]||'servant';
+    return '<div class="identity-seat active revealed" data-player-index="'+i+'" style="left:'+left.toFixed(2)+'%;top:'+top.toFixed(2)+'%" role="button" aria-label="點擊翻回牌背並交給下一位玩家">'+
+     '<div class="role-card role-card-'+slug+'"><div class="role-card-inner">'+
+     '<div class="role-card-back"><span class="mini-seal '+(i===leaderIndex?'is-leader':'')+'">'+(i===leaderIndex?'♛':'✦')+'</span><small>AVALON</small></div>'+
+     '<div class="role-card-front '+(good?'faction-good':'faction-evil')+'"><div class="identity-owner">'+escapeHTML(p.name)+'</div>'+rolePortrait(p.role,good)+'<div class="character-name">'+escapeHTML(p.role)+'</div><div class="faction-tag">'+(good?'正義陣營｜藍方':'邪惡陣營｜紅方')+'</div>'+intelMarkup(p)+'<div class="card-tap-hint">點擊翻回牌背，交給下一位玩家</div></div>'+
+     '</div></div></div>';
+   }
+   return '<div class="identity-seat '+state+(knownClass?' '+knownClass:'')+'" data-player-index="'+i+'" style="left:'+left.toFixed(2)+'%;top:'+top.toFixed(2)+'%">'+
+    '<button type="button" class="identity-card" '+(i===revealIndex?'':'disabled')+' aria-label="'+escapeHTML(p.name)+'的身份牌">'+
+    '<span class="mini-seal '+(i===leaderIndex?'is-leader':'')+'">'+(i===leaderIndex?'♛':'✦')+'</span><small>AVALON</small></button>'+
+    '<span class="identity-name">'+escapeHTML(p.name)+'</span>'+(knownLabel?'<span class="merlin-evil-mark '+(percivalKnown?'percival-mark':evilKnown?'evil-ally-mark':'')+'">'+knownLabel+'</span>':'')+'</div>';
+  }
+  if(teamMode){
+   return '<label class="identity-seat team-seat '+(teamConfirmed?(team.includes(i)?'team-selected':'team-unselected'):'')+'" style="left:'+left.toFixed(2)+'%;top:'+top.toFixed(2)+'%">'+
+    '<span class="identity-card team-pick-card"><span class="mini-seal '+(i===leaderIndex?'is-leader':'')+'">'+(i===leaderIndex?'♛':'✦')+'</span><small>AVALON</small><input class="team-pick" type="checkbox" value="'+i+'" aria-label="選擇 '+escapeHTML(p.name)+' 出征"></span>'+
+    '<span class="identity-name">'+escapeHTML(p.name)+'</span>'+'</label>';
+  }
+  if(voteMode){const v=voteValues[i],delay=order*.48;return '<div class="identity-seat vote-result-seat '+(team.includes(i)?'mission-team-highlight ':'')+(v?'approve':'reject')+'" data-player-index="'+i+'" style="left:'+left.toFixed(2)+'%;top:'+top.toFixed(2)+'%"><div class="vote-flip-inner" style="animation-delay:'+delay.toFixed(2)+'s"><div class="vote-result-back"></div><div class="vote-result-front"><span class="vote-result-choice">'+(v?'○ 贊成':'× 反對')+'</span></div></div><span class="identity-name">'+escapeHTML(p.name)+'</span></div>';}
+  return '<div class="identity-seat" data-player-index="'+i+'" style="left:'+left.toFixed(2)+'%;top:'+top.toFixed(2)+'%"><div class="identity-card"><span class="mini-seal '+(i===leaderIndex?'is-leader':'')+'">'+(i===leaderIndex?'♛':'♟')+'</span></div><span class="identity-name">'+escapeHTML(p.name)+'</span></div>';
+ }).join('');
+ if(targetId==='tableCircle'){el.insertAdjacentHTML('beforeend','<div id="roundProgressCenter" class="round-progress-center" aria-label="任務進度與連續否決進度"></div>');renderRoundProgress();}
+ const teamButton=$('submitTeam');
+ if(teamButton){teamButton.classList.toggle('hidden',!teamMode);teamButton.textContent='確認出征名單，開始投票';}
+ if(identityMode){
+  el.onclick=e=>{
+   const seat=e.target.closest('.identity-seat[data-player-index]');
+   if(!seat)return;
+   const index=Number(seat.dataset.playerIndex);
+   if(index!==revealIndex)return;
+   if(roleCardOpen)closeRoleCard();
+   else openRoleCard(index);
+  };
+ }
+ if(teamMode&&teamConfirmed){el.querySelectorAll('.team-pick').forEach(x=>{x.disabled=true;x.checked=team.includes(+x.value)});}
+ if(teamMode){$('submitTeam').onclick=submitTeamSelection;}
+}
+function showReveal(){
+ $('revealText').textContent='最下方使用王冠標記為本輪領袖：'+players[leader].name+'。請依順時針方向依序點選自己的牌卡，確認後再點一下即可翻回牌背。';
+ $('finishReveal').classList.toggle('hidden',revealIndex<players.length);
+ renderPlayerCircle('revealCircle',leader,true);
+ if(revealIndex===0&&!$('revealCircle').dataset.dealStarted){
+  $('revealCircle').dataset.dealStarted='true';
+  animateIdentityDeal();
+ }
+}
+function animateIdentityDeal(){
+ const circle=$('revealCircle');
+ circle.classList.add('dealing-cards');
+ const seats=[...circle.querySelectorAll('.identity-seat[data-player-index]')].sort((a,b)=>Number(a.dataset.playerIndex)-Number(b.dataset.playerIndex));
+ if(!seats.length)return;
+ seats.forEach(seat=>seat.classList.add('deal-pending'));
+ const firstCard=seats[0].querySelector('.identity-card');
+ if(!firstCard)return;
+ const firstRect=firstCard.getBoundingClientRect();
+ const center=document.createElement('div');
+ center.className='identity-card deal-center-card';
+ center.innerHTML='<span class="mini-seal">✦</span><small>AVALON</small>';
+ center.style.width=firstRect.width+'px';
+ center.style.height=firstRect.height+'px';
+ circle.appendChild(center);
+ const centerRect=center.getBoundingClientRect();
+ const cx=centerRect.left+centerRect.width/2,cy=centerRect.top+centerRect.height/2;
+ const dealNext=index=>{
+  if(index>=seats.length){
+   center.remove();
+   circle.classList.remove('dealing-cards');
+   seats.forEach(seat=>seat.classList.remove('deal-pending'));
+   return;
+  }
+  const seat=seats[index],target=seat.querySelector('.identity-card');
+  if(!target){dealNext(index+1);return}
+  const rect=target.getBoundingClientRect();
+  const flight=center.cloneNode(true);
+  flight.className='identity-card deal-flight-card';
+  flight.style.width=rect.width+'px';
+  flight.style.height=rect.height+'px';
+  flight.style.left=cx+'px';
+  flight.style.top=cy+'px';
+  document.body.appendChild(flight);
+  if(index===seats.length-1)center.classList.add('deal-center-leaving');
+  const animation=flight.animate([
+   {left:cx+'px',top:cy+'px',transform:'translate(-50%,-50%) scale(1)',opacity:1},
+   {left:(rect.left+rect.width/2)+'px',top:(rect.top+rect.height/2)+'px',transform:'translate(-50%,-50%) scale(1)',opacity:1}
+  ],{duration:300,easing:'cubic-bezier(.2,.72,.25,1)',fill:'forwards'});
+  animation.onfinish=()=>{
+   flight.remove();
+   seat.classList.add('dealt');
+   window.setTimeout(()=>dealNext(index+1),40);
+  };
+ };
+ window.setTimeout(()=>dealNext(0),100);
+}
+function openRoleCard(index){
+ if(index!==revealIndex||roleCardOpen||roleCardClosing)return;
+ roleCardOpen=true;
+ roleCardClosing=false;
+ renderPlayerCircle('revealCircle',leader,true);
+}
+function animateRevealRotation(previousPositions){
+ const seats=$('revealCircle').querySelectorAll('.identity-seat[data-player-index]');
+ seats.forEach(seat=>{
+  const old=previousPositions[seat.dataset.playerIndex];
+  if(!old)return;
+  const rect=seat.getBoundingClientRect();
+  const dx=old.x-(rect.left+rect.width/2);
+  const dy=old.y-(rect.top+rect.height/2);
+  if(Math.abs(dx)<1&&Math.abs(dy)<1)return;
+  const base='translate(-50%,-50%)';
+  seat.animate(
+   [{transform:'translate(calc(-50% + '+dx+'px),calc(-50% + '+dy+'px))'},{transform:base}],
+   {duration:720,easing:'cubic-bezier(.22,.72,.2,1)',fill:'both'}
+  );
+ });
+}
+function closeRoleCard(){
+ if(!roleCardOpen||roleCardClosing)return;
+ roleCardClosing=true;
+ const card=$('revealCircle').querySelector('.identity-seat.revealed');
+ if(card)card.classList.add('closing');
+ window.setTimeout(()=>{
+  const previousPositions={};
+  $('revealCircle').querySelectorAll('.identity-seat[data-player-index]').forEach(seat=>{
+   const rect=seat.getBoundingClientRect();
+   previousPositions[seat.dataset.playerIndex]={x:rect.left+rect.width/2,y:rect.top+rect.height/2};
+  });
+  roleCardOpen=false;
+  roleCardClosing=false;
+  revealIndex++;
+  showReveal();
+  animateRevealRotation(previousPositions);
+ },480);
+}
+function rolePortrait(role,good){
+ const images={'梅林':'merlin','派西維爾':'percival','忠臣':'servant','刺客':'assassin','莫甘娜':'morgana','莫德雷德':'mordred','奧伯倫':'oberon','爪牙':'minion'};
+ const file=images[role]||'servant';
+ return '<img class="character-art" src="./assets/roles/'+file+'.png" alt="'+role+'角色頭像" loading="eager" decoding="async">';
+}
+function escapeHTML(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function intelMarkup(p){
+ let r=p.role,evil=players.filter(x=>evilRoles.includes(x.role)),title='',names=[],note='';
+ if(r==='梅林'){title='梅林的視野｜邪惡陣營';names=evil.filter(x=>x.role!=='莫德雷德').map(x=>x.name);note='莫德雷德不會出現在你的視野中。'}
+ else if(r==='派西維爾'){title='派西維爾的視野｜梅林候選人';names=players.filter(x=>['梅林','莫甘娜'].includes(x.role)).map(x=>x.name);note='梅林與莫甘娜會同時出現，請自行判斷。'}
+ else if(evilRoles.includes(r)&&r!=='奧伯倫'){title='邪惡陣營｜你認識的同伴';names=evil.filter(x=>x.role!=='奧伯倫'&&x!==p).map(x=>x.name);note=names.length?'奧伯倫不會出現在邪惡同伴名單中。':'你沒有可辨識的邪惡同伴。'}
+ else if(r==='奧伯倫'){title='奧伯倫｜孤狼資訊';note='你不知道其他邪惡玩家是誰，其他邪惡玩家也不知道你是誰。'}
+ else {title='正義陣營｜沒有額外視野';note='你沒有額外的陣營名單，請透過討論與任務推理。'}
+ let chips=names.length?names.map((name,i)=>'<span class="intel-chip" style="animation-delay:'+(0.72+i*.16)+'s">'+escapeHTML(name)+'</span>').join(''):'<span class="intel-note">'+escapeHTML(note)+'</span>';
+ return '<div class="intel-reveal"><div class="intel-title">'+title+'</div><div class="intel-list">'+chips+'</div>'+(names.length?'<div class="intel-note" style="margin-top:8px">'+escapeHTML(note)+'</div>':'')+'</div>';
+}
+
+
+function renderRoundProgress(){
+ const host=$('roundProgressCenter');if(!host)return;
+ const n=count(),missionCells=Array.from({length:5},(_,i)=>{
+  const state=i<success?'win':i<success+fail?'fail':'';
+  const current=i===round?'current':'';
+  return '<div class="round-progress-cell '+state+' '+current+'">'+teamSizes[n][i]+'</div>';
+ }).join('');
+ const rejectCells=Array.from({length:5},(_,i)=>
+  '<div class="round-progress-cell '+(i<consecutive?'rejected':'')+' '+(i===consecutive&&consecutive<5?'current':'')+'">'+(i+1)+'</div>'
+ ).join('');
+ host.innerHTML='<div class="round-progress-row"><div class="round-progress-label">任務出征人數</div><div class="round-progress-cells">'+missionCells+'</div></div>'+
+  '<div class="round-progress-row"><div class="round-progress-label">連續否決次數</div><div class="round-progress-cells">'+rejectCells+'</div></div>';
+}
+
+function beginRound(){phase='team';$('game').classList.remove('vote-phase');$('voteStageInfo').classList.add('hidden');$('votePanel').classList.add('hidden');$('voteActionSpace').innerHTML='';const voteButtonSpace=document.querySelector('#game .player-area-button-space');if(voteButtonSpace&&$('submitVotes').parentElement!==voteButtonSpace)voteButtonSpace.appendChild($('submitVotes'));$('submitVotes').classList.add('hidden');$('submitVotes').disabled=true;$('submitVotes').textContent='公布投票結果';$('game').classList.add('team-selection-phase');$('teamPanel').classList.remove('hidden');$('teamStageTitle').textContent=`選擇出征名單：${teamSizes[count()][round]}名玩家`;$("teamStageText").textContent=`本輪領袖：${players[leader].name}，請在上方玩家座位區點擊選擇 ${teamSizes[count()][round]} 位出征玩家。`;$('votePanel').classList.add('hidden');$('missionPanel').classList.add('hidden');$('resultPanel').classList.add('hidden');$('assassinPanel').classList.add('hidden');$('roundTitle').textContent=`第 ${round+1} 次任務`;$('leader').textContent='';$('tableCircle').innerHTML='';$('tableCircle').classList.remove('hidden');renderPlayerCircle('tableCircle',leader,false);$('voteFails').textContent=`連續否決：${consecutive}/5`;renderRoundProgress();$('gameHint').classList.add('hidden');
+team=[];teamConfirmed=false;renderPlayerCircle('tableCircle',leader,false,true);
+$('status').textContent=`任務成功 ${success} 次｜任務失敗 ${fail} 次`;$('track').innerHTML=Array.from({length:5},(_,i)=>{let state=i<success?'win':i<success+fail?'fail':'';return '<div class="mission '+state+' '+(i===round?'current':'')+'"><b>'+(i+1)+'</b>'+(state==='win'?'成功':state==='fail'?'失敗':i===round?'進行中':'待執行')+'</div>'}).join('');
+$('progressLabel').textContent=success+' / 3 次成功';
+$('progressFill').style.width=Math.min(100,success/3*100)+'%';}
+$('finishReveal').onclick=()=>{$('reveal').classList.add('hidden');beginRound()};
+function submitTeamSelection(){team=[...document.querySelectorAll('#tableCircle .team-pick:checked')].map(x=>+x.value);if(team.length!==teamSizes[count()][round]){alert(`本次任務必須選擇 ${teamSizes[count()][round]} 人。`);return}teamConfirmed=true;$('game').classList.remove('team-selection-phase');$('game').classList.add('vote-phase');$('submitTeam').classList.add('hidden');$('voteStageInfo').classList.remove('hidden');$('voteActionSpace').innerHTML='';phase='vote';voteValues=Array(players.length).fill(null);voteIndex=leader;voteRevealed=false;$('submitVotes').textContent='公布投票結果';$('submitVotes').disabled=true;$('teamPanel').classList.add('hidden');$('votePanel').classList.remove('hidden');renderVote()}
+function updateVoteTurnCircle(){
+ const el=$('tableCircle'),n=players.length;if(!el)return;
+ if(!el.querySelector('.vote-turn-seat')){
+  el.innerHTML=players.map((p,i)=>'<div class="identity-seat vote-turn-seat '+(team.includes(i)?'mission-team-highlight':'')+'" data-voter="'+i+'"><button type="button" class="identity-card" disabled><span class="mini-seal '+(i===leader?'is-leader':'')+'">'+(i===leader?'♛':'✦')+'</span><small>AVALON</small></button><span class="identity-name">'+escapeHTML(p.name)+'</span></div>').join('');
+ }
+ el.querySelectorAll('.vote-turn-seat').forEach(seat=>{
+  const i=+seat.dataset.voter,order=(i-voteIndex+n)%n,angle=(90+order*360/n)*Math.PI/180,r=39;
+  seat.style.left=(50+r*Math.cos(angle))+'%';seat.style.top=(50+r*Math.sin(angle))+'%';
+  seat.classList.toggle('mission-team-highlight',team.includes(i));
+  seat.classList.toggle('current-voter',voteIndex<n&&i===voteIndex);
+  seat.classList.toggle('active',voteIndex<n&&i===voteIndex);
+ });
+ el.classList.remove('hidden');
+}
+function renderVote(){let p=players[voteIndex];updateVoteTurnCircle();$('gameHint').textContent=p.name+'，請秘密選擇贊成或反對。';$('votes').innerHTML='';$('voteActionSpace').innerHTML='<button type="button" class="blue" onclick="castVote(true)">贊成</button><button type="button" class="red" onclick="castVote(false)">反對</button>'}
+window.castVote=v=>{voteValues[voteIndex]=v;voteIndex++;if(voteIndex<players.length)renderVote();else{$('gameHint').textContent='全員已完成投票，請公布投票結果。';$('votes').innerHTML='';$('voteActionSpace').innerHTML='';$('voteActionSpace').appendChild($('submitVotes'));$('submitVotes').classList.remove('hidden');$('submitVotes').disabled=false;updateVoteTurnCircle()}};
+function revealVoteCircle(yes,no,passed){
+ // 保留任務進度資訊在玩家座位區中央，先依序翻開各玩家的投票卡
+ renderPlayerCircle('tableCircle',leader,false,false,true);
+ $('tableCircle').classList.remove('hidden');
+ $('votes').innerHTML='';
+ $('tableCircle').insertAdjacentHTML('beforeend',
+  '<div class="vote-outcome-center hidden">'+
+   '<div class="vote-outcome-title '+(passed?'passed':'rejected')+'">'+(passed?'隊伍通過':'隊伍遭否決')+'</div>'+
+   '<div class="vote-outcome-count yes">○ 贊成 '+yes+' 票</div>'+
+   '<div class="vote-outcome-count no">× 反對 '+no+' 票</div>'+
+  '</div>');
+ $('submitVotes').textContent='確認結果並繼續';
+ $('submitVotes').disabled=true;
+ // 最後一位玩家翻牌完成後，才顯示總結果並允許進入下一步
+ const revealDuration=Math.max(0,(players.length-1)*480+520+150);
+ window.setTimeout(()=>{
+  const outcome=$('tableCircle').querySelector('.vote-outcome-center');
+  if(outcome)outcome.classList.remove('hidden');
+  $('submitVotes').disabled=false;
+ },revealDuration);
+}
+$('submitVotes').onclick=()=>{
+ const yes=voteValues.filter(Boolean).length,no=players.length-yes,passed=yes>no;
+ if(!voteRevealed){voteRevealed=true;revealVoteCircle(yes,no,passed);return}
+ $('votePanel').classList.add('hidden');
+ const playerButtonSpace=document.querySelector('#game .player-area-button-space');
+ if(playerButtonSpace)playerButtonSpace.appendChild($('submitVotes'));
+ $('submitVotes').classList.add('hidden');
+ $('submitVotes').disabled=true;
+ $('game').classList.remove('vote-phase');
+ $('voteStageInfo').classList.add('hidden');
+ $('voteActionSpace').innerHTML='';
+ if(!passed){
+  consecutive++;leader=(leader+1)%players.length;
+  if(consecutive>=5){end('邪惡陣營獲勝','連續 5 次組隊投票遭否決。');return}
+  alert('隊伍遭否決：贊成 '+yes+'、反對 '+no+'。');
+  beginRound();
+ }else{
+  consecutive=0;phase='mission';missionIndex=0;missionValues=[];
+  $('missionPanel').classList.remove('hidden');
+  $('gameHint').classList.remove('hidden');
+  renderMission();
+ }
+};
+function renderMission(){let p=players[team[missionIndex]];const rotating=updateMissionTurnCircle(()=>{$('missionShow').disabled=false;});$('missionShow').disabled=rotating;$('gameHint').textContent=`請交給出征玩家 ${p.name}。其他人請勿觀看。`;$('missionSecret').classList.add('hidden');$('missionShow').classList.remove('hidden');$('missionHide').classList.add('hidden');$('missionShow').textContent='查看並選擇任務牌';}
+function updateMissionTurnCircle(onComplete){
+ const el=$('tableCircle'),n=players.length;if(!el)return false;
+ const target=team[missionIndex];
+ if(!el.querySelector('.mission-turn-seat')){
+  el.innerHTML=players.map((p,i)=>'<div class="identity-seat mission-turn-seat" data-mission-voter="'+i+'"><div class="identity-card"><span class="mini-seal">'+(i===leader?'♛':'✦')+'</span><small>AVALON</small></div><span class="identity-name">'+escapeHTML(p.name)+'</span></div>').join('');
+ }
+ let anchor=Number(el.dataset.missionAnchor);
+ // 初次進入任務出牌階段，先讓本輪領袖停留在最下方
+ if(!Number.isInteger(anchor)||anchor<0||anchor>=n)anchor=leader;
+ const applyPositions=()=>{
+  el.querySelectorAll('.mission-turn-seat').forEach(seat=>{
+   const i=+seat.dataset.missionVoter;
+   const order=(i-anchor+n)%n;
+   const angle=(90+order*360/n)*Math.PI/180,r=39;
+   seat.style.left=(50+r*Math.cos(angle)).toFixed(2)+'%';
+   seat.style.top=(50+r*Math.sin(angle)).toFixed(2)+'%';
+   seat.classList.toggle('mission-team-highlight',team.includes(i));
+   seat.classList.toggle('current-mission-voter',i===anchor);
+  });
+  el.dataset.missionAnchor=String(anchor);
+ };
+ el.classList.remove('hidden');
+ if(anchor===target){applyPositions();return false;}
+ // 從領袖位置開始，每次逆時針移動一個座位，逐格轉到本位出牌玩家
+ const step=()=>{
+  if(anchor===target){if(onComplete)onComplete();return;}
+  anchor=(anchor+1)%n;
+  applyPositions();
+  window.setTimeout(step,460);
+ };
+ // 先保留領袖在最下方一小段時間，再開始逐格旋轉
+ window.setTimeout(step,460);
+ return true;
+}
+$('missionShow').onclick=()=>{let p=players[team[missionIndex]],evil=evilRoles.includes(p.role);$('gameHint').textContent=`${p.name}，請秘密選擇任務牌。其他玩家請勿觀看。`;$('missionSecret').innerHTML=`<div>${p.name}，請選擇</div><div class="actions"><button class="blue" onclick="missionCard(true)">任務成功</button>${evil?'<button class="red" onclick="missionCard(false)">任務失敗</button>':''}</div>`;$('missionSecret').classList.remove('hidden');$('missionShow').classList.add('hidden')};
+window.missionCard=v=>{missionValues.push(v);missionIndex++;if(missionIndex<team.length){renderMission()}else{$('missionPanel').classList.add('hidden');$('gameHint').textContent='所有出征玩家均已完成秘密出牌，請查看任務結果。';let fails=missionValues.filter(x=>!x).length,threshold=($('rule').value==='standard'&&count()>=7&&round===3)?2:1;let passed=fails<threshold;if(passed)success++;else fail++;$('resultPanel').classList.remove('hidden');$('gameHint').textContent='任務結果已統計，請確認後進入下一步。';$('resultText').innerHTML=`本次任務：<b>${passed?'成功':'失敗'}</b><br>失敗牌數：${fails} 張（本關需 ${threshold} 張失敗才算失敗）<br><span class="muted">任務牌已統計，不公開各玩家出的牌。</span>`;phase='result'}};
+$('next').onclick=()=>{if(fail>=3){end('邪惡陣營獲勝','邪惡陣營累積 3 次任務失敗。');return}if(success>=3){let assassin=players.find(p=>p.role==='刺客');if(!assassin){end('正義陣營獲勝','正義陣營完成三次任務成功，且本局未配置刺客。');return}$('resultPanel').classList.add('hidden');$('assassinPanel').classList.remove('hidden');$('gameHint').textContent='請由刺客選擇一位玩家，嘗試找出梅林。';$('assassinChoices').innerHTML=players.map((p,i)=>`<label class="vote"><input type="radio" name="target" value="${i}" style="width:auto"> ${p.name}</label>`).join('');return}round++;leader=(leader+1)%players.length;beginRound()};
+$('assassinate').onclick=()=>{let t=document.querySelector('input[name=target]:checked');if(!t){alert('請選擇刺殺目標。');return}let p=players[+t.value];if(p.role==='梅林')end('邪惡陣營獲勝','刺客成功指認梅林！');else end('正義陣營獲勝',`刺客指認了 ${p.name}，但他不是梅林。`);};
+function end(title,msg){$('teamPanel').classList.add('hidden');$('votePanel').classList.add('hidden');$('missionPanel').classList.add('hidden');$('resultPanel').classList.add('hidden');$('assassinPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');$('gameHint').textContent=msg;$('endTitle').textContent=title;$('endText').textContent=msg+` 最終戰績：正義任務成功 ${success} 次、失敗 ${fail} 次。`;$('roundTitle').textContent='遊戲結束';}
+$('restart').onclick=()=>location.reload();
+function closeGameMenu(){
+ $('gameMenuDropdown').classList.add('hidden');
+ $('gameMenuButton').setAttribute('aria-expanded','false');
+}
+$('gameMenuButton').onclick=()=>{
+ const opening=$('gameMenuDropdown').classList.contains('hidden');
+ $('gameMenuDropdown').classList.toggle('hidden',!opening);
+ $('gameMenuButton').setAttribute('aria-expanded',String(opening));
+};
+document.addEventListener('click',e=>{
+ if(!$('gameMenu').contains(e.target))closeGameMenu();
+});
+let pendingGameMenuAction=null;
+function openGameMenuConfirm(action){
+ pendingGameMenuAction=action;
+ closeGameMenu();
+ const restart=action==='restart';
+ $('gameMenuConfirmTitle').textContent=restart?'重新開始遊戲':'設定新遊戲';
+ $('gameMenuConfirmMessage').textContent=restart
+  ?'確定要重新開始遊戲嗎？目前遊戲進度將會重置，並沿用原本的遊戲設定。'
+  :'確定要設定新遊戲嗎？將返回遊戲設定畫面，重新調整遊戲內容。';
+ $('gameMenuConfirmAccept').textContent=restart?'確認重新開始':'確認設定新遊戲';
+ $('gameMenuConfirm').classList.remove('hidden');
+}
+function closeGameMenuConfirm(){
+ $('gameMenuConfirm').classList.add('hidden');
+ pendingGameMenuAction=null;
+}
+function restartWithSavedSettings(){
+ if(!savedGameSettings)return;
+ const cfg=savedGameSettings;
+ $('count').value=String(cfg.count);renderSetup();$('rule').value=cfg.rule;
+ cfg.names.forEach((name,i)=>{const input=$('p'+i);if(input)input.value=name});
+ ['goodChecks','evilChecks'].forEach((id,index)=>{
+  const selected=new Set(index===0?cfg.good:cfg.evil);
+  const root=$(id);
+  if(root)root.querySelectorAll('input[type="checkbox"]').forEach(input=>{input.checked=selected.has(input.value)});
+  const countLabel=root?.closest('.role-dropdown')?.querySelector('.role-count');
+  if(countLabel)countLabel.textContent='已選 '+(root?[...root.querySelectorAll('input:checked')].length:0)+' 位';
+ });
+ $('game').classList.remove('vote-phase','team-selection-phase');
+ ['teamPanel','votePanel','missionPanel','resultPanel','assassinPanel','endPanel'].forEach(id=>$(id).classList.add('hidden'));
+ $('reveal').classList.add('hidden');$('game').classList.add('hidden');$('setup').classList.remove('hidden');
+ const focus=document.querySelector('.role-focus');if(focus)focus.remove();
+ closeGameMenu();start();
+}
+function returnToNewGameSetup(){
+ $('gameMenu').classList.add('hidden');
+ $('reveal').classList.add('hidden');$('game').classList.add('hidden');$('setup').classList.remove('hidden');
+ $('game').classList.remove('vote-phase','team-selection-phase');
+ ['teamPanel','votePanel','missionPanel','resultPanel','assassinPanel','endPanel'].forEach(id=>$(id).classList.add('hidden'));
+ const focus=document.querySelector('.role-focus');if(focus)focus.remove();
+ phase='setup';roleCardOpen=false;roleCardClosing=false;
+ document.body.classList.remove('app-fullscreen');
+ if(document.fullscreenElement&&document.exitFullscreen){try{document.exitFullscreen().catch(()=>{})}catch(_){}}
+ window.scrollTo(0,0);
+}
+$('restartSameGame').onclick=()=>openGameMenuConfirm('restart');
+$('newGameSetup').onclick=()=>openGameMenuConfirm('new');
+$('gameMenuConfirmCancel').onclick=closeGameMenuConfirm;
+$('gameMenuConfirmAccept').onclick=()=>{
+ const action=pendingGameMenuAction;
+ closeGameMenuConfirm();
+ if(action==='restart')restartWithSavedSettings();
+ if(action==='new')returnToNewGameSetup();
+};
+$('gameMenuConfirm').addEventListener('click',e=>{
+ if(e.target===$('gameMenuConfirm'))closeGameMenuConfirm();
+});
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&!$('gameMenuConfirm').classList.contains('hidden'))closeGameMenuConfirm();
+});
+
+
+</script></body></html>
+
+<style>
+/* v0.1.26：所有遊戲階段統一只保留標題、玩家座位、階段資訊三區 */
+.stage-info-area{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:8px 0;box-shadow:0 8px 24px #1720330c}
+.stage-info-area>.stage-progress-info{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.stage-info-area>.panel{background:transparent;border:0;border-radius:0;box-shadow:none;padding:8px 0;margin:8px 0;border-top:1px solid #e6eaf0}
+.stage-info-area>.panel:first-of-type{border-top:0}
+.stage-info-area>.panel h2{font-size:16px;margin:0 0 8px}
+.stage-info-area .actions{margin-top:8px}
+.stage-info-area .game-hint{margin:8px 0}
+#reveal .stage-info-area h2{margin-bottom:8px}
+/* v0.1.26：任務次數與否決資訊只能屬於正式遊戲的階段資訊區 */
+#game>.stage-info-area>.stage-progress-info{position:relative;width:100%;margin:0 0 8px;padding:0;}
+#reveal #roundTitle,#reveal #voteFails{display:none!important}
+/* v0.1.26：秘密身份確認期間隱藏正式遊戲區，避免任務資訊框與分隔邊界露出 */
+#reveal:not(.hidden) ~ #game{display:none!important}
+
+/* v0.1.26：所有階段資訊區文字一律強制白色 */
+.stage-info-area,
+.stage-info-area *,
+.stage-info-area *::before,
+.stage-info-area *::after {
+  color: #fff !important;
+}
+
+/* v0.1.26：角色選單標題右側僅顯示已選人數 */
+#setup .role-dropdown>summary{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#setup .role-dropdown>summary .role-count{margin-left:auto;white-space:nowrap}
+</style>
+
+<style>
+/* v0.1.27：陣營標題右側顯示依玩家人數計算的陣營總人數 */
+#setup .role-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 4px;color:#fff;font-size:13px;font-weight:750}
+#setup .role-total{font-size:11px;font-weight:700;white-space:nowrap;opacity:.9}
+</style>
+
+<style>
+/* v0.1.34：出征確認按鈕沿用身份確認按鈕的尺寸、外觀與座位區下方定位 */
+.player-area-button-space #finishReveal,
+.player-area-button-space #submitTeam{margin:0;max-width:100%;width:auto;}
+</style>
+
+<style>
+/* v0.1.34：出征按鈕置中，空白投票操作區不再佔位；階段訊息取消內層面板框架 */
+.player-area-button-space{justify-content:center!important;position:relative}
+.player-area-button-space #submitTeam{display:block;margin-left:auto!important;margin-right:auto!important}
+#voteActionSpace:empty{display:none!important}
+#game.team-selection-phase #teamPanel{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important;margin:0!important}
+</style>
+
+<style>
+/* v0.1.37：隊伍投票結果顯示於玩家座位圓桌中央 */
+.vote-outcome-center{
+ position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+ z-index:8;width:46%;max-width:250px;min-width:145px;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+ padding:12px 7px;border:1px solid #d7dee8;border-radius:14px;
+ background:rgba(255,255,255,.75);box-shadow:0 6px 22px #101b2d38;
+ text-align:center;pointer-events:none;
+}
+.vote-outcome-title{font-size:clamp(14px,3.8vw,19px);font-weight:900;line-height:1.25;padding:6px 8px;border:1.5px solid currentColor;border-radius:9px;width:100%}
+.vote-outcome-title.passed,.vote-outcome-count.yes{color:#16834f}
+.vote-outcome-title.rejected,.vote-outcome-count.no{color:#c73535}
+.vote-outcome-count{font-size:clamp(12px,3.1vw,15px);font-weight:850;line-height:1.25;white-space:nowrap}
+@media(max-width:380px){.vote-outcome-center{min-width:136px;padding:9px 5px;gap:6px}}
+</style>
+
+<style>
+/* v0.1.41：確保遊戲選單在身份翻牌覆蓋層上方，且下拉選單不被標題列裁切 */
+body.app-fullscreen header{z-index:4000!important;overflow:visible!important}
+body.app-fullscreen #gameMenu{z-index:4100!important;pointer-events:auto!important}
+body.app-fullscreen #gameMenuButton,
+body.app-fullscreen #gameMenuDropdown{position:relative;z-index:4101;pointer-events:auto}
+body.app-fullscreen #gameMenuDropdown{position:absolute}
+</style>
+
+<style>
+/* v0.1.44：遊戲選單操作前，於畫面中央顯示確認視窗 */
+.game-menu-confirm{
+ position:fixed;inset:0;z-index:10000;
+ display:flex;align-items:center;justify-content:center;
+ padding:20px;background:rgba(8,17,31,.68);
+}
+.game-menu-confirm-card{
+ width:min(390px,100%);padding:24px 20px 18px;
+ border:1px solid #dce3ed;border-radius:18px;
+ background:#fff;box-shadow:0 18px 60px rgba(0,0,0,.38);
+ text-align:center;color:#243247;
+}
+.game-menu-confirm-card h2{margin:0 0 12px;font-size:20px;color:#173454}
+.game-menu-confirm-card p{margin:0;line-height:1.7;font-size:15px;color:#45556b}
+.game-menu-confirm-actions{display:flex;gap:10px;margin-top:22px}
+.game-menu-confirm-actions button{flex:1;min-width:0;padding:11px 8px;border-radius:10px;font-size:14px;font-weight:750}
+.game-menu-confirm-cancel{background:#e9edf2;color:#34445b}
+.game-menu-confirm-accept{background:#173d63;color:#fff}
+
+<style>
+/* v0.1.44：遊戲選單選項加入灰階圖示 */
+header .game-menu-dropdown button{display:flex;align-items:center;gap:10px}
+.game-menu-item-icon{width:17px;height:17px;flex:0 0 17px;fill:none;stroke:#aeb8c5;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+.game-menu-dropdown button span{display:inline-block}
+</style>
+
+<style>
+/* v0.1.44：遊戲選單改用灰階文字符號 */
+.game-menu-dropdown button{display:flex;align-items:center;gap:10px}
+.game-menu-item-symbol{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;flex:0 0 17px;color:#aeb8c5;font-family:Arial,sans-serif;font-size:19px;font-weight:600;line-height:1;opacity:.95}
+#newGameSetup .game-menu-item-symbol{font-size:17px}
+</style>
+
+
+<style>
+/* v0.1.45：玩家座位區下方按鈕預留空間高度加倍 */
+.player-area-button-space{
+ height:124px!important;
+ min-height:124px!important;
+ flex:0 0 124px!important;
+}
+
+/* v0.1.45：階段資訊區只保留外層框架，內部元素取消額外框架 */
+.stage-info-area :is(.panel,.notice,.secret,.vote,.track,.mission,.progress-rail,.progress-summary,.pill,.intel-reveal,.stage-progress-info){
+ background:transparent!important;
+ border:0!important;
+ border-radius:0!important;
+ box-shadow:none!important;
+ outline:0!important;
+}
+.stage-info-area>.panel{
+ padding:0!important;
+ margin:8px 0!important;
+}
+.stage-info-area .notice,
+.stage-info-area .secret,
+.stage-info-area .intel-reveal{
+ padding:0!important;
+ margin:8px 0!important;
+}
+.stage-info-area .stage-progress-info{
+ padding:0!important;
+ margin:0 0 8px!important;
+}
+.stage-info-area h2{
+ font-size:26px!important;
+ font-weight:900!important;
+ line-height:1.25!important;
+ margin:0 0 10px!important;
+}
+.stage-info-area>h2{
+ font-size:26px!important;
+ font-weight:900!important;
+}
+</style>
+
+
+<style>
+/* v0.1.46：玩家區下方按鈕高度統一增加一倍 */
+.player-area-button-space button{
+ box-sizing:border-box!important;
+ min-height:84px!important;
+ padding-top:22px!important;
+ padding-bottom:22px!important;
+}
+
+/* v0.1.46：階段資訊區內部全面取消次級框架，只保留外層資訊框架 */
+.stage-info-area :where(*) {
+ background:transparent!important;
+ border:0!important;
+ border-radius:0!important;
+ box-shadow:none!important;
+ outline:0!important;
+}
+.stage-info-area h2,
+.stage-info-area .stage-progress-info h2,
+.stage-info-area .panel h2{
+ font-size:20px!important;
+ font-weight:800!important;
+ line-height:1.3!important;
+}
+</style>
+
+<style>
+/* v0.1.49：加快身份發牌動畫 */
+#revealCircle.dealing-cards .identity-seat{pointer-events:none!important}
+#revealCircle .identity-seat.deal-pending .identity-card{opacity:0!important}
+#revealCircle .identity-seat.dealt .identity-card{opacity:1!important;transition:opacity .16s ease}
+#revealCircle .deal-center-card{position:absolute;left:50%;top:50%;z-index:15;transform:translate(-50%,-50%);pointer-events:none;margin:0;}
+.deal-flight-card{position:fixed!important;z-index:12000!important;pointer-events:none!important;margin:0!important;}
+#revealCircle .deal-center-card.deal-center-leaving{opacity:0;transition:opacity .12s ease}
+@media(prefers-reduced-motion:reduce){#revealCircle .deal-center-card.deal-center-leaving{transition:none}}
+</style>
