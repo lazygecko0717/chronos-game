@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.0.9</div>
+  <div class="home-version">VERSION v0.0.10</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1995,4 +1995,11 @@ body:not(.home-active)>header h1{color:#ffe0a0!important}
 .round-progress-row:last-child .round-progress-cell.rejected{color:#ff6c83!important;background:#7b2540!important}
 .round-progress-row:last-child .round-progress-cell.current{color:#ffe2a3!important;filter:drop-shadow(0 0 3px #ffc65e)}
 .identity-card .mini-seal.is-leader,.role-card-back .mini-seal.is-leader{color:#ffe4a1!important;text-shadow:0 0 5px #fff1ae,0 0 12px #ffb52f,0 2px 3px #000!important}
+</style><style>
+/* CHRONOS v0.0.10 — fractured clock veto rune */
+#game .round-progress-row:last-child .round-progress-cell{clip-path:none!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;filter:none!important;position:relative;color:#a9a5b8!important;font-size:0!important;transform:scale(.9)}
+#game .round-progress-row:last-child .round-progress-cell::after{content:""!important;display:block!important;position:absolute;inset:0;background:currentColor!important;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2040%2040%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M17%203%20A17%2017%200%200%200%208%2032%20M12%2035%20A17%2017%200%200%200%2024%2037%20M28%2035%20A17%2017%200%200%200%2022%203%20M20%206%20L16%2016%20L23%2020%20L18%2028%20L24%2035%20M8%2020%20H11%20M29%2020%20H32%20M20%2029%20V32%20M20%208%20V11%22%2F%3E%3Cpath%20d%3D%22M12%2012%20L17%2017%20M24%2023%20L29%2027%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat;-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2040%2040%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M17%203%20A17%2017%200%200%200%208%2032%20M12%2035%20A17%2017%200%200%200%2024%2037%20M28%2035%20A17%2017%200%200%200%2022%203%20M20%206%20L16%2016%20L23%2020%20L18%2028%20L24%2035%20M8%2020%20H11%20M29%2020%20H32%20M20%2029%20V32%20M20%208%20V11%22%2F%3E%3Cpath%20d%3D%22M12%2012%20L17%2017%20M24%2023%20L29%2027%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat;filter:none!important}
+#game .round-progress-row:last-child .round-progress-cell.rejected{color:#ff536f!important}
+#game .round-progress-row:last-child .round-progress-cell.current{color:#ffe09a!important;filter:drop-shadow(0 0 4px #ffbf4a)!important}
+#game .round-progress-row:last-child .round-progress-label::before{content:"◷"!important}
 </style>
