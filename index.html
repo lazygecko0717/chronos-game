@@ -197,7 +197,7 @@ body.app-fullscreen #game .panel{margin:8px 0}
 .team-seat.team-selected .team-pick,.team-seat.team-unselected .team-pick{visibility:hidden}
 @media(max-width:390px){.team-pick-card{height:57px}.team-pick-card .mini-seal{font-size:25px}.team-pick{width:17px!important;height:17px}}
 /* Home screen and install experience */
-.home-screen{position:fixed;inset:0;z-index:1000;min-height:100vh;min-height:100dvh;width:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:28px 20px;isolation:isolate;background:#0b1e32 url('./home-background.svg') center/cover no-repeat}
+.home-screen{position:fixed;inset:0;z-index:1000;min-height:100vh;min-height:100dvh;width:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:28px 20px;isolation:isolate;background:#0b1e32 url('./assets/home/home-background.webp') center/cover no-repeat}
 .home-screen:before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#08182a44,#08182a70 65%,#08182a99);pointer-events:none}
 .home-card{width:min(100%,560px);box-sizing:border-box;text-align:center;padding:24px 18px;background:transparent;color:#fff;position:relative}
 .home-card h2{font-size:clamp(32px,7vw,48px);letter-spacing:4px;margin:0 0 12px;color:#fff;text-shadow:0 3px 18px #000b}
@@ -215,7 +215,7 @@ body.home-active{overflow:hidden}body.home-active>header,body.home-active>footer
 .install-dialog h2{margin:0 0 10px}.install-dialog ol{padding-left:22px}.install-dialog .actions{margin-top:16px}
 @media(max-width:520px){.home-screen{padding:20px 14px}.home-card{padding:20px 10px}.home-subtitle{font-size:14px;margin-bottom:28px}}
 
-/* Avalon setup layout inspired by the Undercover setup screen */
+/* CHRONOS setup layout */
 #setup.setup-panel{width:min(100%,650px);margin:14px auto 18px;padding:18px;border-radius:20px;background:#fff;border:1px solid #dbe3ef;box-shadow:0 5px 18px #0f172a0d}
 .setup-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
 .setup-heading h2{margin:3px 0 0;font-size:21px;color:#172f4d}
@@ -275,7 +275,7 @@ body.home-active{overflow:hidden}body.home-active>header,body.home-active>footer
 
 /* v0.1.26：遊戲所有階段沿用首頁背景，主要前景面板為 20% 不透明度 */
 body, body.app-fullscreen {
-  background: #0b1e32 url('./home-background.svg') center center / cover fixed no-repeat !important;
+  background: #0b1e32 url('./assets/home/home-background.webp') center center / cover fixed no-repeat !important;
 }
 .panel,
 #setup.setup-panel {
@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.0.11</div>
+  <div class="home-version">VERSION v0.1.0</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1213,12 +1213,12 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
   <ul>
    <li><b>時序之神（時間守護者）</b>：能看見命運反抗軍成員，但看不見隱時者。</li>
    <li><b>命運觀測者（時間守護者）</b>：能看見時序之神與虛無之主，但無法分辨兩人的真正身份。</li>
-   <li><b>時間騎士（時間守護者）</b>：沒有額外視野，透過討論與任務推理守護時間線。</li>
+   <li><b>時間騎士、時空守衛、永恆使者（時間守護者）</b>：沒有額外視野，透過討論與任務推理守護時間線。</li>
    <li><b>命運刺客（命運反抗軍）</b>：時間守護者完成三個時間節點後，可發動最終命運裁決；若正確找出時序之神，命運反抗軍獲勝。</li>
    <li><b>虛無之主（命運反抗軍）</b>：在命運觀測者眼中會呈現為時序之神。</li>
    <li><b>隱時者（命運反抗軍）</b>：不會出現在時序之神的視野中。</li>
    <li><b>孤時旅者（命運反抗軍）</b>：不知道其他命運反抗軍成員，其他反抗軍也不知道其身份。</li>
-   <li><b>時間掠奪者（命運反抗軍）</b>：沒有額外視野，與同伴合作干擾時間線。</li>
+   <li><b>時間掠奪者、混沌旅者（命運反抗軍）</b>：沒有額外視野，與同伴合作干擾時間線。</li>
   </ul>
   <h3>三、遊戲流程</h3>
   <ol>
@@ -1236,7 +1236,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
   <p>標準規則中，<b>7 人以上的第 4 個時間節點</b>需要至少兩張干擾牌才算失守；也可選擇「所有節點一張干擾牌即失守」的自訂規則。</p>
   <h3>五、勝負條件</h3>
   <ul><li><b>時間守護者獲勝：</b>成功修復三個時間節點，且最終命運裁決未能找出時序之神。</li><li><b>命運反抗軍獲勝：</b>造成三個時間節點失守、連續五次隊伍遭否決，或最終命運裁決成功找出時序之神。</li></ul>
-  <p class="muted">本階段沿用原版已驗證的任務人數、投票、秘密出牌與勝負判定邏輯；角色名稱及世界觀已轉換，角色美術仍待後續替換為 CHRONOS 原創作品。</p>
+  <p class="muted">本遊戲採同一裝置輪流操作。請勿查看其他玩家的秘密身份或出牌畫面；音效可於首頁或遊戲標題欄關閉。</p>
  </div>
 </div>
 <div id="gameApp" class="hidden">
