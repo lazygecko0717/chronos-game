@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CHRONOS 時序之戰">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/svg+xml" href="chronos-icon.svg">
+<link rel="icon" type="image/png" href="./assets/home/app-icon-192.png"><link rel="apple-touch-icon" href="./assets/home/apple-touch-icon.png">
 
 
 <style>
@@ -1191,16 +1191,15 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 <main>
 <section id="homeScreen" class="home-screen">
  <div class="home-card">
-   <h2>CHRONOS 時序之戰</h2>
+   <h2><img class="home-logo" src="./assets/home/home-logo.png" alt="CHRONOS 時序之戰"></h2>
   <p class="home-subtitle">守護時間線與反抗命運的史詩對決<br>5–10 人同樂・同一台裝置輪流遊玩</p>
   <div class="home-actions">
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
-   <button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
+   <button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.0.7</div>
+  <div class="home-version">VERSION v0.0.8</div>
  </div>
 </section>
-<div id="gameApp" class="hidden">
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
  <div class="rules-dialog">
   <button type="button" class="rules-close" id="closeRules" aria-label="關閉規則">✕ 關閉</button>
@@ -1215,7 +1214,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <li><b>時序之神（時間守護者）</b>：能看見命運反抗軍成員，但看不見隱時者。</li>
    <li><b>命運觀測者（時間守護者）</b>：能看見時序之神與虛無之主，但無法分辨兩人的真正身份。</li>
    <li><b>時間騎士（時間守護者）</b>：沒有額外視野，透過討論與任務推理守護時間線。</li>
-   <li><b>命運命運刺客（命運反抗軍）</b>：時間守護者完成三個時間節點後，可發動最終命運裁決；若正確找出時序之神，命運反抗軍獲勝。</li>
+   <li><b>命運刺客（命運反抗軍）</b>：時間守護者完成三個時間節點後，可發動最終命運裁決；若正確找出時序之神，命運反抗軍獲勝。</li>
    <li><b>虛無之主（命運反抗軍）</b>：在命運觀測者眼中會呈現為時序之神。</li>
    <li><b>隱時者（命運反抗軍）</b>：不會出現在時序之神的視野中。</li>
    <li><b>孤時旅者（命運反抗軍）</b>：不知道其他命運反抗軍成員，其他反抗軍也不知道其身份。</li>
@@ -1240,6 +1239,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
   <p class="muted">本階段沿用原版已驗證的任務人數、投票、秘密出牌與勝負判定邏輯；角色名稱及世界觀已轉換，角色美術仍待後續替換為 CHRONOS 原創作品。</p>
  </div>
 </div>
+<div id="gameApp" class="hidden">
 <section id="setup" class="panel setup-panel">
 <div class="setup-heading">
  <div><h2>建立遊戲</h2></div>
@@ -1363,7 +1363,8 @@ $('closeNames').onclick=()=>{$('namesOverlay').classList.add('hidden');$('openNa
 $('namesOverlay').onclick=e=>{if(e.target===$('namesOverlay'))$('namesOverlay').classList.add('hidden')};
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('namesOverlay').classList.add('hidden')});
 $('openRules').onclick=()=>{$('rulesOverlay').classList.remove('hidden');$('closeRules').focus()};
-$('closeRules').onclick=()=>{$('rulesOverlay').classList.add('hidden');$('openRules').focus()};
+$('homeRules').onclick=()=>{$('rulesOverlay').classList.remove('hidden');$('closeRules').focus()};
+$('closeRules').onclick=()=>{$('rulesOverlay').classList.add('hidden');$(document.body.classList.contains('home-active')?'homeRules':'openRules').focus()};
 $('rulesOverlay').onclick=e=>{if(e.target===$('rulesOverlay'))$('rulesOverlay').classList.add('hidden')};
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('rulesOverlay').classList.add('hidden')});
 function chosen(id){return [...document.querySelectorAll(`#${id} input:checked`)].map(x=>x.value)}
@@ -1961,4 +1962,16 @@ header .game-menu-dropdown button{display:flex;align-items:center;gap:10px}
 #reveal .identity-seat.revealed .role-card-front.faction-good{background:linear-gradient(to right,transparent 8%,#e4f3ffcc 16%,#e4f3ffcc 84%,transparent 92%),url('./assets/cards/guardian-frame.png') center/100% 100% no-repeat!important;border-color:transparent!important;box-shadow:none!important}
 #reveal .identity-seat.revealed .role-card-front.faction-evil{background:linear-gradient(to right,transparent 8%,#f3e5ffcc 16%,#f3e5ffcc 84%,transparent 92%),url('./assets/cards/rebel-frame.png') center/100% 100% no-repeat!important;border-color:transparent!important;box-shadow:none!important}
 #reveal .identity-seat.revealed .role-card-front:before,#reveal .identity-seat.revealed .role-card-front:after{display:none!important}
+</style><style>
+#homeScreen.home-screen{background:#10142c url('./assets/home/home-background.webp') center/cover no-repeat!important;padding:env(safe-area-inset-top,0px) 14px env(safe-area-inset-bottom,0px)!important;align-items:flex-end;overflow:auto}
+#homeScreen.home-screen:before{background:linear-gradient(180deg,transparent 35%,#090b2580 75%,#090b25c9)!important}
+#homeScreen .home-card{padding:12px 8px max(20px,env(safe-area-inset-bottom));width:min(100%,460px)}
+#homeScreen .home-logo{display:block;width:100%;max-height:25dvh;object-fit:contain;margin:auto}
+#homeScreen .home-subtitle{display:none}
+#homeScreen .home-actions{gap:10px;margin-top:18px}
+#homeScreen .home-actions button{min-height:48px;border:2px solid #d9ac50;border-radius:9px;background:linear-gradient(180deg,#294a79,#0b1939 52%,#172a50)!important;color:#ffe5a0!important;box-shadow:inset 0 0 0 2px #79531e,0 4px 12px #0009;text-shadow:0 2px 3px #000;font-weight:800}
+#homeScreen .home-install{font-size:14px}
+#homeScreen .home-version{margin-top:14px}
+#rulesOverlay{z-index:1300}
+@media(max-height:520px){#homeScreen .home-card{padding:6px}#homeScreen .home-logo{max-height:18dvh}#homeScreen .home-actions{gap:5px;margin-top:6px}#homeScreen .home-actions button{min-height:36px}#homeScreen .home-version{margin-top:5px}}
 </style>
