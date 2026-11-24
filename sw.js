@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chronos-v0-0-10';
+const CACHE_NAME = 'chronos-v0-0-11';
 const APP_FILES = ['./', './index.html', './manifest.webmanifest', './assets/home/app-icon-192.png', './assets/home/app-icon-512.png', './assets/home/apple-touch-icon.png', './assets/home/home-background.webp', './assets/home/home-logo.png', './assets/player-area-bg.webp'];
 
 self.addEventListener('install', event => {

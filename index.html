@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.0.10</div>
+  <div class="home-version">VERSION v0.0.11</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1455,7 +1455,7 @@ function showReveal(){
   animateIdentityDeal();
  }
 }
-function animateIdentityDeal(){
+function animateIdentityDeal(){window.chronosCue?.('start');
  const circle=$('revealCircle');
  circle.classList.add('dealing-cards');
  const seats=[...circle.querySelectorAll('.identity-seat[data-player-index]')].sort((a,b)=>Number(a.dataset.playerIndex)-Number(b.dataset.playerIndex));
@@ -1482,7 +1482,7 @@ function animateIdentityDeal(){
   const seat=seats[index],target=seat.querySelector('.identity-card');
   if(!target){dealNext(index+1);return}
   const rect=target.getBoundingClientRect();
-  const flight=center.cloneNode(true);
+  window.chronosCue?.('deal');const flight=center.cloneNode(true);
   flight.className='identity-card deal-flight-card';
   flight.style.width=rect.width+'px';
   flight.style.height=rect.height+'px';
@@ -1504,7 +1504,7 @@ function animateIdentityDeal(){
 }
 function openRoleCard(index){
  if(index!==revealIndex||roleCardOpen||roleCardClosing)return;
- roleCardOpen=true;
+ window.chronosCue?.('flip');roleCardOpen=true;
  roleCardClosing=false;
  renderPlayerCircle('revealCircle',leader,true);
 }
@@ -1595,7 +1595,7 @@ function updateVoteTurnCircle(){
  el.classList.remove('hidden');
 }
 function renderVote(){let p=players[voteIndex];updateVoteTurnCircle();$('gameHint').textContent=p.name+'，請秘密選擇贊成或反對。';$('votes').innerHTML='';$('voteActionSpace').innerHTML='<button type="button" class="blue" onclick="castVote(true)">贊成</button><button type="button" class="red" onclick="castVote(false)">反對</button>'}
-window.castVote=v=>{voteValues[voteIndex]=v;voteIndex++;if(voteIndex<players.length)renderVote();else{$('gameHint').textContent='全員已完成投票，請公布投票結果。';$('votes').innerHTML='';$('voteActionSpace').innerHTML='';$('voteActionSpace').appendChild($('submitVotes'));$('submitVotes').classList.remove('hidden');$('submitVotes').disabled=false;updateVoteTurnCircle()}};
+window.castVote=v=>{window.chronosCue?.('secret');voteValues[voteIndex]=v;voteIndex++;if(voteIndex<players.length)renderVote();else{$('gameHint').textContent='全員已完成投票，請公布投票結果。';$('votes').innerHTML='';$('voteActionSpace').innerHTML='';$('voteActionSpace').appendChild($('submitVotes'));$('submitVotes').classList.remove('hidden');$('submitVotes').disabled=false;updateVoteTurnCircle()}};
 function revealVoteCircle(yes,no,passed){
  // 保留任務進度資訊在玩家座位區中央，先依序翻開各玩家的投票卡
  renderPlayerCircle('tableCircle',leader,false,false,true);
@@ -1613,7 +1613,7 @@ function revealVoteCircle(yes,no,passed){
  const revealDuration=Math.max(0,(players.length-1)*480+520+150);
  window.setTimeout(()=>{
   const outcome=$('tableCircle').querySelector('.vote-outcome-center');
-  if(outcome)outcome.classList.remove('hidden');
+  if(outcome){outcome.classList.remove('hidden');window.chronosCue?.(passed?'pass':'reject');window.chronosFlash?.(passed?'pass':'fail')}
   $('submitVotes').disabled=false;
  },revealDuration);
 }
@@ -1676,10 +1676,10 @@ function updateMissionTurnCircle(onComplete){
  return true;
 }
 $('missionShow').onclick=()=>{let p=players[team[missionIndex]],evil=evilRoles.includes(p.role);$('gameHint').textContent=`${p.name}，請秘密選擇任務牌。其他玩家請勿觀看。`;$('missionSecret').innerHTML=`<div>${p.name}，請選擇</div><div class="actions"><button class="blue" onclick="missionCard(true)"><img src="./assets/cards/mission-success.png" alt="">任務成功</button>${evil?'<button class="red" onclick="missionCard(false)"><img src="./assets/cards/mission-failure.png" alt="">任務失敗</button>':''}</div>`;$('missionSecret').classList.remove('hidden');$('missionShow').classList.add('hidden')};
-window.missionCard=v=>{missionValues.push(v);missionIndex++;if(missionIndex<team.length){renderMission()}else{$('missionPanel').classList.add('hidden');$('gameHint').textContent='所有修復小隊成員均已完成秘密選擇，請查看任務結果。';let fails=missionValues.filter(x=>!x).length,threshold=($('rule').value==='standard'&&count()>=7&&round===3)?2:1;let passed=fails<threshold;if(passed)success++;else fail++;$('resultPanel').classList.remove('hidden');$('gameHint').textContent='時間節點結果已統計，請確認後進入下一步。';$('resultText').innerHTML=`時間節點結果：<b>${passed?'修復成功':'遭到干擾'}</b><br>干擾牌數：${fails} 張（本關需 ${threshold} 張干擾才算節點失守）<br><span class="muted">時間牌已統計，不公開各玩家出的牌。</span>`;phase='result'}};
+window.missionCard=v=>{window.chronosCue?.('secret');missionValues.push(v);missionIndex++;if(missionIndex<team.length){renderMission()}else{$('missionPanel').classList.add('hidden');$('gameHint').textContent='所有修復小隊成員均已完成秘密選擇，請查看任務結果。';let fails=missionValues.filter(x=>!x).length,threshold=($('rule').value==='standard'&&count()>=7&&round===3)?2:1;let passed=fails<threshold;if(passed)success++;else fail++;window.chronosCue?.(passed?'success':'failure');window.chronosFlash?.(passed?'pass':'fail');$('resultPanel').classList.remove('hidden');$('gameHint').textContent='時間節點結果已統計，請確認後進入下一步。';$('resultText').innerHTML=`時間節點結果：<b>${passed?'修復成功':'遭到干擾'}</b><br>干擾牌數：${fails} 張（本關需 ${threshold} 張干擾才算節點失守）<br><span class="muted">時間牌已統計，不公開各玩家出的牌。</span>`;phase='result'}};
 $('next').onclick=()=>{if(fail>=3){end('命運反抗軍獲勝','命運反抗軍造成 3 個時間節點失守。');return}if(success>=3){let assassin=players.find(p=>p.role==='命運刺客');if(!assassin){end('時間守護者獲勝','時間守護者已修復三個時間節點，且本局未配置命運刺客。');return}$('resultPanel').classList.add('hidden');$('assassinPanel').classList.remove('hidden');$('gameHint').textContent='請命運刺客選擇一位玩家，進行最終命運裁決。';$('assassinChoices').innerHTML=players.map((p,i)=>`<label class="vote"><input type="radio" name="target" value="${i}" style="width:auto"> ${p.name}</label>`).join('');return}round++;leader=(leader+1)%players.length;beginRound()};
 $('assassinate').onclick=()=>{let t=document.querySelector('input[name=target]:checked');if(!t){alert('請選擇最終裁決目標。');return}let p=players[+t.value];if(p.role==='時序之神')end('命運反抗軍獲勝','命運刺客成功指認時序之神！');else end('時間守護者獲勝',`命運刺客指認了 ${p.name}，但他不是時序之神。`);};
-function end(title,msg){$('teamPanel').classList.add('hidden');$('votePanel').classList.add('hidden');$('missionPanel').classList.add('hidden');$('resultPanel').classList.add('hidden');$('assassinPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');$('gameHint').textContent=msg;$('endTitle').textContent=title;$('endText').textContent=msg+` 最終戰績：時間節點修復成功 ${success} 次、失守 ${fail} 次。`;$('roundTitle').textContent='遊戲結束';}
+function end(title,msg){window.chronosCue?.(title.includes('時間守護者')?'win':'lose');window.chronosFlash?.(title.includes('時間守護者')?'pass':'fail');$('teamPanel').classList.add('hidden');$('votePanel').classList.add('hidden');$('missionPanel').classList.add('hidden');$('resultPanel').classList.add('hidden');$('assassinPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');$('gameHint').textContent=msg;$('endTitle').textContent=title;$('endText').textContent=msg+` 最終戰績：時間節點修復成功 ${success} 次、失守 ${fail} 次。`;$('roundTitle').textContent='遊戲結束';}
 $('restart').onclick=()=>location.reload();
 function closeGameMenu(){
  $('gameMenuDropdown').classList.add('hidden');
@@ -2002,4 +2002,26 @@ body:not(.home-active)>header h1{color:#ffe0a0!important}
 #game .round-progress-row:last-child .round-progress-cell.rejected{color:#ff536f!important}
 #game .round-progress-row:last-child .round-progress-cell.current{color:#ffe09a!important;filter:drop-shadow(0 0 4px #ffbf4a)!important}
 #game .round-progress-row:last-child .round-progress-label::before{content:"◷"!important}
-</style>
+</style><style>
+#chronosSoundToggle{min-height:36px!important;font-size:13px!important}
+#chronosGameSoundToggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;padding:5px 8px;background:#15213b;color:#ffe0a0;border:1px solid #b68a45;border-radius:6px}
+body:not(.home-active)>header h1{padding-right:75px}
+.deal-flight-card{filter:drop-shadow(0 0 7px #ffc86b)}
+@keyframes chronoPass{0%,100%{filter:none}35%{filter:drop-shadow(0 0 13px #ffce69)}}
+@keyframes chronoFail{0%,100%{filter:none}35%{filter:drop-shadow(0 0 13px #ee497e)}}
+.chrono-pass{animation:chronoPass .7s ease-out}.chrono-fail{animation:chronoFail .7s ease-out}
+@media(prefers-reduced-motion:reduce){.chrono-pass,.chrono-fail{animation:none}}
+</style><script>
+(function(){
+ let enabled=true,ctx;
+ try{enabled=localStorage.getItem('chronosSound')!=='off'}catch(e){}
+ const tones={start:[220,330,440,660],deal:[440,660],flip:[330,495,660],pick:[660],secret:[440,550],pass:[392,523,659],reject:[330,220,165],success:[392,523,659,784],failure:[220,196,130],win:[262,392,523,659,784],lose:[330,247,196,131]};
+ function unlock(){if(!enabled)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;ctx=ctx||new C();if(ctx.state==='suspended')ctx.resume().catch(()=>{})}catch(e){}}
+ document.addEventListener('pointerdown',unlock,true);document.addEventListener('click',unlock,true);
+ window.chronosCue=function(kind){if(!enabled||!ctx||ctx.state!=='running')return;try{(tones[kind]||tones.pick).forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+i*.075;o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.055,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+.16);o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+.17)})}catch(e){}};
+ window.chronosFlash=function(kind){const host=document.querySelector('#game:not(.hidden) .player-circle')||document.querySelector('#reveal:not(.hidden) .player-circle');if(!host)return;host.classList.remove('chrono-pass','chrono-fail');void host.offsetWidth;host.classList.add(kind==='fail'?'chrono-fail':'chrono-pass')};
+ const btn=document.createElement('button');btn.type='button';btn.id='chronosSoundToggle';function label(){btn.textContent=enabled?'音效：開':'音效：關';btn.setAttribute('aria-pressed',String(enabled))}label();btn.onclick=()=>{enabled=!enabled;try{localStorage.setItem('chronosSound',enabled?'on':'off')}catch(e){}label();if(enabled){unlock();window.chronosCue('pick')}};document.querySelector('.home-actions').appendChild(btn);
+ const gameBtn=btn.cloneNode(true);gameBtn.id='chronosGameSoundToggle';gameBtn.onclick=()=>{btn.click();gameBtn.textContent=btn.textContent;gameBtn.setAttribute('aria-pressed',String(enabled))};document.querySelector('body>header')?.appendChild(gameBtn);btn.addEventListener('click',()=>{gameBtn.textContent=btn.textContent;gameBtn.setAttribute('aria-pressed',String(enabled))});
+ document.addEventListener('change',e=>{if(e.target.matches('.team-pick'))window.chronosCue('pick')});
+})();
+</script>
