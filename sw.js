@@ -1,5 +1,5 @@
-const CACHE_NAME = 'chronos-v0-0-8';
-const APP_FILES = ['./', './index.html', './manifest.webmanifest', './assets/home/app-icon-192.png', './assets/home/app-icon-512.png', './assets/home/apple-touch-icon.png', './assets/home/home-background.webp', './assets/home/home-logo.png', './assets/player-area-bg.svg'];
+const CACHE_NAME = 'chronos-v0-0-9';
+const APP_FILES = ['./', './index.html', './manifest.webmanifest', './assets/home/app-icon-192.png', './assets/home/app-icon-512.png', './assets/home/apple-touch-icon.png', './assets/home/home-background.webp', './assets/home/home-logo.png', './assets/player-area-bg.webp'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES)));

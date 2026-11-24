@@ -468,7 +468,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 .vote-reveal-stage{
  background-image:
   linear-gradient(rgba(7,18,31,.22),rgba(7,18,31,.22)),
-  url('./assets/player-area-bg.svg') !important;
+  url('./assets/player-area-bg.webp') !important;
  background-position:center;
  background-size:cover;
  background-repeat:no-repeat;
@@ -544,7 +544,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 .vote-reveal-stage{
   background-image:
     linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.75)),
-    url('./assets/player-area-bg.svg') !important;
+    url('./assets/player-area-bg.webp') !important;
   background-position:center center !important;
   background-size:cover !important;
   background-repeat:no-repeat !important;
@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.0.8</div>
+  <div class="home-version">VERSION v0.0.9</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1974,4 +1974,25 @@ header .game-menu-dropdown button{display:flex;align-items:center;gap:10px}
 #homeScreen .home-version{margin-top:14px}
 #rulesOverlay{z-index:1300}
 @media(max-height:520px){#homeScreen .home-card{padding:6px}#homeScreen .home-logo{max-height:18dvh}#homeScreen .home-actions{gap:5px;margin-top:6px}#homeScreen .home-actions button{min-height:36px}#homeScreen .home-version{margin-top:5px}}
+</style><style>
+/* CHRONOS v0.0.9 — visual theme only */
+#reveal .player-circle,#game .player-circle,.vote-reveal-stage{background-image:linear-gradient(#080b2090,#080b2090),url('./assets/player-area-bg.webp')!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important;box-shadow:inset 0 0 0 1px #c79b50,inset 0 0 22px #090c24!important;border-radius:14px}
+#reveal .player-area-panel,#game .player-area-panel{background:linear-gradient(145deg,#10182de8,#20132fe8)!important;box-shadow:inset 0 0 0 1px #ad8246,0 4px 16px #0006!important}
+#reveal .stage-info-area,#game .stage-info-area{background:linear-gradient(145deg,#10182de8,#241735e8)!important;border:1px solid #bd9451!important;box-shadow:inset 0 0 0 1px #705027,0 4px 14px #0005!important;color:#fff!important}
+#reveal .stage-info-area h2,#game .stage-info-area h2{color:#ffe0a0!important;text-shadow:0 2px 3px #000}
+body:not(.home-active)>header{background:linear-gradient(110deg,#101b36,#261438)!important;box-shadow:inset 0 -1px #d8af60,0 3px 12px #0007!important;color:#ffe0a0!important}
+body:not(.home-active)>header h1{color:#ffe0a0!important}
+#reveal .player-area-button-space button,#game .player-area-button-space button,#game .stage-info-area button{background:linear-gradient(180deg,#304b75,#101b38 55%,#1c2b50)!important;color:#ffe6ad!important;border:1px solid #d6aa58!important;box-shadow:inset 0 0 0 1px #8d652d,0 3px 8px #0006!important;text-shadow:0 1px 3px #000}
+#game .stage-info-area button.red{background:linear-gradient(#783049,#36152b)!important}
+#game button:disabled,#reveal button:disabled{cursor:default}
+.round-progress-center{background:#080e25b8!important;box-shadow:inset 0 0 0 1px #a47b47!important}
+.round-progress-label{color:#ffe2a3!important}
+.round-progress-row:first-child .round-progress-cell{clip-path:none!important;border-radius:50%!important;background:#192440!important;border:1px solid #8c774f!important;color:#fff!important}
+.round-progress-row:first-child .round-progress-cell.win{background:#205c81!important;border-color:#91ddff!important}
+.round-progress-row:first-child .round-progress-cell.fail{background:#682344!important;border-color:#ef8da6!important}
+.round-progress-row:first-child .round-progress-cell.current{border:2px solid #ffe09a!important;box-shadow:0 0 8px #ffc95d!important}
+.round-progress-row:last-child .round-progress-cell{color:#a9a5b8!important}
+.round-progress-row:last-child .round-progress-cell.rejected{color:#ff6c83!important;background:#7b2540!important}
+.round-progress-row:last-child .round-progress-cell.current{color:#ffe2a3!important;filter:drop-shadow(0 0 3px #ffc65e)}
+.identity-card .mini-seal.is-leader,.role-card-back .mini-seal.is-leader{color:#ffe4a1!important;text-shadow:0 0 5px #fff1ae,0 0 12px #ffb52f,0 2px 3px #000!important}
 </style>
