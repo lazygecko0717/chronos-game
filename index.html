@@ -1322,21 +1322,23 @@ $('installApp').onclick=async()=>{
 };
 $('closeInstallHelp').onclick=()=>$('installHelp').classList.add('hidden');
 $('installHelp').onclick=e=>{if(e.target===$('installHelp'))$('installHelp').classList.add('hidden')};
-const evilRoles=['命運刺客','虛無之主','隱時者','孤時旅者','時間掠奪者'];
-const goodRoles=['時序之神','命運觀測者','時間騎士'];
+const evilRoles=['命運刺客','虛無之主','隱時者','孤時旅者','時間掠奪者','混沌旅者'];
+const goodRoles=['時序之神','命運觀測者','時間騎士','時空守衛','永恆使者'];
 const defaultSpecial={5:['時序之神','命運觀測者','命運刺客','虛無之主'],6:['時序之神','命運觀測者','命運刺客','虛無之主'],7:['時序之神','命運觀測者','命運刺客','虛無之主','孤時旅者'],8:['時序之神','命運觀測者','命運刺客','虛無之主','隱時者'],9:['時序之神','命運觀測者','命運刺客','虛無之主','隱時者'],10:['時序之神','命運觀測者','命運刺客','虛無之主','隱時者','孤時旅者']};
 const ratios={5:[3,2],6:[4,2],7:[4,3],8:[5,3],9:[6,3],10:[6,4]};
 const teamSizes={5:[2,3,2,3,3],6:[2,3,4,3,4],7:[2,3,3,4,4],8:[3,4,4,5,5],9:[3,4,4,5,5],10:[3,4,4,5,5]};
 let players=[],roles=[],round=0,leader=0,consecutive=0,success=0,fail=0,team=[],voteIndex=0,voteValues=[],missionIndex=0,missionValues=[],phase='setup',revealIndex=0,roleCardOpen=false,assassinTarget=null;
 let voteRevealed=false,teamConfirmed=false,roleCardClosing=false;
 let savedGameSettings=null;
+let roleConfigMode='preset';
 function count(){return +$('count').value}
 function renderSetup(){let n=count();$('ratio').textContent='';
 $('names').innerHTML=Array.from({length:n},(_,i)=>`<div class="player name-option"><input id="p${i}" aria-label="玩家 ${i+1} 名稱" placeholder="玩家 ${i+1}" value="玩家${i+1}" maxlength="12"></div>`).join('');
-let sp=defaultSpecial[n];let good=sp.filter(x=>goodRoles.includes(x)),evil=sp.filter(x=>evilRoles.includes(x));
-const roleOption=(name,side,selected)=>{const slug={'時序之神':'merlin','命運觀測者':'percival','時間騎士':'servant','命運刺客':'assassin','虛無之主':'morgana','隱時者':'mordred','孤時旅者':'oberon','時間掠奪者':'minion'}[name];return `<label class="role-option"><img src="./assets/roles/${slug}.png" alt=""><span>${name}</span><input type="checkbox" value="${name}" ${selected?'checked':''}></label>`};
-const fixedRole=(name)=>{const slug=name==='時間騎士'?'servant':'minion';return `<div class="role-option role-fixed"><img src="./assets/roles/${slug}.png" alt=""><span>${name}</span><small>固定補足</small></div>`};
-$('roles').innerHTML=`<div class="row"><div class="role-side good"><div class="role-heading"><span>時間守護者角色</span><span class="role-total">${ratios[n][0]} 人</span></div><details class="role-dropdown"><summary><span>選擇時間守護者角色</span><span class="role-count">已選 ${good.length} 位</span></summary><div class="role-menu" id="goodChecks">${['時序之神','命運觀測者'].map(x=>roleOption(x,'good',good.includes(x))).join('')}${fixedRole('時間騎士')}</div></details></div><div class="role-side evil"><div class="role-heading"><span>命運反抗軍角色</span><span class="role-total">${ratios[n][1]} 人</span></div><details class="role-dropdown"><summary><span>選擇命運反抗軍角色</span><span class="role-count">已選 ${evil.length} 位</span></summary><div class="role-menu" id="evilChecks">${['命運刺客','虛無之主','隱時者','孤時旅者'].map(x=>roleOption(x,'evil',evil.includes(x))).join('')}${fixedRole('時間掠奪者')}</div></details></div></div><p class="muted">未選滿的陣營名額會自動以「時間騎士」或「時間掠奪者」補足。命運刺客建議保留，否則三次成功後將無法進行命運裁決階段。</p>`;
+let sp=roleConfigMode==='preset'?defaultSpecial[n]:['時序之神','命運刺客'];let good=sp.filter(x=>goodRoles.includes(x)),evil=sp.filter(x=>evilRoles.includes(x));
+const roleOption=(name,side,selected)=>{const slug={'時序之神':'merlin','命運觀測者':'percival','時間騎士':'servant','時空守衛':'servant','永恆使者':'servant','命運刺客':'assassin','虛無之主':'morgana','隱時者':'mordred','孤時旅者':'oberon','時間掠奪者':'minion','混沌旅者':'minion'}[name];return `<label class="role-option"><img src="./assets/roles/${slug}.png" alt=""><span>${name}</span><input type="checkbox" value="${name}" ${selected?'checked':''}></label>`};
+const fixedRole=(name)=>{const slug=goodRoles.includes(name)?'servant':'minion';return `<div class="role-option role-fixed"><img src="./assets/roles/${slug}.png" alt=""><span>${name}</span><small>固定補足</small></div>`};
+$('roles').innerHTML=`<label class="role-mode-label">角色配置模式<select id="roleConfigMode"><option value="preset" ${roleConfigMode==='preset'?'selected':''}>預設配置</option><option value="free" ${roleConfigMode==='free'?'selected':''}>自由選擇</option></select></label><div class="row"><div class="role-side good"><div class="role-heading"><span>時間守護者角色</span><span class="role-total">${ratios[n][0]} 人</span></div><details class="role-dropdown"><summary><span>選擇時間守護者角色</span><span class="role-count">已選 ${good.length} 位</span></summary><div class="role-menu" id="goodChecks">${['時序之神','命運觀測者','時間騎士','時空守衛','永恆使者'].map(x=>roleOption(x,'good',good.includes(x))).join('')}</div></details></div><div class="role-side evil"><div class="role-heading"><span>命運反抗軍角色</span><span class="role-total">${ratios[n][1]} 人</span></div><details class="role-dropdown"><summary><span>選擇命運反抗軍角色</span><span class="role-count">已選 ${evil.length} 位</span></summary><div class="role-menu" id="evilChecks">${['命運刺客','虛無之主','隱時者','孤時旅者','時間掠奪者','混沌旅者'].map(x=>roleOption(x,'evil',evil.includes(x))).join('')}</div></details></div></div><p class="muted">預設配置會依玩家人數帶入建議角色；自由選擇可自行搭配特殊角色。未選滿的名額會以普通角色補足。命運刺客為反抗軍必要角色，若未選取會自動補入。</p>`;
+$('roleConfigMode').onchange=e=>{roleConfigMode=e.target.value;renderSetup()};
 $('roles').querySelectorAll('.role-dropdown').forEach(dropdown=>{const update=()=>{const checks=dropdown.querySelectorAll('input[type="checkbox"]');const count=dropdown.querySelector('.role-count');count.textContent='已選 '+Array.from(checks).filter(x=>x.checked).length+' 位'};dropdown.querySelectorAll('input[type="checkbox"]').forEach(input=>input.addEventListener('change',update));});
 }
 $('count').onchange=renderSetup;renderSetup();
@@ -1359,7 +1361,7 @@ function enterGameFullscreen(){
 }
 function start(){let n=count(),[g,e]=ratios[n],gs=chosen('goodChecks'),es=chosen('evilChecks');
 if(gs.length>g||es.length>e||gs.length===0||!gs.includes('時序之神')){alert('請確認特殊角色數量沒有超過陣營人數，且保留時序之神。');return}
-savedGameSettings={count:n,rule:$('rule').value,names:Array.from({length:n},(_,i)=>$('p'+i).value.trim()||`玩家${i+1}`),good:[...gs],evil:[...es]};
+savedGameSettings={count:n,rule:$('rule').value,roleConfigMode,names:Array.from({length:n},(_,i)=>$('p'+i).value.trim()||`玩家${i+1}`),good:[...gs],evil:[...es]};
 $('gameMenu').classList.remove('hidden');$('gameMenuDropdown').classList.add('hidden');$('gameMenuButton').setAttribute('aria-expanded','false');
 enterGameFullscreen();
 let gr=[...gs,...Array(g-gs.length).fill('時間騎士')],er=[...es,...Array(e-es.length).fill('時間掠奪者')];
@@ -1692,7 +1694,7 @@ function closeGameMenuConfirm(){
 function restartWithSavedSettings(){
  if(!savedGameSettings)return;
  const cfg=savedGameSettings;
- $('count').value=String(cfg.count);renderSetup();$('rule').value=cfg.rule;
+ roleConfigMode=cfg.roleConfigMode||'preset';$('count').value=String(cfg.count);renderSetup();$('rule').value=cfg.rule;
  cfg.names.forEach((name,i)=>{const input=$('p'+i);if(input)input.value=name});
  ['goodChecks','evilChecks'].forEach((id,index)=>{
   const selected=new Set(index===0?cfg.good:cfg.evil);
