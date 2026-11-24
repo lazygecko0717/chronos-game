@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.0.6</div>
+  <div class="home-version">VERSION v0.0.7</div>
  </div>
 </section>
 <div id="gameApp" class="hidden">
@@ -1955,4 +1955,10 @@ header .game-menu-dropdown button{display:flex;align-items:center;gap:10px}
 .vote-result-front .vote-result-choice{color:transparent!important;text-shadow:none!important}
 #missionSecret button[onclick^="missionCard"] img{display:block;width:100%;max-width:90px;height:auto;margin:auto}
 #missionSecret button[onclick^="missionCard"]{height:auto;min-height:44px}
+</style>
+<style>
+/* v0.0.7: faction frame overrides legacy reveal backgrounds */
+#reveal .identity-seat.revealed .role-card-front.faction-good{background:linear-gradient(to right,transparent 8%,#e4f3ffcc 16%,#e4f3ffcc 84%,transparent 92%),url('./assets/cards/guardian-frame.png') center/100% 100% no-repeat!important;border-color:transparent!important;box-shadow:none!important}
+#reveal .identity-seat.revealed .role-card-front.faction-evil{background:linear-gradient(to right,transparent 8%,#f3e5ffcc 16%,#f3e5ffcc 84%,transparent 92%),url('./assets/cards/rebel-frame.png') center/100% 100% no-repeat!important;border-color:transparent!important;box-shadow:none!important}
+#reveal .identity-seat.revealed .role-card-front:before,#reveal .identity-seat.revealed .role-card-front:after{display:none!important}
 </style>
