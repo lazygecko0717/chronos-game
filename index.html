@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" id="homeRanking">時序英雄排行榜</button><button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.2.3</div>
+  <div class="home-version">VERSION v0.2.4</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1295,7 +1295,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 </section>
 
 </div>
-</main><footer>CHRONOS 時序之戰｜v0.2.3｜本機遊戲，不會上傳玩家資料</footer>
+</main><footer>CHRONOS 時序之戰｜v0.2.4｜本機遊戲，不會上傳玩家資料</footer>
 <div id="installHelp" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle">
  <div class="install-dialog">
   <h2 id="installHelpTitle">📲 加入主畫面</h2>
@@ -2117,4 +2117,22 @@ function createChronoSkillEngine(roster,mode='classic'){
  window.chronoSkillStage=(e,stage,node,leader,callback)=>{if(engine||!e.begin(stage,node,leader))return false;engine=e;done=callback;priorFocus=document.activeElement;overlay.classList.remove('hidden');showPass();return true};
  window.chronoSkillAbort=()=>{engine?.close();engine=null;done=null;privateView=false;overlay.classList.add('hidden');text.textContent='';use.classList.add('hidden');skip.classList.add('hidden')};
 })();
-</script>
+</script><style>
+/* Full-bleed identity artwork; existing flip geometry is unchanged. */
+#reveal .identity-seat.revealed .role-card-front.faction-good,
+#reveal .identity-seat.revealed .role-card-front.faction-evil{isolation:isolate;overflow:hidden;justify-content:flex-end!important;background:#10192e!important;border:2px solid #c5a15d!important;padding:14px!important;box-sizing:border-box}
+#reveal .identity-seat.revealed .role-card-front.faction-evil{border-color:#b18bd9!important;background:#21132f!important}
+#reveal .identity-seat.revealed .role-card-front .character-art{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important;object-position:center 35%;margin:0!important;z-index:0!important;filter:none!important;pointer-events:none}
+#reveal .identity-seat.revealed .role-card-front:before{content:""!important;display:block!important;position:absolute!important;inset:0!important;z-index:1!important;background:linear-gradient(180deg,#080c1b88 0%,transparent 24%,#080c1b33 40%,#080c1bd9 68%,#080c1bf5 100%)!important;pointer-events:none}
+#reveal .identity-seat.revealed .role-card-front:after{content:""!important;display:block!important;position:absolute!important;inset:0!important;z-index:3!important;pointer-events:none;border:8px solid transparent;border-image:url('./assets/cards/guardian-frame.png') 12% stretch!important;background:none!important;box-shadow:inset 0 0 0 1px #e3c77c88}
+#reveal .identity-seat.revealed .role-card-front.faction-evil:after{border-image-source:url('./assets/cards/rebel-frame.png')!important;box-shadow:inset 0 0 0 1px #c8a2ee88}
+#reveal .identity-seat.revealed .role-card-front>*:not(.character-art){position:relative;z-index:2!important;color:#fff!important;text-shadow:0 1px 3px #000,0 0 5px #000}
+#reveal .identity-seat.revealed .role-card-front .identity-owner{margin-bottom:auto;color:#fff!important;background:#080c1b88!important;border-radius:5px;padding:2px 6px}
+#reveal .identity-seat.revealed .role-card-front .character-name{color:#ffe3a1!important;text-shadow:0 2px 4px #000!important}
+#reveal .identity-seat.revealed .role-card-front.faction-evil .character-name{color:#e4c6ff!important}
+#reveal .identity-seat.revealed .role-card-front .faction-tag{background:#153451d9!important;color:#d5edff!important;box-shadow:none!important}
+#reveal .identity-seat.revealed .role-card-front.faction-evil .faction-tag{background:#432356d9!important;color:#f0d7ff!important}
+#reveal .identity-seat.revealed .role-card-front .intel-reveal{background:#080c1bb0!important;color:#fff!important;border-color:#ffffff40!important}
+#reveal .identity-seat.revealed .role-card-front .intel-title,#reveal .identity-seat.revealed .role-card-front .intel-note,#reveal .identity-seat.revealed .role-card-front .card-tap-hint{color:#fff!important}
+#reveal .identity-seat.revealed .role-card-front .intel-chip{color:#fff!important;background:#26334de8!important}
+</style>
