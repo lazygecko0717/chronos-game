@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" id="homeRanking">時序英雄排行榜</button><button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.2.0</div>
+  <div class="home-version">VERSION v0.2.1</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1245,7 +1245,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
  <div><h2>建立遊戲</h2></div>
  <button type="button" class="gold setup-rules" id="openRules">📖 遊戲規則說明</button>
 </div>
-<div class="setup-row"><label for="count">玩家人數</label><select id="count"><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div>
+<div class="setup-row"><label for="chronoMode">遊戲模式</label><select id="chronoMode"><option value="classic">經典模式</option><option value="advanced">時序進階模式（開發中）</option></select></div><p id="chronoModeNote" class="setup-note" aria-live="polite">經典模式：5～10 人，使用原有 11 種角色。</p><div class="setup-row"><label for="count">玩家人數</label><select id="count"><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div>
 <div class="setup-name-toolbar">
  <div class="setup-section-title">玩家名稱</div>
  <button type="button" class="secondary setup-name-open" id="openNames">✎ 設定玩家名稱</button>
@@ -1295,7 +1295,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 </section>
 
 </div>
-</main><footer>CHRONOS 時序之戰｜v0.2.0｜本機遊戲，不會上傳玩家資料</footer>
+</main><footer>CHRONOS 時序之戰｜v0.2.1｜本機遊戲，不會上傳玩家資料</footer>
 <div id="installHelp" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle">
  <div class="install-dialog">
   <h2 id="installHelpTitle">📲 加入主畫面</h2>
@@ -1380,7 +1380,7 @@ function enterGameFullscreen(){
   try{const result=root.requestFullscreen();if(result&&typeof result.catch==='function')result.catch(()=>{});}catch(_){}
  }
 }
-function start(){let n=count(),[g,e]=ratios[n],gs=chosen('goodChecks'),es=chosen('evilChecks');
+function start(){if(document.getElementById('chronoMode').value==='advanced'){alert('時序進階模式仍在開發中，請切換至經典模式開始遊戲。');return}let n=count(),[g,e]=ratios[n],gs=chosen('goodChecks'),es=chosen('evilChecks');
 if(gs.length>g||es.length>e||gs.length===0||!gs.includes('時序之神')){alert('請確認特殊角色數量沒有超過陣營人數，且保留時序之神。');return}
 if(!es.includes('命運刺客')&&es.length===e){alert('反抗軍角色名額已滿，請先取消一位角色，再加入命運刺客。');return}
 if([...gs,...es].some(name=>!roleDefinition(name))){alert('角色設定包含未知角色，請重新選擇。');return}
@@ -2063,5 +2063,16 @@ body:not(.home-active)>header h1{padding-right:75px}
  function open(e){opener=e.currentTarget;render();overlay.classList.remove('hidden');overlay.querySelector('#chronoRankClose').focus()}
  function close(){overlay.classList.add('hidden');opener?.focus()}
  document.getElementById('homeRanking').onclick=open;document.getElementById('endRanking').onclick=open;overlay.querySelector('#chronoRankClose').onclick=close;overlay.onclick=e=>{if(e.target===overlay)close()};document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.classList.contains('hidden'))close()});overlay.querySelector('#chronoRankClear').onclick=()=>{if(confirm('確定永久清除本機全部玩家戰績？')){stats=[];save();render()}};
+})();
+</script><style>
+#chronoModeNote{color:#e5c98b!important;font-size:13px;line-height:1.5;margin:4px 0 10px}
+#setup #start:disabled{opacity:.5;cursor:not-allowed}
+#chronoMode{max-width:100%;min-width:0}
+</style>
+<script>
+(function(){
+ const mode=document.getElementById('chronoMode'),count=document.getElementById('count'),note=document.getElementById('chronoModeNote'),start=document.getElementById('start');
+ function sync(){const advanced=mode.value==='advanced';for(const o of count.options)o.disabled=advanced&&Number(o.value)<7;if(advanced&&Number(count.value)<7){count.value='7';count.dispatchEvent(new Event('change'))}start.disabled=advanced;start.textContent=advanced?'時序進階模式開發中':'洗牌並開始分配身份';note.textContent=advanced?'時序進階模式：7～10 人，預計新增六位原創角色及秘密技能。現階段僅供設定預覽，角色選單暫沿用經典配置，尚未開放開局。':'經典模式：5～10 人，使用原有 11 種角色。'}
+ mode.addEventListener('change',sync);count.addEventListener('change',sync);sync();
 })();
 </script>
