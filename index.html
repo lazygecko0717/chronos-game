@@ -1195,9 +1195,9 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
   <p class="home-subtitle">守護時間線與反抗命運的史詩對決<br>5–10 人同樂・同一台裝置輪流遊玩</p>
   <div class="home-actions">
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
-   <button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
+   <button type="button" id="homeRanking">時序英雄排行榜</button><button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.1.1</div>
+  <div class="home-version">VERSION v0.2.0</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1290,12 +1290,12 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 <div class="panel hidden" id="missionPanel"><h2>⑤ 時間線修復</h2><div id="missionSecret" class="secret hidden"></div><div class="actions"><button class="blue" id="missionShow">查看並選擇時間牌</button><button class="secondary hidden" id="missionHide">確認選擇並交給下一位</button></div></div>
 <div class="panel hidden" id="resultPanel"><h2>時間節點結果</h2><div id="resultText" class="notice"></div><div class="actions"><button class="blue" id="next">進入下一步</button></div></div>
 <div class="panel hidden" id="assassinPanel"><h2>⑥ 最終命運裁決</h2><p>時間守護者已成功修復三個時間節點。請由命運刺客發動最終命運裁決，選擇一位玩家。</p><div id="assassinChoices" class="votegrid"></div><div class="actions"><button class="red" id="assassinate">確認命運裁決目標</button></div></div>
-<div class="panel hidden" id="endPanel"><h2 id="endTitle">遊戲結束</h2><div id="endText" class="notice"></div><div class="actions"><button id="restart">重新開局</button></div></div>
+<div class="panel hidden" id="endPanel"><h2 id="endTitle">遊戲結束</h2><div id="endText" class="notice"></div><div class="actions"><button id="restart">重新開局</button><button type="button" id="endRanking">查看排行榜</button></div></div>
 </div>
 </section>
 
 </div>
-</main><footer>CHRONOS 時序之戰｜v0.1.1｜本機遊戲，不會上傳玩家資料</footer>
+</main><footer>CHRONOS 時序之戰｜v0.2.0｜本機遊戲，不會上傳玩家資料</footer>
 <div id="installHelp" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle">
  <div class="install-dialog">
   <h2 id="installHelpTitle">📲 加入主畫面</h2>
@@ -1384,6 +1384,7 @@ function start(){let n=count(),[g,e]=ratios[n],gs=chosen('goodChecks'),es=chosen
 if(gs.length>g||es.length>e||gs.length===0||!gs.includes('時序之神')){alert('請確認特殊角色數量沒有超過陣營人數，且保留時序之神。');return}
 if(!es.includes('命運刺客')&&es.length===e){alert('反抗軍角色名額已滿，請先取消一位角色，再加入命運刺客。');return}
 if([...gs,...es].some(name=>!roleDefinition(name))){alert('角色設定包含未知角色，請重新選擇。');return}
+const chronoNames=Array.from({length:n},(_,i)=>$('p'+i).value.trim()||`玩家${i+1}`);if(new Set(chronoNames).size!==n){alert('為了正確記錄戰績，玩家名稱不得重複。');return}window.chronoNewMatch?.(chronoNames);
 savedGameSettings={count:n,rule:$('rule').value,roleConfigMode,names:Array.from({length:n},(_,i)=>$('p'+i).value.trim()||`玩家${i+1}`),good:[...gs],evil:[...es]};
 $('gameMenu').classList.remove('hidden');$('gameMenuDropdown').classList.add('hidden');$('gameMenuButton').setAttribute('aria-expanded','false');
 enterGameFullscreen();
@@ -1683,7 +1684,7 @@ $('missionShow').onclick=()=>{let p=players[team[missionIndex]],evil=evilRoles.i
 window.missionCard=v=>{window.chronosCue?.('secret');missionValues.push(v);missionIndex++;if(missionIndex<team.length){renderMission()}else{$('missionPanel').classList.add('hidden');$('gameHint').textContent='所有修復小隊成員均已完成秘密選擇，請查看任務結果。';let fails=missionValues.filter(x=>!x).length,threshold=($('rule').value==='standard'&&count()>=7&&round===3)?2:1;let passed=fails<threshold;if(passed)success++;else fail++;window.chronosCue?.(passed?'success':'failure');window.chronosFlash?.(passed?'pass':'fail');$('resultPanel').classList.remove('hidden');$('gameHint').textContent='時間節點結果已統計，請確認後進入下一步。';$('resultText').innerHTML=`時間節點結果：<b>${passed?'修復成功':'遭到干擾'}</b><br>干擾牌數：${fails} 張（本關需 ${threshold} 張干擾才算節點失守）<br><span class="muted">時間牌已統計，不公開各玩家出的牌。</span>`;phase='result'}};
 $('next').onclick=()=>{if(fail>=3){end('命運反抗軍獲勝','命運反抗軍造成 3 個時間節點失守。');return}if(success>=3){let assassin=players.find(p=>p.role==='命運刺客');if(!assassin){end('時間守護者獲勝','時間守護者已修復三個時間節點，且本局未配置命運刺客。');return}$('resultPanel').classList.add('hidden');$('assassinPanel').classList.remove('hidden');$('gameHint').textContent='請命運刺客選擇一位玩家，進行最終命運裁決。';$('assassinChoices').innerHTML=players.map((p,i)=>`<label class="vote"><input type="radio" name="target" value="${i}" style="width:auto"> ${p.name}</label>`).join('');return}round++;leader=(leader+1)%players.length;beginRound()};
 $('assassinate').onclick=()=>{let t=document.querySelector('input[name=target]:checked');if(!t){alert('請選擇最終裁決目標。');return}let p=players[+t.value];if(p.role==='時序之神')end('命運反抗軍獲勝','命運刺客成功指認時序之神！');else end('時間守護者獲勝',`命運刺客指認了 ${p.name}，但他不是時序之神。`);};
-function end(title,msg){window.chronosCue?.(title.includes('時間守護者')?'win':'lose');window.chronosFlash?.(title.includes('時間守護者')?'pass':'fail');$('teamPanel').classList.add('hidden');$('votePanel').classList.add('hidden');$('missionPanel').classList.add('hidden');$('resultPanel').classList.add('hidden');$('assassinPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');$('gameHint').textContent=msg;$('endTitle').textContent=title;$('endText').textContent=msg+` 最終戰績：時間節點修復成功 ${success} 次、失守 ${fail} 次。`;$('roundTitle').textContent='遊戲結束';}
+function end(title,msg){window.chronoRecord?.(players,title);window.chronosCue?.(title.includes('時間守護者')?'win':'lose');window.chronosFlash?.(title.includes('時間守護者')?'pass':'fail');$('teamPanel').classList.add('hidden');$('votePanel').classList.add('hidden');$('missionPanel').classList.add('hidden');$('resultPanel').classList.add('hidden');$('assassinPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');$('gameHint').textContent=msg;$('endTitle').textContent=title;$('endText').textContent=msg+` 最終戰績：時間節點修復成功 ${success} 次、失守 ${fail} 次。`;$('roundTitle').textContent='遊戲結束';}
 $('restart').onclick=()=>location.reload();
 function closeGameMenu(){
  $('gameMenuDropdown').classList.add('hidden');
@@ -2036,4 +2037,31 @@ body:not(.home-active)>header h1{padding-right:75px}
 #setup .names-dialog{max-height:85dvh;overflow-y:auto;overscroll-behavior:contain}
 #setup .names-dialog input{font-size:16px}
 #setup .names-dialog>button{margin-top:12px;width:100%}
+</style><style>
+#chronoRanking{position:fixed;inset:0;z-index:99999;background:#060a17e8;display:flex;align-items:center;justify-content:center;padding:12px}
+#chronoRanking.hidden{display:none!important}
+#chronoRanking .ranking-card{width:min(100%,620px);max-height:90dvh;overflow:auto;background:#101b32;color:#f8e8bd;border:1px solid #c6a15d;border-radius:14px;padding:14px;box-sizing:border-box}
+#chronoRanking table{width:100%;border-collapse:collapse;font-size:13px;color:inherit}
+#chronoRanking th,#chronoRanking td{padding:8px 3px;border-bottom:1px solid #ffffff20;text-align:right}
+#chronoRanking th:nth-child(2),#chronoRanking td:nth-child(2){text-align:left;overflow-wrap:anywhere}
+#chronoRanking button{background:#243650;color:#ffe3a0;border:1px solid #ad8848;padding:9px;border-radius:7px}
+#chronoRanking details{margin:10px 0}
+#chronoRanking summary{cursor:pointer}
 </style>
+<script>
+(function(){
+ const key='chronos.stats.v1',namesKey='chronos.names.v1';let stats=[],recorded=true,storageOK=true;
+ try{const raw=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(raw))stats=raw.filter(x=>x&&typeof x.name==='string'&&Number.isFinite(x.games)&&Number.isFinite(x.wins));const names=JSON.parse(localStorage.getItem(namesKey)||'[]');if(Array.isArray(names)){names.slice(0,10).forEach((name,i)=>{if(typeof name==='string'){chronoNameDraft[i]=name.slice(0,12);const input=document.getElementById('p'+i);if(input)input.value=chronoNameDraft[i]}})}}catch(e){storageOK=false}
+ function save(){try{localStorage.setItem(key,JSON.stringify(stats))}catch(e){storageOK=false}}
+ window.chronoNewMatch=function(names){recorded=false;try{localStorage.setItem(namesKey,JSON.stringify(names))}catch(e){storageOK=false}};
+ function tally(bucket,k,won){if(!Object.prototype.hasOwnProperty.call(bucket,k))Object.defineProperty(bucket,k,{value:{games:0,wins:0},enumerable:true,writable:true});bucket[k].games++;if(won)bucket[k].wins++}
+ window.chronoRecord=function(players,title){if(recorded)return;const winner=title==='時間守護者獲勝'?'guardian':title==='命運反抗軍獲勝'?'rebel':null;if(!winner)return;recorded=true;players.forEach(p=>{let row=stats.find(x=>x.name===p.name);if(!row){row={name:p.name,games:0,wins:0,factions:{},roles:{}};stats.push(row)}const won=p.faction===winner;row.games++;if(won)row.wins++;tally(row.factions,p.faction,won);tally(row.roles,p.role,won)});save()};
+ const overlay=document.createElement('div');overlay.id='chronoRanking';overlay.className='hidden';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','時序英雄排行榜');overlay.innerHTML='<div class="ranking-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h2>時序英雄排行榜</h2><button type="button" id="chronoRankClose">關閉</button></div><p id="chronoRankNote"></p><div id="chronoRankBody"></div><button type="button" id="chronoRankClear">清除全部戰績</button></div>';document.body.appendChild(overlay);
+ const body=overlay.querySelector('#chronoRankBody'),note=overlay.querySelector('#chronoRankNote');let opener;
+ const rate=(w,g)=>g?Math.round(w/g*100)+'%':'0%';
+ function render(){body.replaceChildren();note.textContent='勝場 +3 分，敗場 +0 分。同名玩家共用本機戰績。'+(storageOK?'':' 本機儲存不可用，戰績可能無法保留。');const sorted=[...stats].sort((a,b)=>b.wins-a.wins||b.wins/b.games-a.wins/a.games||a.name.localeCompare(b.name,'zh-Hant'));if(!sorted.length){body.textContent='尚無戰績，完成一局遊戲後即可查看。';return}const table=document.createElement('table');table.innerHTML='<thead><tr><th>排名</th><th>玩家</th><th>場次</th><th>勝</th><th>敗</th><th>勝率</th><th>積分</th></tr></thead><tbody></tbody>';sorted.forEach((x,i)=>{const tr=table.tBodies[0].insertRow();[i+1,x.name,x.games,x.wins,x.games-x.wins,rate(x.wins,x.games),x.wins*3].forEach(v=>tr.insertCell().textContent=v)});body.appendChild(table);sorted.forEach(x=>{const d=document.createElement('details'),s=document.createElement('summary');s.textContent=x.name+'｜陣營與角色戰績';d.appendChild(s);for(const [label,bucket] of [['陣營',x.factions],['角色',x.roles]]){const h=document.createElement('h3');h.textContent=label;d.appendChild(h);Object.entries(bucket||{}).forEach(([k,v])=>{const p=document.createElement('p');p.textContent=({guardian:'時間守護者',rebel:'命運反抗軍'}[k]||k)+'：'+v.wins+' 勝 / '+v.games+' 場（'+rate(v.wins,v.games)+'）';d.appendChild(p)})}body.appendChild(d)})}
+ function open(e){opener=e.currentTarget;render();overlay.classList.remove('hidden');overlay.querySelector('#chronoRankClose').focus()}
+ function close(){overlay.classList.add('hidden');opener?.focus()}
+ document.getElementById('homeRanking').onclick=open;document.getElementById('endRanking').onclick=open;overlay.querySelector('#chronoRankClose').onclick=close;overlay.onclick=e=>{if(e.target===overlay)close()};document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.classList.contains('hidden'))close()});overlay.querySelector('#chronoRankClear').onclick=()=>{if(confirm('確定永久清除本機全部玩家戰績？')){stats=[];save();render()}};
+})();
+</script>
