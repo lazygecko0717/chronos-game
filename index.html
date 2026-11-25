@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.1.0</div>
+  <div class="home-version">VERSION v0.1.1</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1255,13 +1255,13 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 <div id="namesOverlay" class="names-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="namesTitle">
  <div class="names-dialog">
   <div class="names-dialog-head"><h3 id="namesTitle">玩家名稱設定</h3><button type="button" class="secondary" id="closeNames">完成</button></div>
-  <p class="setup-note">可分別修改每位玩家的顯示名稱。</p>
+  <p class="setup-note">可分別修改每位玩家的顯示名稱。變更人數或角色配置時會保留已輸入的名稱。</p>
   <div id="names" class="players setup-players"></div>
  </div>
 </div>
 <div class="setup-divider"></div>
 <div class="setup-section-title">角色配置</div>
-<p class="setup-note">可依喜好選擇時間守護者與命運反抗軍角色；未勾選的名額會由時間騎士或時間掠奪者補足。陣營人數會固定符合玩家人數。</p>
+<p class="setup-note">可依喜好選擇時間守護者與命運反抗軍角色；未選滿的名額會由普通角色補足。陣營人數會固定符合玩家人數。</p>
 <div id="roles" class="setup-roles"></div>
 <div class="actions setup-actions"><button class="blue" id="start">洗牌並開始分配身份</button></div>
 </section>
@@ -1295,7 +1295,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 </section>
 
 </div>
-</main><footer>CHRONOS 時序之戰｜v0.0.3｜本機遊戲，不會上傳玩家資料</footer>
+</main><footer>CHRONOS 時序之戰｜v0.1.1｜本機遊戲，不會上傳玩家資料</footer>
 <div id="installHelp" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle">
  <div class="install-dialog">
   <h2 id="installHelpTitle">📲 加入主畫面</h2>
@@ -1348,8 +1348,10 @@ let voteRevealed=false,teamConfirmed=false,roleCardClosing=false;
 let savedGameSettings=null;
 let roleConfigMode='preset';
 function count(){return +$('count').value}
-function renderSetup(){let n=count();$('ratio').textContent='';
+const chronoNameDraft=[];
+function renderSetup(){ $('names').querySelectorAll('input').forEach((input,i)=>{chronoNameDraft[i]=input.value});let n=count();$('ratio').textContent='';
 $('names').innerHTML=Array.from({length:n},(_,i)=>`<div class="player name-option"><input id="p${i}" aria-label="玩家 ${i+1} 名稱" placeholder="玩家 ${i+1}" value="玩家${i+1}" maxlength="12"></div>`).join('');
+$('names').querySelectorAll('input').forEach((input,i)=>{if(chronoNameDraft[i]!==undefined)input.value=chronoNameDraft[i]});
 let sp=roleConfigMode==='preset'?defaultSpecial[n]:['時序之神','命運刺客'];let good=sp.filter(x=>goodRoles.includes(x)),evil=sp.filter(x=>evilRoles.includes(x));
 const roleOption=(name,side,selected)=>{const slug=roleAsset(name);return `<label class="role-option"><img src="./assets/roles/${slug}.png" alt=""><span>${name}</span><input type="checkbox" value="${name}" ${selected?'checked':''}></label>`};
 const fixedRole=(name)=>{const slug=roleAsset(name);return `<div class="role-option role-fixed"><img src="./assets/roles/${slug}.png" alt=""><span>${name}</span><small>固定補足</small></div>`};
@@ -1358,6 +1360,8 @@ $('roleConfigMode').onchange=e=>{roleConfigMode=e.target.value;renderSetup()};
 $('roles').querySelectorAll('.role-dropdown').forEach(dropdown=>{const update=()=>{const checks=dropdown.querySelectorAll('input[type="checkbox"]');const count=dropdown.querySelector('.role-count');count.textContent='已選 '+Array.from(checks).filter(x=>x.checked).length+' 位'};dropdown.querySelectorAll('input[type="checkbox"]').forEach(input=>input.addEventListener('change',update));});
 }
 $('count').onchange=renderSetup;renderSetup();
+const chronoResetNames=document.createElement('button');chronoResetNames.type='button';chronoResetNames.className='secondary';chronoResetNames.textContent='重設玩家名稱';chronoResetNames.onclick=()=>{if(!confirm('將所有玩家名稱恢復為預設名稱？'))return;chronoNameDraft.length=0;$('names').querySelectorAll('input').forEach((input,i)=>{input.value='玩家'+(i+1)});};$('names').after(chronoResetNames);
+
 $('openNames').onclick=()=>{$('namesOverlay').classList.remove('hidden');const first=$('names').querySelector('input');if(first)first.focus()};
 $('closeNames').onclick=()=>{$('namesOverlay').classList.add('hidden');$('openNames').focus()};
 $('namesOverlay').onclick=e=>{if(e.target===$('namesOverlay'))$('namesOverlay').classList.add('hidden')};
@@ -2024,4 +2028,12 @@ body:not(.home-active)>header h1{padding-right:75px}
  const gameBtn=btn.cloneNode(true);gameBtn.id='chronosGameSoundToggle';gameBtn.onclick=()=>{btn.click();gameBtn.textContent=btn.textContent;gameBtn.setAttribute('aria-pressed',String(enabled))};document.querySelector('body>header')?.appendChild(gameBtn);btn.addEventListener('click',()=>{gameBtn.textContent=btn.textContent;gameBtn.setAttribute('aria-pressed',String(enabled))});
  document.addEventListener('change',e=>{if(e.target.matches('.team-pick'))window.chronosCue('pick')});
 })();
-</script>
+</script><style>
+#setup .setup-heading{gap:8px}
+#setup .setup-row select,#setup .role-mode-label select{min-width:0;max-width:100%;text-overflow:ellipsis}
+#setup .setup-name-toolbar button,#setup .setup-rules{white-space:normal}
+#setup .role-option:focus-within{outline:2px solid #d6aa58;outline-offset:2px}
+#setup .names-dialog{max-height:85dvh;overflow-y:auto;overscroll-behavior:contain}
+#setup .names-dialog input{font-size:16px}
+#setup .names-dialog>button{margin-top:12px;width:100%}
+</style>
