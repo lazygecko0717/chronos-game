@@ -441,24 +441,24 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 /* v0.1.26：身份牌統一調整為 1:1 正方形 */
 .identity-seat .identity-card{
  height:auto;
- aspect-ratio:4 / 3;
+ aspect-ratio:3 / 4;
 }
 .identity-seat.revealed{
  width:clamp(140px,34%,190px);
  height:auto;
- aspect-ratio:4 / 3;
+ aspect-ratio:3 / 4;
 }
 .identity-seat.revealed .role-card,
 .identity-seat.revealed .role-card-inner,
 .identity-seat.revealed .role-card-back,
 .identity-seat.revealed .role-card-front{
- aspect-ratio:4 / 3;
+ aspect-ratio:3 / 4;
 }
 @media(max-width:390px){
  .identity-seat.revealed{
   width:clamp(132px,38%,158px);
   height:auto;
-  aspect-ratio:4 / 3;
+  aspect-ratio:3 / 4;
  }
 }
 
@@ -568,7 +568,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 #reveal .identity-seat.revealed{
  width:clamp(264px,76%,316px) !important;
  height:auto !important;
- aspect-ratio:4 / 3 !important;
+ aspect-ratio:3 / 4 !important;
 }
 #reveal .identity-seat.revealed .role-card-front{padding:22px !important}
 #reveal .identity-seat.revealed .identity-owner{font-size:20px !important}
@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" id="homeRanking">時序英雄排行榜</button><button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.2.7</div>
+  <div class="home-version">VERSION v0.2.8</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1295,7 +1295,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 </section>
 
 </div>
-</main><footer>CHRONOS 時序之戰｜v0.2.7｜本機遊戲，不會上傳玩家資料</footer>
+</main><footer>CHRONOS 時序之戰｜v0.2.8｜本機遊戲，不會上傳玩家資料</footer>
 <div id="installHelp" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle">
  <div class="install-dialog">
   <h2 id="installHelpTitle">📲 加入主畫面</h2>
@@ -2142,8 +2142,8 @@ function createChronoSkillEngine(roster,mode='classic'){
 }
 #reveal .identity-seat.revealed .role-card-front.faction-evil:after{border-image-source:url('./assets/cards/rebel-frame.png')!important;box-shadow:inset 0 0 0 2px #c6a1f0,inset 0 0 0 4px #4b286d!important}
 </style><style>
-#reveal .identity-seat.revealed{aspect-ratio:4/3!important;height:auto!important}
-#reveal .identity-seat.revealed .role-card,#reveal .identity-seat.revealed .role-card-inner{width:100%!important;height:100%!important;min-height:0!important;aspect-ratio:4/3!important}
-#reveal .identity-seat.revealed .role-card-front,#reveal .identity-seat.revealed .role-card-back{aspect-ratio:4/3!important;box-sizing:border-box!important}
-.identity-seat .identity-card,.vote-turn-seat .identity-card,.mission-turn-seat .identity-card,.team-seat .team-pick-card{aspect-ratio:4/3!important;height:auto!important;box-sizing:border-box!important}
+#reveal .identity-seat.revealed{aspect-ratio:3/4!important;height:auto!important}
+#reveal .identity-seat.revealed .role-card,#reveal .identity-seat.revealed .role-card-inner{width:100%!important;height:100%!important;min-height:0!important;aspect-ratio:3/4!important}
+#reveal .identity-seat.revealed .role-card-front,#reveal .identity-seat.revealed .role-card-back{aspect-ratio:3/4!important;box-sizing:border-box!important}
+.identity-seat .identity-card,.vote-turn-seat .identity-card,.mission-turn-seat .identity-card,.team-seat .team-pick-card{aspect-ratio:3/4!important;height:auto!important;box-sizing:border-box!important}
 </style>
