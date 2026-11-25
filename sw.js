@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chronos-v0-2-6';
+const CACHE_NAME = 'chronos-v0-2-7';
 const APP_FILES = ['./', './index.html', './manifest.webmanifest', './assets/home/app-icon-192.png', './assets/home/app-icon-512.png', './assets/home/apple-touch-icon.png', './assets/home/home-background.webp', './assets/home/home-logo.png', './assets/player-area-bg.webp', "./assets/roles/chronos.png", "./assets/roles/oracle.png", "./assets/roles/time-knight.png", "./assets/roles/chrono-guard.png", "./assets/roles/eternal-herald.png", "./assets/roles/fate-assassin.png", "./assets/roles/void-lord.png", "./assets/roles/hidden-one.png", "./assets/roles/lone-wanderer.png", "./assets/roles/time-raider.png", "./assets/roles/chaos-walker.png", "./assets/cards/card-back.png", "./assets/cards/guardian-frame.png", "./assets/cards/rebel-frame.png", "./assets/cards/mission-success.png", "./assets/cards/mission-failure.png", "./assets/cards/vote-approve.png", "./assets/cards/vote-reject.png"];
 
 self.addEventListener('install', event => {
