@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" id="homeRanking">時序英雄排行榜</button><button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.2.12</div>
+  <div class="home-version">VERSION v0.2.13</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1220,7 +1220,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <li><b>孤時旅者（命運反抗軍）</b>：不知道其他命運反抗軍成員，其他反抗軍也不知道其身份。</li>
    <li><b>時間掠奪者、混沌旅者（命運反抗軍）</b>：沒有額外視野，與同伴合作干擾時間線。</li>
   </ul>
-  <h3>三、遊戲流程</h3>
+  <h3>進階模式｜六位原創角色</h3><p>經典模式5～10人，進階模式7～10人。7～9人每陣營最多1位新增角色，10人最多2位。每項新增技能每局限用一次。所有玩家輪流秘密確認，不公開發動者。</p><div class="chrono-rules-roles"><article><img src="./assets/roles/time-prophet.png" alt="時光先知"><div><b>時光先知｜未來觀測</b><p>第2～4節點，隊伍通過且未取消後，秘密觀測是否存在反抗軍，不顯示人數或身份。</p></div></article><article><img src="./assets/roles/time-weaver.png" alt="時間編織者"><div><b>時間編織者｜時序回溯</b><p>投票公布後，同一領袖與隊伍重新投票，只計最終結果，第五次否決也先處理回溯。</p></div></article><article><img src="./assets/roles/temporal-arbiter.png" alt="時空仲裁者"><div><b>時空仲裁者｜因果審判</b><p>第2或3節點完成且未達終局，秘密調查另一位玩家陣營；隱時者或受遮蔽者顯示無法判定。</p></div></article><article><img src="./assets/roles/fate-thief.png" alt="命運竊取者"><div><b>命運竊取者｜命運遮蔽</b><p>身份確認後選自己或已知反抗軍同伴，首次相關調查消耗遮蔽，不影響初始視野。</p></div></article><article><img src="./assets/roles/time-reverser.png" alt="時間逆行者"><div><b>時間逆行者｜逆轉時序</b><p>第2～4節點隊伍通過後取消出征，下一位領袖重新組隊，保留否決次數，不計任務失敗。</p></div></article><article><img src="./assets/roles/paradox-maker.png" alt="悖論製造者"><div><b>悖論製造者｜因果錯亂</b><p>第2～4節點秘密出牌前發動，只公布成功或失敗，隱藏干擾牌數，門檻不變。</p></div></article></div><p><b>技能順序：</b>命運遮蔽 → 時序回溯 → 逆轉時序 → 未來觀測 → 因果錯亂 → 因果審判。取消出征即跳過後續技能，終局不再調查。</p><h3>三、遊戲流程</h3>
   <ol>
    <li><b>時序覺醒：</b>每位玩家輪流查看自己的角色與陣營情報，確認後將卡牌翻回背面。</li>
    <li><b>組建時間修復小隊：</b>本輪領袖依指定人數挑選隊員。</li>
@@ -1295,7 +1295,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 </section>
 
 </div>
-</main><footer>CHRONOS 時序之戰｜v0.2.12｜本機遊戲，不會上傳玩家資料</footer>
+</main><footer>CHRONOS 時序之戰｜v0.2.13｜本機遊戲，不會上傳玩家資料</footer>
 <div id="installHelp" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle">
  <div class="install-dialog">
   <h2 id="installHelpTitle">📲 加入主畫面</h2>
@@ -1306,7 +1306,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 <script>
 const $=id=>document.getElementById(id);
 // 預先載入角色立繪，避免翻牌動畫開始時才讀取圖片造成卡頓。
-['chronos','oracle','time-knight','chrono-guard','eternal-herald','fate-assassin','void-lord','hidden-one','lone-wanderer','time-raider','chaos-walker'].forEach(name=>{const image=new Image();image.src='./assets/roles/'+name+'.png'});
+['chronos','oracle','time-knight','chrono-guard','eternal-herald','fate-assassin','void-lord','hidden-one','lone-wanderer','time-raider','chaos-walker','time-prophet','time-weaver','temporal-arbiter','fate-thief','time-reverser','paradox-maker'].forEach(name=>{const image=new Image();image.src='./assets/roles/'+name+'.png'});
 
 let deferredInstallPrompt=null;
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{}));}
@@ -1363,7 +1363,7 @@ function renderSetup(){ $('names').querySelectorAll('input').forEach((input,i)=>
 $('names').innerHTML=Array.from({length:n},(_,i)=>`<div class="player name-option"><input id="p${i}" aria-label="玩家 ${i+1} 名稱" placeholder="玩家 ${i+1}" value="玩家${i+1}" maxlength="12"></div>`).join('');
 $('names').querySelectorAll('input').forEach((input,i)=>{if(chronoNameDraft[i]!==undefined)input.value=chronoNameDraft[i]});
 const advanced=isAdvanced(),goodPool=advanced?[...goodRoles,...advancedGood]:goodRoles,evilPool=advanced?[...evilRoles,...advancedEvil]:evilRoles;let sp=roleConfigMode==='preset'?(advanced?advancedPresets[n]||advancedPresets[7]:defaultSpecial[n]):['時序之神','命運刺客'];let good=sp.filter(x=>goodPool.includes(x)),evil=sp.filter(x=>evilPool.includes(x));
-const roleOption=(name,side,selected)=>{const slug=roleAsset(name),fresh=roleDefinition(name).advanced;return `<label class="role-option">${fresh?'<span class="chrono-role-placeholder" aria-hidden="true">◷</span>':'<img src="./assets/roles/'+slug+'.png" alt="">'}<span>${name}${fresh?' ✦':''}</span><input type="checkbox" value="${name}" ${selected?'checked':''}></label>`};
+const roleOption=(name,side,selected)=>{const slug=roleAsset(name),fresh=roleDefinition(name).advanced;return `<label class="role-option">${'<img src="./assets/roles/'+slug+'.png" alt="">'}<span>${name}${fresh?' ✦':''}</span><input type="checkbox" value="${name}" ${selected?'checked':''}></label>`};
 const fixedRole=(name)=>{const slug=roleAsset(name);return `<div class="role-option role-fixed"><img src="./assets/roles/${slug}.png" alt=""><span>${name}</span><small>固定補足</small></div>`};
 $('roles').innerHTML=`<label class="role-mode-label">角色配置模式<select id="roleConfigMode"><option value="preset" ${roleConfigMode==='preset'?'selected':''}>預設配置</option><option value="free" ${roleConfigMode==='free'?'selected':''}>自由選擇</option></select></label><div class="row"><div class="role-side good"><div class="role-heading"><span>時間守護者角色</span><span class="role-total">${ratios[n][0]} 人</span></div><details class="role-dropdown"><summary><span>選擇時間守護者角色</span><span class="role-count">已選 ${good.length} 位</span></summary><div class="role-menu" id="goodChecks">${goodPool.map(x=>roleOption(x,'good',good.includes(x))).join('')}</div></details></div><div class="role-side evil"><div class="role-heading"><span>命運反抗軍角色</span><span class="role-total">${ratios[n][1]} 人</span></div><details class="role-dropdown"><summary><span>選擇命運反抗軍角色</span><span class="role-count">已選 ${evil.length} 位</span></summary><div class="role-menu" id="evilChecks">${evilPool.map(x=>roleOption(x,'evil',evil.includes(x))).join('')}</div></details></div></div><p class="muted">預設配置會依玩家人數帶入建議角色；自由選擇可自行搭配特殊角色。未選滿的名額會以普通角色補足。命運刺客為反抗軍必要角色，若未選取會自動補入。</p>`;
 $('roleConfigMode').onchange=e=>{roleConfigMode=e.target.value;renderSetup()};
@@ -1559,7 +1559,7 @@ function closeRoleCard(){
  },480);
 }
 function rolePortrait(role,good){
- if(roleDefinition(role).advanced)return '<div class="character-art chrono-advanced-art" aria-hidden="true">◷</div>';
+
  const file=roleAsset(role);
  return '<img class="character-art" src="./assets/roles/'+file+'.png" alt="'+role+'角色頭像" loading="eager" decoding="async">';
 }
@@ -2163,4 +2163,4 @@ function createChronoSkillEngine(roster,mode='classic',context={}){
 .role-focus-card{width:min(94vw,58.5dvh,520px)!important;height:auto!important;min-height:0!important;aspect-ratio:3/4!important}
 .role-focus-card .role-card,.role-focus-card .role-card-inner{height:100%!important}
 #missionSecret button[onclick^="missionCard"] img,button[onclick^="castVote"] img{aspect-ratio:3/4!important;height:auto!important;object-fit:cover!important;object-position:center top!important}
-</style><style>.chrono-advanced-art{display:grid!important;place-items:center;background:radial-gradient(circle,#645b89,#17243d 65%);color:#e7c77e;font-size:90px!important}.faction-evil .chrono-advanced-art{background:radial-gradient(circle,#644275,#21132f 65%);color:#d8b3ff}</style>
+</style><style>.chrono-advanced-art{display:grid!important;place-items:center;background:radial-gradient(circle,#645b89,#17243d 65%);color:#e7c77e;font-size:90px!important}.faction-evil .chrono-advanced-art{background:radial-gradient(circle,#644275,#21132f 65%);color:#d8b3ff}</style><style>.chrono-rules-roles article{display:flex;align-items:flex-start;gap:12px;margin:12px 0}.chrono-rules-roles img{width:76px;aspect-ratio:3/4;object-fit:cover;object-position:top;border-radius:6px;flex-shrink:0}.chrono-rules-roles article p{margin:5px 0}.chrono-rules-roles article div{min-width:0}</style>
