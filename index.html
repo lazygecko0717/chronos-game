@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" id="homeRanking">時序英雄排行榜</button><button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.2.2</div>
+  <div class="home-version">VERSION v0.2.3</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1295,7 +1295,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 </section>
 
 </div>
-</main><footer>CHRONOS 時序之戰｜v0.2.2｜本機遊戲，不會上傳玩家資料</footer>
+</main><footer>CHRONOS 時序之戰｜v0.2.3｜本機遊戲，不會上傳玩家資料</footer>
 <div id="installHelp" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle">
  <div class="install-dialog">
   <h2 id="installHelpTitle">📲 加入主畫面</h2>
@@ -1390,7 +1390,7 @@ function enterGameFullscreen(){
   try{const result=root.requestFullscreen();if(result&&typeof result.catch==='function')result.catch(()=>{});}catch(_){}
  }
 }
-function start(){if(document.getElementById('chronoMode').value==='advanced'){alert('時序進階模式仍在開發中，請切換至經典模式開始遊戲。');return}let n=count(),[g,e]=ratios[n],gs=chosen('goodChecks'),es=chosen('evilChecks');
+function start(){window.chronoSkillAbort?.();if(document.getElementById('chronoMode').value==='advanced'){alert('時序進階模式仍在開發中，請切換至經典模式開始遊戲。');return}let n=count(),[g,e]=ratios[n],gs=chosen('goodChecks'),es=chosen('evilChecks');
 if(gs.length>g||es.length>e||gs.length===0||!gs.includes('時序之神')){alert('請確認特殊角色數量沒有超過陣營人數，且保留時序之神。');return}
 if(!es.includes('命運刺客')&&es.length===e){alert('反抗軍角色名額已滿，請先取消一位角色，再加入命運刺客。');return}
 if([...gs,...es].some(name=>!roleDefinition(name))){alert('角色設定包含未知角色，請重新選擇。');return}
@@ -2085,4 +2085,36 @@ body:not(.home-active)>header h1{padding-right:75px}
  function sync(){const advanced=mode.value==='advanced';for(const o of count.options)o.disabled=advanced&&Number(o.value)<7;if(advanced&&Number(count.value)<7){count.value='7';count.dispatchEvent(new Event('change'))}start.disabled=advanced;start.textContent=advanced?'時序進階模式開發中':'洗牌並開始分配身份';note.textContent=advanced?'時序進階模式：7～10 人，預計新增六位原創角色及秘密技能。現階段可預覽全部17種角色及配置。7～9人每陣營最多1位新增角色，10人最多2位；尚未開放開局。':'經典模式：5～10 人，使用原有 11 種角色。'}
  mode.addEventListener('change',()=>{sync();renderSetup()});count.addEventListener('change',sync);sync();
 })();
-</script><style>.chrono-role-placeholder{display:inline-grid;place-items:center;width:36px;height:36px;flex:none;color:#d6b56c;border:1px solid #a18449;border-radius:6px;background:#18223b;font-size:24px}</style>
+</script><style>.chrono-role-placeholder{display:inline-grid;place-items:center;width:36px;height:36px;flex:none;color:#d6b56c;border:1px solid #a18449;border-radius:6px;background:#18223b;font-size:24px}</style><style>
+#chronoSkillOverlay{position:fixed;inset:0;z-index:100000;background:#080c1a;display:grid;place-items:center;padding:16px;color:#fff}
+#chronoSkillOverlay.hidden{display:none!important}
+#chronoSkillOverlay .skill-card{width:min(100%,420px);max-height:90dvh;overflow:auto;background:#17243d;border:1px solid #c4a15c;border-radius:14px;padding:20px;box-sizing:border-box;text-align:center}
+#chronoSkillOverlay h2{color:#ffe0a0}
+#chronoSkillOverlay button{width:100%;min-height:48px;margin:5px 0;background:#263e64;color:#ffe0a0;border:1px solid #c4a15c;border-radius:8px}
+</style>
+<script>
+function createChronoSkillEngine(roster,mode='classic'){
+ const specs=Object.freeze({fate_shield:{stage:'identity',min:0,max:0},vote_rewind:{stage:'after_vote',min:1,max:5},cancel_expedition:{stage:'before_mission',min:2,max:4},future_observation:{stage:'observation',min:2,max:4},hide_failure_count:{stage:'before_cards',min:2,max:4},faction_inquiry:{stage:'after_mission',min:2,max:3}});
+ const used=new Map();let session=null,closed=false;
+ const eligible=(i,stage,node)=>{const p=roster[i],s=specs[p?.ability];return mode==='advanced'&&!closed&&!!s&&s.stage===stage&&node>=s.min&&node<=s.max&&(used.get(i)||0)<1};
+ function begin(stage,node,leader=0){if(closed||session||mode!=='advanced'||!roster.length||!Object.values(specs).some(s=>s.stage===stage&&node>=s.min&&node<=s.max))return false;session={stage,node,order:Array.from({length:roster.length},(_,i)=>(leader+i)%roster.length),cursor:0,opened:false,decisions:[]};return true}
+ function publicView(){return session?{player:roster[session.order[session.cursor]]?.name,position:session.cursor+1,total:roster.length}:null}
+ function open(){if(!session||session.opened)return null;session.opened=true;const i=session.order[session.cursor],available=eligible(i,session.stage,session.node);return {available,ability:available?roster[i].ability:null}}
+ function submit(activate){if(!session||!session.opened)return false;const i=session.order[session.cursor];if(activate&&!eligible(i,session.stage,session.node))return false;if(activate){used.set(i,(used.get(i)||0)+1);session.decisions.push({playerIndex:i,ability:roster[i].ability})}session.opened=false;session.cursor++;return true}
+ function complete(){if(!session||session.cursor!==roster.length)return null;const decisions=session.decisions.slice();session=null;return decisions}
+ function close(){closed=true;session=null;used.clear()}
+ return {begin,publicView,open,submit,complete,close};
+}
+(function(){
+ const overlay=document.createElement('div');overlay.id='chronoSkillOverlay';overlay.className='hidden';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','秘密技能確認');overlay.innerHTML='<div class="skill-card"><h2>時間能力確認</h2><p id="chronoSkillText"></p><button type="button" id="chronoSkillOpen">查看秘密能力</button><button type="button" id="chronoSkillUse" class="hidden">發動能力</button><button type="button" id="chronoSkillSkip" class="hidden">確認並交給下一位</button></div>';document.body.appendChild(overlay);
+ const text=overlay.querySelector('#chronoSkillText'),open=overlay.querySelector('#chronoSkillOpen'),use=overlay.querySelector('#chronoSkillUse'),skip=overlay.querySelector('#chronoSkillSkip');let engine=null,done=null,priorFocus=null,privateView=false;
+ const labels={fate_shield:'命運遮蔽',vote_rewind:'時序回溯',cancel_expedition:'逆轉時序',future_observation:'未來觀測',hide_failure_count:'因果錯亂',faction_inquiry:'因果審判'};
+ function showPass(){privateView=false;const p=engine.publicView();text.textContent='請將裝置交給 '+p.player+'（'+p.position+'/'+p.total+'），其他玩家請勿觀看。';open.classList.remove('hidden');use.classList.add('hidden');skip.classList.add('hidden');open.focus()}
+ function finish(){const result=engine.complete();if(result===null){showPass();return}overlay.classList.add('hidden');text.textContent='';use.classList.add('hidden');skip.classList.add('hidden');const cb=done;done=null;engine=null;priorFocus?.focus();cb?.(result)}
+ open.onclick=()=>{if(!engine||privateView)return;const v=engine.open();if(!v)return;privateView=true;text.textContent=v.available?'可發動：'+labels[v.ability]+'。每局一次。':'本階段沒有可發動的時間能力。';open.classList.add('hidden');use.classList.toggle('hidden',!v.available);skip.classList.remove('hidden');skip.textContent=v.available?'保留能力並確認':'確認並交給下一位';skip.focus()};
+ function submit(activate){if(!engine||!privateView||!engine.submit(activate))return;privateView=false;window.chronosCue?.('secret');finish()}
+ use.onclick=()=>submit(true);skip.onclick=()=>submit(false);
+ window.chronoSkillStage=(e,stage,node,leader,callback)=>{if(engine||!e.begin(stage,node,leader))return false;engine=e;done=callback;priorFocus=document.activeElement;overlay.classList.remove('hidden');showPass();return true};
+ window.chronoSkillAbort=()=>{engine?.close();engine=null;done=null;privateView=false;overlay.classList.add('hidden');text.textContent='';use.classList.add('hidden');skip.classList.add('hidden')};
+})();
+</script>
