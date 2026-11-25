@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" id="homeRanking">時序英雄排行榜</button><button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.2.11</div>
+  <div class="home-version">VERSION v0.2.12</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1245,7 +1245,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
  <div><h2>建立遊戲</h2></div>
  <button type="button" class="gold setup-rules" id="openRules">📖 遊戲規則說明</button>
 </div>
-<div class="setup-row"><label for="chronoMode">遊戲模式</label><select id="chronoMode"><option value="classic">經典模式</option><option value="advanced">時序進階模式（開發中）</option></select></div><p id="chronoModeNote" class="setup-note" aria-live="polite">經典模式：5～10 人，使用原有 11 種角色。</p><div class="setup-row"><label for="count">玩家人數</label><select id="count"><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div>
+<div class="setup-row"><label for="chronoMode">遊戲模式</label><select id="chronoMode"><option value="classic">經典模式</option><option value="advanced">時序進階模式（測試版）</option></select></div><p id="chronoModeNote" class="setup-note" aria-live="polite">經典模式：5～10 人，使用原有 11 種角色。</p><div class="setup-row"><label for="count">玩家人數</label><select id="count"><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div>
 <div class="setup-name-toolbar">
  <div class="setup-section-title">玩家名稱</div>
  <button type="button" class="secondary setup-name-open" id="openNames">✎ 設定玩家名稱</button>
@@ -1295,7 +1295,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 </section>
 
 </div>
-</main><footer>CHRONOS 時序之戰｜v0.2.11｜本機遊戲，不會上傳玩家資料</footer>
+</main><footer>CHRONOS 時序之戰｜v0.2.12｜本機遊戲，不會上傳玩家資料</footer>
 <div id="installHelp" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle">
  <div class="install-dialog">
   <h2 id="installHelpTitle">📲 加入主畫面</h2>
@@ -1390,12 +1390,13 @@ function enterGameFullscreen(){
   try{const result=root.requestFullscreen();if(result&&typeof result.catch==='function')result.catch(()=>{});}catch(_){}
  }
 }
-function start(){window.chronoSkillAbort?.();if(document.getElementById('chronoMode').value==='advanced'){alert('時序進階模式仍在開發中，請切換至經典模式開始遊戲。');return}let n=count(),[g,e]=ratios[n],gs=chosen('goodChecks'),es=chosen('evilChecks');
+function start(){window.chronoSkillAbort?.();if(isAdvanced()&&count()<7){alert('時序進階模式至少需要7人。');return}let n=count(),[g,e]=ratios[n],gs=chosen('goodChecks'),es=chosen('evilChecks');
 if(gs.length>g||es.length>e||gs.length===0||!gs.includes('時序之神')){alert('請確認特殊角色數量沒有超過陣營人數，且保留時序之神。');return}
 if(!es.includes('命運刺客')&&es.length===e){alert('反抗軍角色名額已滿，請先取消一位角色，再加入命運刺客。');return}
 if([...gs,...es].some(name=>!roleDefinition(name))){alert('角色設定包含未知角色，請重新選擇。');return}
+if(gs.some(x=>roleFaction(x)!=='guardian')||es.some(x=>roleFaction(x)!=='rebel')||(!isAdvanced()&&[...gs,...es].some(x=>roleDefinition(x).advanced))||(isAdvanced()&&[gs,es].some(list=>list.filter(x=>roleDefinition(x).advanced).length>(n===10?2:1)))){alert('角色配置不符合模式或陣營限制。');return}
 const chronoNames=Array.from({length:n},(_,i)=>$('p'+i).value.trim()||`玩家${i+1}`);if(new Set(chronoNames).size!==n){alert('為了正確記錄戰績，玩家名稱不得重複。');return}window.chronoNewMatch?.(chronoNames);
-savedGameSettings={count:n,rule:$('rule').value,roleConfigMode,names:Array.from({length:n},(_,i)=>$('p'+i).value.trim()||`玩家${i+1}`),good:[...gs],evil:[...es]};
+savedGameSettings={mode:$('chronoMode').value,count:n,rule:$('rule').value,roleConfigMode,names:Array.from({length:n},(_,i)=>$('p'+i).value.trim()||`玩家${i+1}`),good:[...gs],evil:[...es]};
 $('gameMenu').classList.remove('hidden');$('gameMenuDropdown').classList.add('hidden');$('gameMenuButton').setAttribute('aria-expanded','false');
 enterGameFullscreen();
 let gr=[...gs,...Array(g-gs.length).fill('時間騎士')],er=[...es,...Array(e-es.length).fill('時間掠奪者')];
@@ -1405,10 +1406,10 @@ roles=shuffle([...gr,...er]);players.forEach((p,i)=>{p.role=roles[i];const def=r
 $('setup').classList.add('hidden');$('game').classList.remove('hidden');$('reveal').classList.remove('hidden');$('teamPanel').classList.add('hidden');showReveal();
 }
 $('start').onclick=start;
-function info(p){let r=p.role,evil=players.filter(x=>evilRoles.includes(x.role));let seen='';
+function info(p){let r=p.role,evil=players.filter(x=>x.faction==='rebel');let seen='';
 if(r==='時序之神')seen='你看見的反抗軍玩家（隱時者除外）：'+evil.filter(x=>x.role!=='隱時者').map(x=>x.name).join('、');
 if(r==='命運觀測者'){let m=players.filter(x=>['時序之神','虛無之主'].includes(x.role));seen='你看見可能是時序之神的人（時序之神與虛無之主不分）：'+(m.map(x=>x.name).join('、')||'無');}
-if(evilRoles.includes(r)&&r!=='孤時旅者'){let known=evil.filter(x=>x.role!=='孤時旅者'&&x!==p);seen='你認識的反抗軍同伴：'+(known.map(x=>x.name).join('、')||'無（你可能是孤狼）');}
+if(roleFaction(r)==='rebel'&&r!=='孤時旅者'){let known=evil.filter(x=>x.role!=='孤時旅者'&&x!==p);seen='你認識的反抗軍同伴：'+(known.map(x=>x.name).join('、')||'無（你可能是孤狼）');}
 if(r==='孤時旅者')seen='你是孤狼：你不知道其他反抗軍玩家是誰，其他反抗軍玩家也不知道你是誰。';
 return seen}
 function renderPlayerCircle(targetId,leaderIndex,identityMode=false,teamMode=false,voteMode=false){
@@ -1419,9 +1420,9 @@ function renderPlayerCircle(targetId,leaderIndex,identityMode=false,teamMode=fal
   if(identityMode){
    const state=i<revealIndex?'done':i===revealIndex?'active':'locked';
    const viewingRole=roleCardOpen?players[revealIndex]?.role:null;
-   const merlinKnownEvil=viewingRole==='時序之神'&&evilRoles.includes(p.role)&&p.role!=='隱時者'&&i!==revealIndex;
+   const merlinKnownEvil=viewingRole==='時序之神'&&p.faction==='rebel'&&p.role!=='隱時者'&&i!==revealIndex;
    const percivalKnown=viewingRole==='命運觀測者'&&['時序之神','虛無之主'].includes(p.role)&&i!==revealIndex;
-   const evilKnown=viewingRole&&evilRoles.includes(viewingRole)&&viewingRole!=='孤時旅者'&&evilRoles.includes(p.role)&&p.role!=='孤時旅者'&&i!==revealIndex;
+   const evilKnown=viewingRole&&roleFaction(viewingRole)==='rebel'&&viewingRole!=='孤時旅者'&&p.faction==='rebel'&&p.role!=='孤時旅者'&&i!==revealIndex;
    const knownClass=merlinKnownEvil?'merlin-known-evil':percivalKnown?'percival-known-candidate':evilKnown?'evil-known-ally':'';
    const knownLabel=merlinKnownEvil?'命運反抗軍':percivalKnown?'時序之神候選人':evilKnown?'反抗軍同伴':'';
    if(i===revealIndex&&roleCardOpen){
@@ -1558,15 +1559,16 @@ function closeRoleCard(){
  },480);
 }
 function rolePortrait(role,good){
+ if(roleDefinition(role).advanced)return '<div class="character-art chrono-advanced-art" aria-hidden="true">◷</div>';
  const file=roleAsset(role);
  return '<img class="character-art" src="./assets/roles/'+file+'.png" alt="'+role+'角色頭像" loading="eager" decoding="async">';
 }
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function intelMarkup(p){
- let r=p.role,evil=players.filter(x=>evilRoles.includes(x.role)),title='',names=[],note='';
+ let r=p.role,evil=players.filter(x=>x.faction==='rebel'),title='',names=[],note='';
  if(r==='時序之神'){title='時序之神的視野｜命運反抗軍';names=evil.filter(x=>x.role!=='隱時者').map(x=>x.name);note='隱時者不會出現在你的視野中。'}
  else if(r==='命運觀測者'){title='命運觀測者的視野｜時序之神候選人';names=players.filter(x=>['時序之神','虛無之主'].includes(x.role)).map(x=>x.name);note='時序之神與虛無之主會同時出現，請自行判斷。'}
- else if(evilRoles.includes(r)&&r!=='孤時旅者'){title='命運反抗軍｜你認識的同伴';names=evil.filter(x=>x.role!=='孤時旅者'&&x!==p).map(x=>x.name);note=names.length?'孤時旅者不會出現在反抗軍同伴名單中。':'你沒有可辨識的反抗軍同伴。'}
+ else if(roleFaction(r)==='rebel'&&r!=='孤時旅者'){title='命運反抗軍｜你認識的同伴';names=evil.filter(x=>x.role!=='孤時旅者'&&x!==p).map(x=>x.name);note=names.length?'孤時旅者不會出現在反抗軍同伴名單中。':'你沒有可辨識的反抗軍同伴。'}
  else if(r==='孤時旅者'){title='孤時旅者｜孤狼資訊';note='你不知道其他反抗軍玩家是誰，其他反抗軍玩家也不知道你是誰。'}
  else {title='時間守護者｜沒有額外視野';note='你沒有額外的陣營名單，請透過討論與任務推理。'}
  let chips=names.length?names.map((name,i)=>'<span class="intel-chip" style="animation-delay:'+(0.72+i*.16)+'s">'+escapeHTML(name)+'</span>').join(''):'<span class="intel-note">'+escapeHTML(note)+'</span>';
@@ -1610,7 +1612,7 @@ function updateVoteTurnCircle(){
  el.classList.remove('hidden');
 }
 function renderVote(){let p=players[voteIndex];updateVoteTurnCircle();$('gameHint').textContent=p.name+'，請秘密選擇贊成或反對。';$('votes').innerHTML='';$('voteActionSpace').innerHTML='<button type="button" class="blue" onclick="castVote(true)">贊成</button><button type="button" class="red" onclick="castVote(false)">反對</button>'}
-window.castVote=v=>{window.chronosCue?.('secret');voteValues[voteIndex]=v;voteIndex++;if(voteIndex<players.length)renderVote();else{$('gameHint').textContent='全員已完成投票，請公布投票結果。';$('votes').innerHTML='';$('voteActionSpace').innerHTML='';$('voteActionSpace').appendChild($('submitVotes'));$('submitVotes').classList.remove('hidden');$('submitVotes').disabled=false;updateVoteTurnCircle()}};
+window.castVote=v=>{if(phase!=='vote'||voteValues[voteIndex]!==null||typeof v!=='boolean')return;window.chronosCue?.('secret');voteValues[voteIndex]=v;voteIndex=(voteIndex+1)%players.length;if(voteValues.some(x=>x===null))renderVote();else{$('gameHint').textContent='全員已完成投票，請公布投票結果。';$('votes').innerHTML='';$('voteActionSpace').innerHTML='';$('voteActionSpace').appendChild($('submitVotes'));$('submitVotes').classList.remove('hidden');$('submitVotes').disabled=false;updateVoteTurnCircle()}};
 function revealVoteCircle(yes,no,passed){
  // 保留任務進度資訊在玩家座位區中央，先依序翻開各玩家的投票卡
  renderPlayerCircle('tableCircle',leader,false,false,true);
@@ -1634,9 +1636,9 @@ function revealVoteCircle(yes,no,passed){
 }
 function chronoGuardianStage(stage,cb){const e=window.chronoGuardianEngine;if(!e||!window.chronoSkillStage(e,stage,stage==='identity'?0:round+1,leader,cb))cb([])}
 $('submitVotes').onclick=()=>{
- const yes=voteValues.filter(Boolean).length,no=players.length-yes,passed=yes>no;
+ if(phase!=='vote'||$('submitVotes').disabled||voteValues.some(x=>x===null))return;const yes=voteValues.filter(Boolean).length,no=players.length-yes,passed=yes>no;
  if(!voteRevealed){voteRevealed=true;revealVoteCircle(yes,no,passed);return}
- $('submitVotes').disabled=true;chronoGuardianStage('after_vote',decisions=>{if(decisions.some(d=>d.ability==='vote_rewind')){alert('時序回溯：同一隊伍重新投票。');voteValues=Array(players.length).fill(null);voteIndex=0;voteRevealed=false;$('tableCircle').innerHTML='';$('submitVotes').classList.add('hidden');$('submitVotes').textContent='公布投票結果';renderVote();return}chronoFinalizeVote(yes,no,passed)});
+ $('submitVotes').disabled=true;chronoGuardianStage('after_vote',decisions=>{if(decisions.some(d=>d.ability==='vote_rewind')){alert('時序回溯：同一隊伍重新投票。');voteValues=Array(players.length).fill(null);voteIndex=leader;voteRevealed=false;$('tableCircle').innerHTML='';$('submitVotes').classList.add('hidden');$('submitVotes').textContent='公布投票結果';renderVote();return}chronoFinalizeVote(yes,no,passed)});
 };
 function chronoFinalizeVote(yes,no,passed){
  $('votePanel').classList.add('hidden');
@@ -1691,12 +1693,12 @@ function updateMissionTurnCircle(onComplete){
  window.setTimeout(step,460);
  return true;
 }
-$('missionShow').onclick=()=>{let p=players[team[missionIndex]],evil=evilRoles.includes(p.role);$('gameHint').textContent=`${p.name}，請秘密選擇任務牌。其他玩家請勿觀看。`;$('missionSecret').innerHTML=`<div>${p.name}，請選擇</div><div class="actions"><button class="blue" onclick="missionCard(true)"><img src="./assets/cards/mission-success.png" alt="">任務成功</button>${evil?'<button class="red" onclick="missionCard(false)"><img src="./assets/cards/mission-failure.png" alt="">任務失敗</button>':''}</div>`;$('missionSecret').classList.remove('hidden');$('missionShow').classList.add('hidden')};
-window.missionCard=v=>{window.chronosCue?.('secret');missionValues.push(v);missionIndex++;if(missionIndex<team.length){renderMission()}else{$('missionPanel').classList.add('hidden');$('gameHint').textContent='所有修復小隊成員均已完成秘密選擇，請查看任務結果。';let fails=missionValues.filter(x=>!x).length,threshold=($('rule').value==='standard'&&count()>=7&&round===3)?2:1;let passed=fails<threshold;if(passed)success++;else fail++;window.chronosCue?.(passed?'success':'failure');window.chronosFlash?.(passed?'pass':'fail');$('resultPanel').classList.remove('hidden');$('gameHint').textContent='時間節點結果已統計，請確認後進入下一步。';$('resultText').innerHTML=`時間節點結果：<b>${passed?'修復成功':'遭到干擾'}</b><br>${window.chronoHideFailure?'因果錯亂：本次干擾牌數不公開。':`干擾牌數：${fails} 張（本關需 ${threshold} 張干擾才算節點失守）`}<br><span class="muted">時間牌已統計，不公開各玩家出的牌。</span>`;phase='result'}};
+$('missionShow').onclick=()=>{let p=players[team[missionIndex]],evil=p.faction==='rebel';$('gameHint').textContent=`${p.name}，請秘密選擇任務牌。其他玩家請勿觀看。`;$('missionSecret').innerHTML=`<div>${p.name}，請選擇</div><div class="actions"><button class="blue" onclick="missionCard(true)"><img src="./assets/cards/mission-success.png" alt="">任務成功</button>${evil?'<button class="red" onclick="missionCard(false)"><img src="./assets/cards/mission-failure.png" alt="">任務失敗</button>':''}</div>`;$('missionSecret').classList.remove('hidden');$('missionShow').classList.add('hidden')};
+window.missionCard=v=>{if(phase!=='mission'||missionIndex>=team.length||$('missionSecret').classList.contains('hidden')||typeof v!=='boolean'||(!v&&players[team[missionIndex]].faction!=='rebel'))return;$('missionSecret').classList.add('hidden');window.chronosCue?.('secret');missionValues.push(v);missionIndex++;if(missionIndex<team.length){renderMission()}else{$('missionPanel').classList.add('hidden');$('gameHint').textContent='所有修復小隊成員均已完成秘密選擇，請查看任務結果。';let fails=missionValues.filter(x=>!x).length,threshold=($('rule').value==='standard'&&count()>=7&&round===3)?2:1;let passed=fails<threshold;if(passed)success++;else fail++;window.chronosCue?.(passed?'success':'failure');window.chronosFlash?.(passed?'pass':'fail');$('resultPanel').classList.remove('hidden');$('gameHint').textContent='時間節點結果已統計，請確認後進入下一步。';$('resultText').innerHTML=`時間節點結果：<b>${passed?'修復成功':'遭到干擾'}</b><br>${window.chronoHideFailure?'因果錯亂：本次干擾牌數不公開。':`干擾牌數：${fails} 張（本關需 ${threshold} 張干擾才算節點失守）`}<br><span class="muted">時間牌已統計，不公開各玩家出的牌。</span>`;phase='result'}};
 $('next').onclick=()=>{if(fail<3&&success<3&&(round===1||round===2)){ $('next').disabled=true;chronoGuardianStage('after_mission',()=>{$('next').disabled=false;chronoNextMission()});return}chronoNextMission()};
-function chronoNextMission(){if(fail>=3){end('命運反抗軍獲勝','命運反抗軍造成 3 個時間節點失守。');return}if(success>=3){let assassin=players.find(p=>p.role==='命運刺客');if(!assassin){end('時間守護者獲勝','時間守護者已修復三個時間節點，且本局未配置命運刺客。');return}$('resultPanel').classList.add('hidden');$('assassinPanel').classList.remove('hidden');$('gameHint').textContent='請命運刺客選擇一位玩家，進行最終命運裁決。';$('assassinChoices').innerHTML=players.map((p,i)=>`<label class="vote"><input type="radio" name="target" value="${i}" style="width:auto"> ${p.name}</label>`).join('');return}round++;leader=(leader+1)%players.length;beginRound()}
-$('assassinate').onclick=()=>{let t=document.querySelector('input[name=target]:checked');if(!t){alert('請選擇最終裁決目標。');return}let p=players[+t.value];if(p.role==='時序之神')end('命運反抗軍獲勝','命運刺客成功指認時序之神！');else end('時間守護者獲勝',`命運刺客指認了 ${p.name}，但他不是時序之神。`);};
-function end(title,msg){window.chronoRecord?.(players,title);window.chronosCue?.(title.includes('時間守護者')?'win':'lose');window.chronosFlash?.(title.includes('時間守護者')?'pass':'fail');$('teamPanel').classList.add('hidden');$('votePanel').classList.add('hidden');$('missionPanel').classList.add('hidden');$('resultPanel').classList.add('hidden');$('assassinPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');$('gameHint').textContent=msg;$('endTitle').textContent=title;$('endText').textContent=msg+` 最終戰績：時間節點修復成功 ${success} 次、失守 ${fail} 次。`;$('roundTitle').textContent='遊戲結束';}
+function chronoNextMission(){if(phase!=='result')return;phase='transition';if(fail>=3){end('命運反抗軍獲勝','命運反抗軍造成 3 個時間節點失守。');return}if(success>=3){let assassin=players.find(p=>p.role==='命運刺客');if(!assassin){end('時間守護者獲勝','時間守護者已修復三個時間節點，且本局未配置命運刺客。');return}$('resultPanel').classList.add('hidden');$('assassinPanel').classList.remove('hidden');phase='assassin';$('gameHint').textContent='請命運刺客選擇一位玩家，進行最終命運裁決。';$('assassinChoices').innerHTML=players.map((p,i)=>`<label class="vote"><input type="radio" name="target" value="${i}" style="width:auto"> ${p.name}</label>`).join('');return}round++;leader=(leader+1)%players.length;beginRound()}
+$('assassinate').onclick=()=>{if(phase!=='assassin')return;let t=document.querySelector('input[name=target]:checked');if(!t){alert('請選擇最終裁決目標。');return}let p=players[+t.value];if(p.role==='時序之神')end('命運反抗軍獲勝','命運刺客成功指認時序之神！');else end('時間守護者獲勝',`命運刺客指認了 ${p.name}，但他不是時序之神。`);};
+function end(title,msg){if(phase==='ended')return;phase='ended';window.chronoGuardianEngine?.close();window.chronoSkillAbort?.();window.chronoRecord?.(players,title);window.chronosCue?.(title.includes('時間守護者')?'win':'lose');window.chronosFlash?.(title.includes('時間守護者')?'pass':'fail');$('teamPanel').classList.add('hidden');$('votePanel').classList.add('hidden');$('missionPanel').classList.add('hidden');$('resultPanel').classList.add('hidden');$('assassinPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');$('gameHint').textContent=msg;$('endTitle').textContent=title;$('endText').textContent=msg+` 最終戰績：時間節點修復成功 ${success} 次、失守 ${fail} 次。`;$('roundTitle').textContent='遊戲結束';}
 $('restart').onclick=()=>location.reload();
 function closeGameMenu(){
  $('gameMenuDropdown').classList.add('hidden');
@@ -1729,7 +1731,7 @@ function closeGameMenuConfirm(){
 function restartWithSavedSettings(){
  if(!savedGameSettings)return;
  const cfg=savedGameSettings;
- roleConfigMode=cfg.roleConfigMode||'preset';$('count').value=String(cfg.count);renderSetup();$('rule').value=cfg.rule;
+ $('chronoMode').value=cfg.mode||'classic';roleConfigMode=cfg.roleConfigMode||'preset';$('count').value=String(cfg.count);renderSetup();$('rule').value=cfg.rule;
  cfg.names.forEach((name,i)=>{const input=$('p'+i);if(input)input.value=name});
  ['goodChecks','evilChecks'].forEach((id,index)=>{
   const selected=new Set(index===0?cfg.good:cfg.evil);
@@ -1744,7 +1746,7 @@ function restartWithSavedSettings(){
  const focus=document.querySelector('.role-focus');if(focus)focus.remove();
  closeGameMenu();start();
 }
-function returnToNewGameSetup(){
+function returnToNewGameSetup(){window.chronoSkillAbort?.();window.chronoGuardianEngine?.close();
  $('gameMenu').classList.add('hidden');
  $('reveal').classList.add('hidden');$('game').classList.add('hidden');$('setup').classList.remove('hidden');
  $('game').classList.remove('vote-phase','team-selection-phase');
@@ -2084,7 +2086,7 @@ body:not(.home-active)>header h1{padding-right:75px}
 <script>
 (function(){
  const mode=document.getElementById('chronoMode'),count=document.getElementById('count'),note=document.getElementById('chronoModeNote'),start=document.getElementById('start');
- function sync(){const advanced=mode.value==='advanced';for(const o of count.options)o.disabled=advanced&&Number(o.value)<7;if(advanced&&Number(count.value)<7){count.value='7';count.dispatchEvent(new Event('change'))}start.disabled=advanced;start.textContent=advanced?'時序進階模式開發中':'洗牌並開始分配身份';note.textContent=advanced?'時序進階模式：7～10 人，預計新增六位原創角色及秘密技能。現階段可預覽全部17種角色及配置。7～9人每陣營最多1位新增角色，10人最多2位；尚未開放開局。':'經典模式：5～10 人，使用原有 11 種角色。'}
+ function sync(){const advanced=mode.value==='advanced';for(const o of count.options)o.disabled=advanced&&Number(o.value)<7;if(advanced&&Number(count.value)<7){count.value='7';count.dispatchEvent(new Event('change'))}start.disabled=false;start.textContent='洗牌並開始分配身份';note.textContent=advanced?'時序進階模式測試版：7～10 人，17種角色。7～9人每陣營最多1位新增角色，10人最多2位。':'經典模式：5～10 人，使用原有 11 種角色。'}
  mode.addEventListener('change',()=>{sync();renderSetup()});count.addEventListener('change',sync);sync();
 })();
 </script><style>.chrono-role-placeholder{display:inline-grid;place-items:center;width:36px;height:36px;flex:none;color:#d6b56c;border:1px solid #a18449;border-radius:6px;background:#18223b;font-size:24px}</style><style>
@@ -2161,4 +2163,4 @@ function createChronoSkillEngine(roster,mode='classic',context={}){
 .role-focus-card{width:min(94vw,58.5dvh,520px)!important;height:auto!important;min-height:0!important;aspect-ratio:3/4!important}
 .role-focus-card .role-card,.role-focus-card .role-card-inner{height:100%!important}
 #missionSecret button[onclick^="missionCard"] img,button[onclick^="castVote"] img{aspect-ratio:3/4!important;height:auto!important;object-fit:cover!important;object-position:center top!important}
-</style>
+</style><style>.chrono-advanced-art{display:grid!important;place-items:center;background:radial-gradient(circle,#645b89,#17243d 65%);color:#e7c77e;font-size:90px!important}.faction-evil .chrono-advanced-art{background:radial-gradient(circle,#644275,#21132f 65%);color:#d8b3ff}</style>
