@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" id="homeRanking">時序英雄排行榜</button><button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.2.9</div>
+  <div class="home-version">VERSION v0.2.10</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1295,7 +1295,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 </section>
 
 </div>
-</main><footer>CHRONOS 時序之戰｜v0.2.9｜本機遊戲，不會上傳玩家資料</footer>
+</main><footer>CHRONOS 時序之戰｜v0.2.10｜本機遊戲，不會上傳玩家資料</footer>
 <div id="installHelp" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle">
  <div class="install-dialog">
   <h2 id="installHelpTitle">📲 加入主畫面</h2>
@@ -1401,7 +1401,7 @@ enterGameFullscreen();
 let gr=[...gs,...Array(g-gs.length).fill('時間騎士')],er=[...es,...Array(e-es.length).fill('時間掠奪者')];
 if(!er.includes('命運刺客'))er[er.length-1]='命運刺客';
 players=Array.from({length:n},(_,i)=>({name:$('p'+i).value.trim()||`玩家${i+1}`,role:null,roleId:null,faction:null,ability:null}));
-roles=shuffle([...gr,...er]);players.forEach((p,i)=>{p.role=roles[i];const def=roleDefinition(p.role);p.roleId=def.id;p.faction=def.faction;p.ability=def.ability});round=0;leader=0;consecutive=0;success=0;fail=0;phase='reveal';revealIndex=0;$('revealCircle').dataset.dealStarted='';
+roles=shuffle([...gr,...er]);players.forEach((p,i)=>{p.role=roles[i];const def=roleDefinition(p.role);p.roleId=def.id;p.faction=def.faction;p.ability=def.ability});window.chronoGuardianEngine=createChronoSkillEngine(players,isAdvanced()?'advanced':'classic',{team:()=>team.slice()});round=0;leader=0;consecutive=0;success=0;fail=0;phase='reveal';revealIndex=0;$('revealCircle').dataset.dealStarted='';
 $('setup').classList.add('hidden');$('game').classList.remove('hidden');$('reveal').classList.remove('hidden');$('teamPanel').classList.add('hidden');showReveal();
 }
 $('start').onclick=start;
@@ -1632,9 +1632,13 @@ function revealVoteCircle(yes,no,passed){
   $('submitVotes').disabled=false;
  },revealDuration);
 }
+function chronoGuardianStage(stage,cb){const e=window.chronoGuardianEngine;if(!e||!window.chronoSkillStage(e,stage,round+1,leader,cb))cb([])}
 $('submitVotes').onclick=()=>{
  const yes=voteValues.filter(Boolean).length,no=players.length-yes,passed=yes>no;
  if(!voteRevealed){voteRevealed=true;revealVoteCircle(yes,no,passed);return}
+ $('submitVotes').disabled=true;chronoGuardianStage('after_vote',decisions=>{if(decisions.some(d=>d.ability==='vote_rewind')){alert('時序回溯：同一隊伍重新投票。');voteValues=Array(players.length).fill(null);voteIndex=0;voteRevealed=false;$('tableCircle').innerHTML='';$('submitVotes').classList.add('hidden');$('submitVotes').textContent='公布投票結果';renderVote();return}chronoFinalizeVote(yes,no,passed)});
+};
+function chronoFinalizeVote(yes,no,passed){
  $('votePanel').classList.add('hidden');
  const playerButtonSpace=document.querySelector('#game .player-area-button-space');
  if(playerButtonSpace)playerButtonSpace.appendChild($('submitVotes'));
@@ -1652,9 +1656,9 @@ $('submitVotes').onclick=()=>{
   consecutive=0;phase='mission';missionIndex=0;missionValues=[];
   $('missionPanel').classList.remove('hidden');
   $('gameHint').classList.remove('hidden');
-  renderMission();
+  chronoGuardianStage('observation',()=>renderMission());
  }
-};
+}
 function renderMission(){let p=players[team[missionIndex]];const rotating=updateMissionTurnCircle(()=>{$('missionShow').disabled=false;});$('missionShow').disabled=rotating;$('gameHint').textContent=`請交給修復小隊成員 ${p.name}。其他人請勿觀看。`;$('missionSecret').classList.add('hidden');$('missionShow').classList.remove('hidden');$('missionHide').classList.add('hidden');$('missionShow').textContent='查看並選擇時間牌';}
 function updateMissionTurnCircle(onComplete){
  const el=$('tableCircle'),n=players.length;if(!el)return false;
@@ -1692,7 +1696,8 @@ function updateMissionTurnCircle(onComplete){
 }
 $('missionShow').onclick=()=>{let p=players[team[missionIndex]],evil=evilRoles.includes(p.role);$('gameHint').textContent=`${p.name}，請秘密選擇任務牌。其他玩家請勿觀看。`;$('missionSecret').innerHTML=`<div>${p.name}，請選擇</div><div class="actions"><button class="blue" onclick="missionCard(true)"><img src="./assets/cards/mission-success.png" alt="">任務成功</button>${evil?'<button class="red" onclick="missionCard(false)"><img src="./assets/cards/mission-failure.png" alt="">任務失敗</button>':''}</div>`;$('missionSecret').classList.remove('hidden');$('missionShow').classList.add('hidden')};
 window.missionCard=v=>{window.chronosCue?.('secret');missionValues.push(v);missionIndex++;if(missionIndex<team.length){renderMission()}else{$('missionPanel').classList.add('hidden');$('gameHint').textContent='所有修復小隊成員均已完成秘密選擇，請查看任務結果。';let fails=missionValues.filter(x=>!x).length,threshold=($('rule').value==='standard'&&count()>=7&&round===3)?2:1;let passed=fails<threshold;if(passed)success++;else fail++;window.chronosCue?.(passed?'success':'failure');window.chronosFlash?.(passed?'pass':'fail');$('resultPanel').classList.remove('hidden');$('gameHint').textContent='時間節點結果已統計，請確認後進入下一步。';$('resultText').innerHTML=`時間節點結果：<b>${passed?'修復成功':'遭到干擾'}</b><br>干擾牌數：${fails} 張（本關需 ${threshold} 張干擾才算節點失守）<br><span class="muted">時間牌已統計，不公開各玩家出的牌。</span>`;phase='result'}};
-$('next').onclick=()=>{if(fail>=3){end('命運反抗軍獲勝','命運反抗軍造成 3 個時間節點失守。');return}if(success>=3){let assassin=players.find(p=>p.role==='命運刺客');if(!assassin){end('時間守護者獲勝','時間守護者已修復三個時間節點，且本局未配置命運刺客。');return}$('resultPanel').classList.add('hidden');$('assassinPanel').classList.remove('hidden');$('gameHint').textContent='請命運刺客選擇一位玩家，進行最終命運裁決。';$('assassinChoices').innerHTML=players.map((p,i)=>`<label class="vote"><input type="radio" name="target" value="${i}" style="width:auto"> ${p.name}</label>`).join('');return}round++;leader=(leader+1)%players.length;beginRound()};
+$('next').onclick=()=>{if(fail<3&&success<3&&(round===1||round===2)){ $('next').disabled=true;chronoGuardianStage('after_mission',()=>{$('next').disabled=false;chronoNextMission()});return}chronoNextMission()};
+function chronoNextMission(){if(fail>=3){end('命運反抗軍獲勝','命運反抗軍造成 3 個時間節點失守。');return}if(success>=3){let assassin=players.find(p=>p.role==='命運刺客');if(!assassin){end('時間守護者獲勝','時間守護者已修復三個時間節點，且本局未配置命運刺客。');return}$('resultPanel').classList.add('hidden');$('assassinPanel').classList.remove('hidden');$('gameHint').textContent='請命運刺客選擇一位玩家，進行最終命運裁決。';$('assassinChoices').innerHTML=players.map((p,i)=>`<label class="vote"><input type="radio" name="target" value="${i}" style="width:auto"> ${p.name}</label>`).join('');return}round++;leader=(leader+1)%players.length;beginRound()}
 $('assassinate').onclick=()=>{let t=document.querySelector('input[name=target]:checked');if(!t){alert('請選擇最終裁決目標。');return}let p=players[+t.value];if(p.role==='時序之神')end('命運反抗軍獲勝','命運刺客成功指認時序之神！');else end('時間守護者獲勝',`命運刺客指認了 ${p.name}，但他不是時序之神。`);};
 function end(title,msg){window.chronoRecord?.(players,title);window.chronosCue?.(title.includes('時間守護者')?'win':'lose');window.chronosFlash?.(title.includes('時間守護者')?'pass':'fail');$('teamPanel').classList.add('hidden');$('votePanel').classList.add('hidden');$('missionPanel').classList.add('hidden');$('resultPanel').classList.add('hidden');$('assassinPanel').classList.add('hidden');$('endPanel').classList.remove('hidden');$('gameHint').textContent=msg;$('endTitle').textContent=title;$('endText').textContent=msg+` 最終戰績：時間節點修復成功 ${success} 次、失守 ${fail} 次。`;$('roundTitle').textContent='遊戲結束';}
 $('restart').onclick=()=>location.reload();
@@ -2093,29 +2098,30 @@ body:not(.home-active)>header h1{padding-right:75px}
 #chronoSkillOverlay button{width:100%;min-height:48px;margin:5px 0;background:#263e64;color:#ffe0a0;border:1px solid #c4a15c;border-radius:8px}
 </style>
 <script>
-function createChronoSkillEngine(roster,mode='classic'){
+function createChronoSkillEngine(roster,mode='classic',context={}){
  const specs=Object.freeze({fate_shield:{stage:'identity',min:0,max:0},vote_rewind:{stage:'after_vote',min:1,max:5},cancel_expedition:{stage:'before_mission',min:2,max:4},future_observation:{stage:'observation',min:2,max:4},hide_failure_count:{stage:'before_cards',min:2,max:4},faction_inquiry:{stage:'after_mission',min:2,max:3}});
  const used=new Map();let session=null,closed=false;
  const eligible=(i,stage,node)=>{const p=roster[i],s=specs[p?.ability];return mode==='advanced'&&!closed&&!!s&&s.stage===stage&&node>=s.min&&node<=s.max&&(used.get(i)||0)<1};
  function begin(stage,node,leader=0){if(closed||session||mode!=='advanced'||!roster.length||!Object.values(specs).some(s=>s.stage===stage&&node>=s.min&&node<=s.max))return false;session={stage,node,order:Array.from({length:roster.length},(_,i)=>(leader+i)%roster.length),cursor:0,opened:false,decisions:[]};return true}
  function publicView(){return session?{player:roster[session.order[session.cursor]]?.name,position:session.cursor+1,total:roster.length}:null}
- function open(){if(!session||session.opened)return null;session.opened=true;const i=session.order[session.cursor],available=eligible(i,session.stage,session.node);return {available,ability:available?roster[i].ability:null}}
- function submit(activate){if(!session||!session.opened)return false;const i=session.order[session.cursor];if(activate&&!eligible(i,session.stage,session.node))return false;if(activate){used.set(i,(used.get(i)||0)+1);session.decisions.push({playerIndex:i,ability:roster[i].ability})}session.opened=false;session.cursor++;return true}
+ function open(){if(!session||session.opened||session.cursor>=roster.length)return null;session.opened=true;const i=session.order[session.cursor],available=eligible(i,session.stage,session.node);return {available,ability:available?roster[i].ability:null,targets:available&&roster[i].ability==='faction_inquiry'?roster.map((p,j)=>({name:p.name,index:j})).filter(p=>p.index!==i):[]}}
+ function submit(activate,target){if(!session||!session.opened)return false;const i=session.order[session.cursor];if(activate&&!eligible(i,session.stage,session.node))return false;if(activate&&roster[i].ability==='faction_inquiry'&&(!Number.isInteger(target)||target===i||!roster[target]))return false;if(activate){used.set(i,(used.get(i)||0)+1);session.decisions.push({playerIndex:i,ability:roster[i].ability,target})}session.opened=false;session.cursor++;return true}
+ function privateResult(ability,target){if(ability==='future_observation')return (context.team?.()||[]).some(i=>roster[i]?.faction==='rebel')?'修復小隊中存在命運反抗軍。':'修復小隊中未觀測到命運反抗軍。';if(ability==='faction_inquiry'){const p=roster[target];return p.name+'：'+(p.role==='隱時者'?'無法判定':p.faction==='guardian'?'時間守護者':'命運反抗軍')}return ''}
  function complete(){if(!session||session.cursor!==roster.length)return null;const decisions=session.decisions.slice();session=null;return decisions}
  function close(){closed=true;session=null;used.clear()}
- return {begin,publicView,open,submit,complete,close};
+ return {begin,publicView,open,submit,complete,close,privateResult};
 }
 (function(){
  const overlay=document.createElement('div');overlay.id='chronoSkillOverlay';overlay.className='hidden';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','秘密技能確認');overlay.innerHTML='<div class="skill-card"><h2>時間能力確認</h2><p id="chronoSkillText"></p><button type="button" id="chronoSkillOpen">查看秘密能力</button><button type="button" id="chronoSkillUse" class="hidden">發動能力</button><button type="button" id="chronoSkillSkip" class="hidden">確認並交給下一位</button></div>';document.body.appendChild(overlay);
- const text=overlay.querySelector('#chronoSkillText'),open=overlay.querySelector('#chronoSkillOpen'),use=overlay.querySelector('#chronoSkillUse'),skip=overlay.querySelector('#chronoSkillSkip');let engine=null,done=null,priorFocus=null,privateView=false;
+ const text=overlay.querySelector('#chronoSkillText'),open=overlay.querySelector('#chronoSkillOpen'),use=overlay.querySelector('#chronoSkillUse'),skip=overlay.querySelector('#chronoSkillSkip');let engine=null,done=null,priorFocus=null,privateView=false,current=null,reading=false;const target=document.createElement('select');target.className='hidden';target.setAttribute('aria-label','審判目標');use.before(target);
  const labels={fate_shield:'命運遮蔽',vote_rewind:'時序回溯',cancel_expedition:'逆轉時序',future_observation:'未來觀測',hide_failure_count:'因果錯亂',faction_inquiry:'因果審判'};
- function showPass(){privateView=false;const p=engine.publicView();text.textContent='請將裝置交給 '+p.player+'（'+p.position+'/'+p.total+'），其他玩家請勿觀看。';open.classList.remove('hidden');use.classList.add('hidden');skip.classList.add('hidden');open.focus()}
+ function showPass(){privateView=false;reading=false;current=null;target.replaceChildren();target.classList.add('hidden');const p=engine.publicView();text.textContent='請將裝置交給 '+p.player+'（'+p.position+'/'+p.total+'），其他玩家請勿觀看。';open.classList.remove('hidden');use.classList.add('hidden');skip.classList.add('hidden');open.focus()}
  function finish(){const result=engine.complete();if(result===null){showPass();return}overlay.classList.add('hidden');text.textContent='';use.classList.add('hidden');skip.classList.add('hidden');const cb=done;done=null;engine=null;priorFocus?.focus();cb?.(result)}
- open.onclick=()=>{if(!engine||privateView)return;const v=engine.open();if(!v)return;privateView=true;text.textContent=v.available?'可發動：'+labels[v.ability]+'。每局一次。':'本階段沒有可發動的時間能力。';open.classList.add('hidden');use.classList.toggle('hidden',!v.available);skip.classList.remove('hidden');skip.textContent=v.available?'保留能力並確認':'確認並交給下一位';skip.focus()};
- function submit(activate){if(!engine||!privateView||!engine.submit(activate))return;privateView=false;window.chronosCue?.('secret');finish()}
+ open.onclick=()=>{if(!engine||privateView)return;const v=engine.open();if(!v)return;privateView=true;current=v;target.replaceChildren();for(const p of v.targets){const o=document.createElement('option');o.value=String(p.index);o.textContent=p.name;target.appendChild(o)}target.classList.toggle('hidden',!v.targets.length);text.textContent=v.available?'可發動：'+labels[v.ability]+'。每局一次。':'本階段沒有可發動的時間能力。';open.classList.add('hidden');use.classList.toggle('hidden',!v.available);skip.classList.remove('hidden');skip.textContent=v.available?'保留能力並確認':'確認並交給下一位';skip.focus()};
+ function submit(activate){if(reading){reading=false;finish();return}const t=current?.targets.length?Number(target.value):undefined;if(!engine||!privateView||!engine.submit(activate,t))return;privateView=false;target.classList.add('hidden');target.replaceChildren();window.chronosCue?.('secret');const result=activate?engine.privateResult(current.ability,t):'';if(result){reading=true;text.textContent=result;use.classList.add('hidden');skip.textContent='確認並交給下一位';skip.focus();return}finish()}
  use.onclick=()=>submit(true);skip.onclick=()=>submit(false);
  window.chronoSkillStage=(e,stage,node,leader,callback)=>{if(engine||!e.begin(stage,node,leader))return false;engine=e;done=callback;priorFocus=document.activeElement;overlay.classList.remove('hidden');showPass();return true};
- window.chronoSkillAbort=()=>{engine?.close();engine=null;done=null;privateView=false;overlay.classList.add('hidden');text.textContent='';use.classList.add('hidden');skip.classList.add('hidden')};
+ window.chronoSkillAbort=()=>{reading=false;current=null;target.replaceChildren();target.classList.add('hidden');engine?.close();engine=null;done=null;privateView=false;overlay.classList.add('hidden');text.textContent='';use.classList.add('hidden');skip.classList.add('hidden')};
 })();
 </script><style>
 /* Full-bleed identity artwork; existing flip geometry is unchanged. */
