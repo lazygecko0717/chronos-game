@@ -1197,7 +1197,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
    <button type="button" class="home-enter" id="enterGame">進入遊戲</button>
    <button type="button" id="homeRanking">時序英雄排行榜</button><button type="button" class="home-rules" id="homeRules">遊戲說明</button><button type="button" class="home-install" id="installApp">＋ 加入主畫面</button>
   </div>
-  <div class="home-version">VERSION v0.2.1</div>
+  <div class="home-version">VERSION v0.2.2</div>
  </div>
 </section>
 <div id="rulesOverlay" class="rules-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
@@ -1295,7 +1295,7 @@ body:not(.home-active)>header h1{text-align:left;margin:0 !important;line-height
 </section>
 
 </div>
-</main><footer>CHRONOS 時序之戰｜v0.2.1｜本機遊戲，不會上傳玩家資料</footer>
+</main><footer>CHRONOS 時序之戰｜v0.2.2｜本機遊戲，不會上傳玩家資料</footer>
 <div id="installHelp" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle">
  <div class="install-dialog">
   <h2 id="installHelpTitle">📲 加入主畫面</h2>
@@ -1335,7 +1335,13 @@ const ROLE_DEFINITIONS={
  '隱時者':{id:'hidden_one',faction:'rebel',ability:'hidden_from_chronos',asset:'hidden-one'},
  '孤時旅者':{id:'lone_wanderer',faction:'rebel',ability:'isolated_rebel',asset:'lone-wanderer'},
  '時間掠奪者':{id:'time_raider',faction:'rebel',ability:'none',asset:'time-raider'},
- '混沌旅者':{id:'chaos_walker',faction:'rebel',ability:'none',asset:'chaos-walker'}
+ '混沌旅者':{id:'chaos_walker',faction:'rebel',ability:'none',asset:'chaos-walker'},
+ '時光先知':{id:'time_prophet',faction:'guardian',ability:'future_observation',asset:'time-prophet',advanced:true,maxUses:1},
+ '時間編織者':{id:'time_weaver',faction:'guardian',ability:'vote_rewind',asset:'time-weaver',advanced:true,maxUses:1},
+ '時空仲裁者':{id:'temporal_arbiter',faction:'guardian',ability:'faction_inquiry',asset:'temporal-arbiter',advanced:true,maxUses:1},
+ '命運竊取者':{id:'fate_thief',faction:'rebel',ability:'fate_shield',asset:'fate-thief',advanced:true,maxUses:1},
+ '時間逆行者':{id:'time_reverser',faction:'rebel',ability:'cancel_expedition',asset:'time-reverser',advanced:true,maxUses:1},
+ '悖論製造者':{id:'paradox_maker',faction:'rebel',ability:'hide_failure_count',asset:'paradox-maker',advanced:true,maxUses:1}
 };
 const roleDefinition=name=>ROLE_DEFINITIONS[name]||null;
 const roleFaction=name=>roleDefinition(name)?.faction||'guardian';
@@ -1349,15 +1355,19 @@ let savedGameSettings=null;
 let roleConfigMode='preset';
 function count(){return +$('count').value}
 const chronoNameDraft=[];
+const advancedPresets={"7":["時序之神","時光先知","時間騎士","時空守衛","命運刺客","命運竊取者","時間掠奪者"],"8":["時序之神","命運觀測者","時間編織者","時間騎士","時空守衛","命運刺客","虛無之主","時間逆行者"],"9":["時序之神","命運觀測者","時空仲裁者","時間騎士","時空守衛","永恆使者","命運刺客","虛無之主","命運竊取者"],"10":["時序之神","命運觀測者","時間編織者","時光先知","時間騎士","時空守衛","命運刺客","虛無之主","命運竊取者","悖論製造者"]};
+const advancedGood=["時光先知","時間編織者","時空仲裁者"],advancedEvil=["命運竊取者","時間逆行者","悖論製造者"];
+const isAdvanced=()=>$('chronoMode').value==='advanced';
+
 function renderSetup(){ $('names').querySelectorAll('input').forEach((input,i)=>{chronoNameDraft[i]=input.value});let n=count();$('ratio').textContent='';
 $('names').innerHTML=Array.from({length:n},(_,i)=>`<div class="player name-option"><input id="p${i}" aria-label="玩家 ${i+1} 名稱" placeholder="玩家 ${i+1}" value="玩家${i+1}" maxlength="12"></div>`).join('');
 $('names').querySelectorAll('input').forEach((input,i)=>{if(chronoNameDraft[i]!==undefined)input.value=chronoNameDraft[i]});
-let sp=roleConfigMode==='preset'?defaultSpecial[n]:['時序之神','命運刺客'];let good=sp.filter(x=>goodRoles.includes(x)),evil=sp.filter(x=>evilRoles.includes(x));
-const roleOption=(name,side,selected)=>{const slug=roleAsset(name);return `<label class="role-option"><img src="./assets/roles/${slug}.png" alt=""><span>${name}</span><input type="checkbox" value="${name}" ${selected?'checked':''}></label>`};
+const advanced=isAdvanced(),goodPool=advanced?[...goodRoles,...advancedGood]:goodRoles,evilPool=advanced?[...evilRoles,...advancedEvil]:evilRoles;let sp=roleConfigMode==='preset'?(advanced?advancedPresets[n]||advancedPresets[7]:defaultSpecial[n]):['時序之神','命運刺客'];let good=sp.filter(x=>goodPool.includes(x)),evil=sp.filter(x=>evilPool.includes(x));
+const roleOption=(name,side,selected)=>{const slug=roleAsset(name),fresh=roleDefinition(name).advanced;return `<label class="role-option">${fresh?'<span class="chrono-role-placeholder" aria-hidden="true">◷</span>':'<img src="./assets/roles/'+slug+'.png" alt="">'}<span>${name}${fresh?' ✦':''}</span><input type="checkbox" value="${name}" ${selected?'checked':''}></label>`};
 const fixedRole=(name)=>{const slug=roleAsset(name);return `<div class="role-option role-fixed"><img src="./assets/roles/${slug}.png" alt=""><span>${name}</span><small>固定補足</small></div>`};
-$('roles').innerHTML=`<label class="role-mode-label">角色配置模式<select id="roleConfigMode"><option value="preset" ${roleConfigMode==='preset'?'selected':''}>預設配置</option><option value="free" ${roleConfigMode==='free'?'selected':''}>自由選擇</option></select></label><div class="row"><div class="role-side good"><div class="role-heading"><span>時間守護者角色</span><span class="role-total">${ratios[n][0]} 人</span></div><details class="role-dropdown"><summary><span>選擇時間守護者角色</span><span class="role-count">已選 ${good.length} 位</span></summary><div class="role-menu" id="goodChecks">${['時序之神','命運觀測者','時間騎士','時空守衛','永恆使者'].map(x=>roleOption(x,'good',good.includes(x))).join('')}</div></details></div><div class="role-side evil"><div class="role-heading"><span>命運反抗軍角色</span><span class="role-total">${ratios[n][1]} 人</span></div><details class="role-dropdown"><summary><span>選擇命運反抗軍角色</span><span class="role-count">已選 ${evil.length} 位</span></summary><div class="role-menu" id="evilChecks">${['命運刺客','虛無之主','隱時者','孤時旅者','時間掠奪者','混沌旅者'].map(x=>roleOption(x,'evil',evil.includes(x))).join('')}</div></details></div></div><p class="muted">預設配置會依玩家人數帶入建議角色；自由選擇可自行搭配特殊角色。未選滿的名額會以普通角色補足。命運刺客為反抗軍必要角色，若未選取會自動補入。</p>`;
+$('roles').innerHTML=`<label class="role-mode-label">角色配置模式<select id="roleConfigMode"><option value="preset" ${roleConfigMode==='preset'?'selected':''}>預設配置</option><option value="free" ${roleConfigMode==='free'?'selected':''}>自由選擇</option></select></label><div class="row"><div class="role-side good"><div class="role-heading"><span>時間守護者角色</span><span class="role-total">${ratios[n][0]} 人</span></div><details class="role-dropdown"><summary><span>選擇時間守護者角色</span><span class="role-count">已選 ${good.length} 位</span></summary><div class="role-menu" id="goodChecks">${goodPool.map(x=>roleOption(x,'good',good.includes(x))).join('')}</div></details></div><div class="role-side evil"><div class="role-heading"><span>命運反抗軍角色</span><span class="role-total">${ratios[n][1]} 人</span></div><details class="role-dropdown"><summary><span>選擇命運反抗軍角色</span><span class="role-count">已選 ${evil.length} 位</span></summary><div class="role-menu" id="evilChecks">${evilPool.map(x=>roleOption(x,'evil',evil.includes(x))).join('')}</div></details></div></div><p class="muted">預設配置會依玩家人數帶入建議角色；自由選擇可自行搭配特殊角色。未選滿的名額會以普通角色補足。命運刺客為反抗軍必要角色，若未選取會自動補入。</p>`;
 $('roleConfigMode').onchange=e=>{roleConfigMode=e.target.value;renderSetup()};
-$('roles').querySelectorAll('.role-dropdown').forEach(dropdown=>{const update=()=>{const checks=dropdown.querySelectorAll('input[type="checkbox"]');const count=dropdown.querySelector('.role-count');count.textContent='已選 '+Array.from(checks).filter(x=>x.checked).length+' 位'};dropdown.querySelectorAll('input[type="checkbox"]').forEach(input=>input.addEventListener('change',update));});
+$('roles').querySelectorAll('.role-dropdown').forEach(dropdown=>{const update=()=>{const checks=dropdown.querySelectorAll('input[type="checkbox"]');const count=dropdown.querySelector('.role-count');count.textContent='已選 '+Array.from(checks).filter(x=>x.checked).length+' 位'};dropdown.querySelectorAll('input[type="checkbox"]').forEach(input=>input.addEventListener('change',()=>{if(advanced){const checks=[...dropdown.querySelectorAll('input:checked')],side=dropdown.closest('.role-side').classList.contains('good')?0:1,required=side===0?'時序之神':'命運刺客';if(!input.checked&&input.value===required){input.checked=true;alert('此角色為必要角色。')}else if(input.checked&&(checks.length>ratios[n][side]||checks.filter(x=>roleDefinition(x.value).advanced).length>(n===10?2:1))){input.checked=false;alert('已達陣營人數或新增特殊角色上限。')}}update()}));});
 }
 $('count').onchange=renderSetup;renderSetup();
 const chronoResetNames=document.createElement('button');chronoResetNames.type='button';chronoResetNames.className='secondary';chronoResetNames.textContent='重設玩家名稱';chronoResetNames.onclick=()=>{if(!confirm('將所有玩家名稱恢復為預設名稱？'))return;chronoNameDraft.length=0;$('names').querySelectorAll('input').forEach((input,i)=>{input.value='玩家'+(i+1)});};$('names').after(chronoResetNames);
@@ -2072,7 +2082,7 @@ body:not(.home-active)>header h1{padding-right:75px}
 <script>
 (function(){
  const mode=document.getElementById('chronoMode'),count=document.getElementById('count'),note=document.getElementById('chronoModeNote'),start=document.getElementById('start');
- function sync(){const advanced=mode.value==='advanced';for(const o of count.options)o.disabled=advanced&&Number(o.value)<7;if(advanced&&Number(count.value)<7){count.value='7';count.dispatchEvent(new Event('change'))}start.disabled=advanced;start.textContent=advanced?'時序進階模式開發中':'洗牌並開始分配身份';note.textContent=advanced?'時序進階模式：7～10 人，預計新增六位原創角色及秘密技能。現階段僅供設定預覽，角色選單暫沿用經典配置，尚未開放開局。':'經典模式：5～10 人，使用原有 11 種角色。'}
- mode.addEventListener('change',sync);count.addEventListener('change',sync);sync();
+ function sync(){const advanced=mode.value==='advanced';for(const o of count.options)o.disabled=advanced&&Number(o.value)<7;if(advanced&&Number(count.value)<7){count.value='7';count.dispatchEvent(new Event('change'))}start.disabled=advanced;start.textContent=advanced?'時序進階模式開發中':'洗牌並開始分配身份';note.textContent=advanced?'時序進階模式：7～10 人，預計新增六位原創角色及秘密技能。現階段可預覽全部17種角色及配置。7～9人每陣營最多1位新增角色，10人最多2位；尚未開放開局。':'經典模式：5～10 人，使用原有 11 種角色。'}
+ mode.addEventListener('change',()=>{sync();renderSetup()});count.addEventListener('change',sync);sync();
 })();
-</script>
+</script><style>.chrono-role-placeholder{display:inline-grid;place-items:center;width:36px;height:36px;flex:none;color:#d6b56c;border:1px solid #a18449;border-radius:6px;background:#18223b;font-size:24px}</style>
